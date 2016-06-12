@@ -1,5 +1,5 @@
 
-#include "../../src/utils/tuple.h"
+#include "../../queryset/utils/tuple.h"
 
 namespace boost {
     namespace test_tools {

@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "print_helper.hpp"
-#include "../../src/utils/queryset.h"
+#include "../../queryset/utils/queryset.h"
 
 typedef ::utils::queryset<int, std::string, float> myqueryset;
 typedef std::tuple<int, std::string, float> mytuple;

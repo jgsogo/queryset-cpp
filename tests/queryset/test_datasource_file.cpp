@@ -3,7 +3,7 @@
 #include <boost/filesystem.hpp>
 
 #include "../utils/print_helper.hpp"
-#include "../../src/datasource.h"
+#include "../../queryset/datasource.h"
 #include "../config_tests.h"
 
 typedef ::utils::FileQueryset<int, std::string, float> myQuerySet;

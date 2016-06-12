@@ -26,5 +26,5 @@ else()
 endif()
 
 # 
-add_subdirectory(src)
+add_subdirectory(queryset)
 add_subdirectory(tests)

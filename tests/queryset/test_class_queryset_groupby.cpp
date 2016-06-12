@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "print_helper.hpp"
-#include "../../src/queryset.h"
+#include "../../queryset/queryset.h"
 
 
 typedef ::utils::MemoryQueryset<int, std::string, float> myqueryset;

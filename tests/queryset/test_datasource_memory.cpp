@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "../utils/print_helper.hpp"
-#include "../../src/datasource.h"
+#include "../../queryset/datasource.h"
 
 typedef ::utils::MemoryQueryset<int, std::string, float> myQuerySet;
 typedef myQuerySet::qs_type::value_type mytuple;
