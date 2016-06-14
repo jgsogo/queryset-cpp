@@ -12,4 +12,4 @@ target_link_libraries (test_queryset
                        ${Boost_LIBRARIES}
                        )
 
-add_test(NAME TestModels COMMAND $<TARGET_FILE:test_queryset>)
+add_test(NAME TestQuerySet COMMAND $<TARGET_FILE:test_queryset>)

@@ -19,3 +19,4 @@ file(COPY data/ex_filequeryset.tsv DESTINATION ${TEST_DATA_PATH})
 # Add subdirectories with tests
 add_subdirectory(queryset)
 add_subdirectory(utils)
+add_subdirectory(models)

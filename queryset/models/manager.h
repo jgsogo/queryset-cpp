@@ -2,44 +2,44 @@
 #pragma once
 
 #include "../datasource.h"
+#include "../queryset.h"
 
 namespace qs {
 
     template <typename... Args>
     class BaseManager {
         public:
-            typedef QuerySet<Args...> QuerySet;
-        public:
+            BaseManager() {};
             virtual ~BaseManager() {};
 
-            virtual QuerySet all() const = 0;
+            virtual ::QuerySet<Args...> all() const = 0;
     };
 
 
-    template <typename... Args, typename TDataSource = void>
+    template <typename TDataSource, typename... Args>
     class Manager;
 
     template <typename... Args>
-    class Manager<Args..., std::string> : public BaseManager<Args...> {
+    class Manager<std::string, Args...> : public BaseManager<Args...> {
         public:
             Manager(const std::string& filename) : _datasource(filename) {};
             virtual ~Manager() {};
 
-            virtual QuerySet all() const {
-                return QuerySet(_datasource);
+            virtual ::QuerySet<Args...> all() const {
+                return ::QuerySet<Args...>(_datasource);
             }
         protected:
             utils::FileQueryset<Args...> _datasource;
     };
 
     template <typename... Args>
-    class Manager<Args..., void> : public BaseManager<Args...> {
+    class Manager<void, Args...> : public BaseManager<Args...> {
         public:
             Manager() {};
             virtual ~Manager() {};
 
-            virtual QuerySet all() const {
-                return QuerySet(_datasource);
+            virtual ::QuerySet<Args...> all() const {
+                return ::QuerySet<Args...>(_datasource);
             }
 
         protected:
