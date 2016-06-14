@@ -12,19 +12,23 @@ conan_basic_setup()
 # Files in subdirectories
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Testing
-enable_testing()
-if (UNIX)
-    add_definitions(-Wfatal-errors)
-    add_custom_target(check ${CMAKE_COMMAND} -E env CTEST_OUTPUT_ON_FAILURE=1
-                      ${CMAKE_CTEST_COMMAND} --verbose
-                      WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-else()
-    add_custom_target(check ${CMAKE_COMMAND} -E env CTEST_OUTPUT_ON_FAILURE=1
-                      ${CMAKE_CTEST_COMMAND} -C $<CONFIG> --verbose
-                      WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-endif()
-
-# 
 add_subdirectory(queryset)
-add_subdirectory(tests)
+
+option(BUILD_TEST "Build test" OFF)
+if (BUILD_TEST)
+    # Testing
+    enable_testing()
+    if (UNIX)
+        add_definitions(-Wfatal-errors)
+        add_custom_target(check ${CMAKE_COMMAND} -E env CTEST_OUTPUT_ON_FAILURE=1
+                          ${CMAKE_CTEST_COMMAND} --verbose
+                          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    else()
+        add_custom_target(check ${CMAKE_COMMAND} -E env CTEST_OUTPUT_ON_FAILURE=1
+                          ${CMAKE_CTEST_COMMAND} -C $<CONFIG> --verbose
+                          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    endif()
+
+    #
+    add_subdirectory(tests)
+endif()
