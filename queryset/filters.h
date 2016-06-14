@@ -3,6 +3,7 @@
 
 #include <set>
 #include <bitset>
+#include <iterator>
 #include "utils/queryset.h"
 
 namespace utils {
