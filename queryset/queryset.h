@@ -109,6 +109,10 @@ class QuerySet : public BaseReturnQuerySet<QuerySet<Args...>, Args...> {
             return BaseQs::_datasource.apply(BaseQs::_filters);
         }
 
+        std::size_t count() const {
+            return this->get().size();
+        }
+
         // Grouping by field types
         template <typename T>
         GroupedQuerySet<T, Args...> groupBy() {
