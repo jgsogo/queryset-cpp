@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "easylogging++.h"
+
 #include "utils/queryset.h"
 #include "datasource.h"
 #include "filters.h"
@@ -11,16 +13,43 @@ namespace {
     template <typename... Args>
     class BaseQuerySet {
         public:
-            BaseQuerySet(const utils::ImplDataSource<Args...>& datasource) : _datasource(datasource) { };
-            BaseQuerySet(const BaseQuerySet& other) : _datasource(other._datasource), _filters(other._filters) { }
+            BaseQuerySet(const utils::ImplDataSource<Args...>& datasource) : _datasource(datasource), _evaluated(false) {};
+            BaseQuerySet(const BaseQuerySet& other) : _datasource(other._datasource),
+                                                      _filters(other._filters),
+                                                      _evaluated(false) {}
 
             bool empty() const {
-                return _filters.empty();
+                if (!_evaluated) {
+                    this->eval();
+                }
+                return _qs.empty();
+            }
+
+            virtual bool is_evaluated() const {
+                LOG(DEBUG) << "BaseQuerySet[" << this << "]::is_evaluated";
+                return _evaluated;
+            }
+            virtual void reset() {_evaluated = false;}
+
+        protected:
+            // Eval (cache) queryset (make it protected?)
+            const utils::queryset<Args...>& eval() const {
+                LOG(DEBUG) << "BaseQuerySet[" << this << "]::eval";
+                if (!_evaluated) {
+                    LOG(DEBUG) << "BaseQuerySet[" << this << "]::eval -- do evaluation";
+                    _qs = _datasource.apply(_filters);
+                    _evaluated = true;
+                }
+                return _qs;
             }
 
         protected:
-            const utils::ImplDataSource<Args...>& _datasource;
             utils::FilterContainer<Args...> _filters;
+
+        private:
+            const utils::ImplDataSource<Args...>& _datasource;
+            mutable utils::queryset<Args...> _qs;
+            mutable bool _evaluated;
     };
 
     template<typename R, typename... Args>
@@ -28,27 +57,33 @@ namespace {
         protected:
             using BaseQs = BaseQuerySet<Args...>;
         public:
-            BaseReturnQuerySet(const utils::ImplDataSource<Args...>& datasource) : BaseQs(datasource) { };
-            BaseReturnQuerySet(const BaseReturnQuerySet& other) : BaseQs(other) { }
+            BaseReturnQuerySet(const utils::ImplDataSource<Args...>& datasource) : BaseQs(datasource) {};
+            BaseReturnQuerySet(const BaseReturnQuerySet& other) : BaseQs(other) {}
             BaseReturnQuerySet(const BaseQs& other) : BaseQs(other) { }
 
             // Filtering functions
             template<typename T>
-            R filter(const T &filter_value) {
+            R& filter(const T &filter_value) {
+                LOG(DEBUG) << "BaseReturnQuerySet[" << this << "]::filter by " << typeid(filter_value).name() << "=" << filter_value;
+                assert(!is_evaluated());
                 BaseQs::_filters.add_filter(filter_value);
-                return *this;
+                return static_cast<R&>(*this);
             }
 
             template<typename T>
-            R filter(const std::vector<T> &filter_value) {
+            R& filter(const std::vector<T> &filter_value) {
+                LOG(DEBUG) << "BaseReturnQuerySet[" << this << "]::filter by " << typeid(filter_value).name() << " in [" << filter_value << "]";
+                assert(!is_evaluated());
                 BaseQs::_filters.add_filter(filter_value);
-                return *this;
+                return static_cast<R&>(*this);
             }
 
             template<typename... T>
-            R filter(const std::tuple<T...> &filter_value) {
+            R& filter(const std::tuple<T...> &filter_value) {
+                LOG(DEBUG) << "BaseReturnQuerySet[" << this << "]::filter by " << typeid(filter_value).name();
+                assert(!is_evaluated());
                 BaseQs::_filters.add_filter(filter_value);
-                return *this;
+                return static_cast<R&>(*this);
             }
     };
 }
@@ -60,20 +95,41 @@ template <typename T, typename... Args>
 class GroupedQuerySet : public BaseReturnQuerySet<GroupedQuerySet<T, Args...>, Args...> {
         using BaseQs = BaseReturnQuerySet<GroupedQuerySet<T, Args...>, Args...>;
     public:
-        GroupedQuerySet(const utils::ImplDataSource<Args...>& datasource) : BaseQs(datasource) {}
-        GroupedQuerySet(const BaseQs& other) : BaseQs(other) {}
-        GroupedQuerySet(const BaseQuerySet<Args...>& other) : BaseQs(other) {}
+        GroupedQuerySet(const utils::ImplDataSource<Args...>& datasource) : BaseQs(datasource), _evaluated(false) {}
+        //GroupedQuerySet(const BaseQs& other) : BaseQs(other), _evaluated(false) {}
+        GroupedQuerySet(const BaseQuerySet<Args...>& other) : BaseQs(other), _evaluated(false) {}
+        GroupedQuerySet(const GroupedQuerySet<T, Args...>& other) : BaseQs(other),
+                                                                    _evaluated(false) {}
 
-        std::map<T, QuerySet<Args...>> get() {
-            // Put all with the same value of T into a group
-            auto qs = BaseQs::_datasource.apply(BaseQs::_filters);
-            auto values = utils::list<T>(qs);
-            std::map<T, QuerySet<Args...>> result;
-            for (auto& v: values) {
-                result.insert(std::make_pair(v, QuerySet<Args...>(*this).filter(v)));
-            }
-            return result;
+        const std::map<T, QuerySet<Args...>>& get() const {
+            return this->eval();
         }
+
+        virtual bool is_evaluated() const {
+            LOG(DEBUG) << "GroupedQuerySet[" << this << "]::is_evaluated";
+            return _evaluated;
+        }
+        virtual void reset() {_evaluated = false;}
+
+    protected:
+        // Eval (cache) queryset (make it protected?)
+        const std::map<T, QuerySet<Args...>>& eval() const {
+            LOG(DEBUG) << "GroupedQuerySet[" << this << "]::eval";
+            if (!_evaluated) {
+                LOG(DEBUG) << "GroupedQuerySet[" << this << "]::eval -- do evaluation";
+                auto qs = this->BaseQs::eval();
+                auto values = utils::list<T>(qs);
+                for (auto& v: values) {
+                    _qs.insert(std::make_pair(v, QuerySet<Args...>(*this).filter(v)));
+                }
+                _evaluated = true;
+            }
+            return _qs;
+        }
+
+    private:
+        mutable std::map<T, QuerySet<Args...>> _qs;
+        mutable bool _evaluated;
 };
 
 #ifdef WIP
@@ -105,8 +161,8 @@ class QuerySet : public BaseReturnQuerySet<QuerySet<Args...>, Args...> {
 
         QuerySet(const BaseQs& other) : BaseQs(other) {}
 
-        utils::queryset<Args...> get() const {
-            return BaseQs::_datasource.apply(BaseQs::_filters);
+        const utils::queryset<Args...>& get() const {
+            return this->eval();
         }
 
         std::size_t count() const {
@@ -116,6 +172,8 @@ class QuerySet : public BaseReturnQuerySet<QuerySet<Args...>, Args...> {
         // Grouping by field types
         template <typename T>
         GroupedQuerySet<T, Args...> groupBy() {
+            LOG(DEBUG) << "QuerySet[" << this << "]::groupBy";
+            assert (!is_evaluated());
             return GroupedQuerySet<T, Args...>(*this);
         }
 
