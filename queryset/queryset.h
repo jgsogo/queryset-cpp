@@ -19,6 +19,7 @@ namespace {
                                                       _evaluated(false) {}
 
             bool empty() const {
+                LOG(DEBUG) << "BaseQuerySet[" << this << "]::empty";
                 if (!_evaluated) {
                     this->eval();
                 }
@@ -102,6 +103,7 @@ class GroupedQuerySet : public BaseReturnQuerySet<GroupedQuerySet<T, Args...>, A
                                                                     _evaluated(false) {}
 
         const std::map<T, QuerySet<Args...>>& get() const {
+            LOG(DEBUG) << "GroupedQuerySet[" << this << "]::get";
             return this->eval();
         }
 
@@ -162,10 +164,12 @@ class QuerySet : public BaseReturnQuerySet<QuerySet<Args...>, Args...> {
         QuerySet(const BaseQs& other) : BaseQs(other) {}
 
         const utils::queryset<Args...>& get() const {
+            LOG(DEBUG) << "QuerySet[" << this << "]::get";
             return this->eval();
         }
 
         std::size_t count() const {
+            LOG(DEBUG) << "QuerySet[" << this << "]::count";
             return this->get().size();
         }
 

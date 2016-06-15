@@ -15,7 +15,7 @@ namespace qs {
 
             template <typename T>
             static BaseManager<Args...>& objects(const T& t) {
-                LOG(DEBUG) << "Model::objects<T=" << typeid(t).name() << ">(t=" << t << ")";
+                LOG(DEBUG) << "Model::objects<T>(t=" << t << ")";
                 static Manager<T, Args...> manager(t);
                 return manager;
             }
