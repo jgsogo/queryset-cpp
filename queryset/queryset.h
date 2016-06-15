@@ -66,7 +66,7 @@ namespace {
             template<typename T>
             R& filter(const T &filter_value) {
                 LOG(DEBUG) << "BaseReturnQuerySet[" << this << "]::filter by " << typeid(filter_value).name() << "=" << filter_value;
-                assert(!is_evaluated());
+                assert(!BaseQs::is_evaluated());
                 BaseQs::_filters.add_filter(filter_value);
                 return static_cast<R&>(*this);
             }
@@ -74,7 +74,7 @@ namespace {
             template<typename T>
             R& filter(const std::vector<T> &filter_value) {
                 LOG(DEBUG) << "BaseReturnQuerySet[" << this << "]::filter by " << typeid(filter_value).name() << " in [" << filter_value << "]";
-                assert(!is_evaluated());
+                assert(!BaseQs::is_evaluated());
                 BaseQs::_filters.add_filter(filter_value);
                 return static_cast<R&>(*this);
             }
@@ -82,7 +82,7 @@ namespace {
             template<typename... T>
             R& filter(const std::tuple<T...> &filter_value) {
                 LOG(DEBUG) << "BaseReturnQuerySet[" << this << "]::filter by " << typeid(filter_value).name();
-                assert(!is_evaluated());
+                assert(!BaseQs::is_evaluated());
                 BaseQs::_filters.add_filter(filter_value);
                 return static_cast<R&>(*this);
             }
@@ -177,7 +177,7 @@ class QuerySet : public BaseReturnQuerySet<QuerySet<Args...>, Args...> {
         template <typename T>
         GroupedQuerySet<T, Args...> groupBy() {
             LOG(DEBUG) << "QuerySet[" << this << "]::groupBy";
-            assert (!is_evaluated());
+            assert (!BaseQs::is_evaluated());
             return GroupedQuerySet<T, Args...>(*this);
         }
 
