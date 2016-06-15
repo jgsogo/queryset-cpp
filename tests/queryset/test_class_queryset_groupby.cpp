@@ -4,7 +4,6 @@
 #include "print_helper.hpp"
 #include "../../queryset/queryset.h"
 
-
 typedef ::utils::MemoryQueryset<int, std::string, float> myqueryset;
 typedef std::tuple<int, std::string, float> mytuple;
 

@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "easylogging++.h"
 #include "../datasource.h"
 #include "../queryset.h"
 
@@ -26,6 +27,7 @@ namespace qs {
             virtual ~Manager() {};
 
             virtual ::QuerySet<Args...> all() const {
+                LOG(DEBUG) << "Manager<std::string, Args...>::all()";
                 return ::QuerySet<Args...>(_datasource);
             }
         protected:
@@ -39,6 +41,7 @@ namespace qs {
             virtual ~Manager() {};
 
             virtual ::QuerySet<Args...> all() const {
+                LOG(DEBUG) << "Manager<std::string, Args...>::all()";
                 return ::QuerySet<Args...>(_datasource);
             }
 
