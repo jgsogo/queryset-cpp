@@ -21,4 +21,5 @@ test_script:
   - cmd: cd bin
   - cmd: test_queryset_utils.exe
   - cmd: test_queryset.exe
+  - cmd: test_models.exe
 

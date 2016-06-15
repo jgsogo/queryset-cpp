@@ -52,4 +52,4 @@ script:
   - cd bin
   - ./test_queryset_utils
   - ./test_queryset
-
+  - ./test_models
