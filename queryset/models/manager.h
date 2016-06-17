@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "easylogging++.h"
+#include "spdlog/spdlog.h"
 #include "../datasource.h"
 #include "../queryset.h"
 
@@ -11,10 +11,10 @@ namespace qs {
     class BaseManager {
         public:
             BaseManager() {
-                LOG(DEBUG) << "BaseManager<Args...>::BaseManager()";
+                SPDLOG_DEBUG(spdlog::get("qs"), "BaseManager<Args...>::BaseManager()");
             };
             virtual ~BaseManager() {
-                LOG(DEBUG) << "BaseManager<Args...>::~BaseManager()";
+                SPDLOG_DEBUG(spdlog::get("qs"), "BaseManager<Args...>::~BaseManager()");
             };
 
             virtual ::QuerySet<Args...> all() const = 0;
@@ -28,14 +28,14 @@ namespace qs {
     class Manager<std::string, Args...> : public BaseManager<Args...> {
         public:
             Manager(const std::string& filename) : _datasource(filename) {
-                LOG(DEBUG) << "Manager<std::string, Args...>[" << this << "]::Manager(filename='" << filename << "')";
+                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, Args...>[{}]::Manager(filename='{}')", (void*)this, filename);
             };
             virtual ~Manager() {
-                LOG(DEBUG) << "Manager<std::string, Args...>[" << this << "]::~Manager()";
+                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, Args...>[{}]::~Manager()", (void*)this);
             };
 
             virtual ::QuerySet<Args...> all() const {
-                LOG(DEBUG) << "Manager<std::string, Args...>[" << this << "]::all()";
+                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, Args...>[{}]::all()", (void*)this);
                 return ::QuerySet<Args...>(_datasource);
             }
         protected:
@@ -46,14 +46,14 @@ namespace qs {
     class Manager<void, Args...> : public BaseManager<Args...> {
         public:
             Manager() {
-                LOG(DEBUG) << "Manager<Args...>[" << this << "]::Manager()";
+                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<Args...>[{}]::Manager()", (void*)this);
             };
             virtual ~Manager() {
-                LOG(DEBUG) << "Manager<Args...>[" << this << "]::~Manager()";
+                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<Args...>[{}]::~Manager()", (void*)this);
             };
 
             virtual ::QuerySet<Args...> all() const {
-                LOG(DEBUG) << "Manager<std::string, Args...>[" << this << "]::all()";
+                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, Args...>[{}]::all()", (void*)this);
                 return ::QuerySet<Args...>(_datasource);
             }
 

@@ -10,5 +10,5 @@ file(GLOB queryset_SRC
 add_library(queryset ${queryset_SRC})
 set_target_properties(queryset PROPERTIES LINKER_LANGUAGE CXX)
 
-# Testing
 add_subdirectory(utils)
+add_subdirectory(models)
