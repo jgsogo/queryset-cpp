@@ -26,6 +26,4 @@ BOOST_AUTO_TEST_CASE(manager_file)
     BOOST_CHECK_EQUAL(manager.all().count(), 3);
 }
 
-
-
 BOOST_AUTO_TEST_SUITE_END()

@@ -13,10 +13,14 @@ namespace {
     template <typename... Args>
     class BaseQuerySet {
         public:
-            BaseQuerySet(const utils::ImplDataSource<Args...>& datasource) : _datasource(datasource), _evaluated(false) {};
+            BaseQuerySet(const utils::ImplDataSource<Args...>& datasource) : _datasource(datasource), _evaluated(false) {
+                LOG(DEBUG) << "BaseQuerySet<Args...>::BaseQuerySet(datasource)";
+            };
             BaseQuerySet(const BaseQuerySet& other) : _datasource(other._datasource),
                                                       _filters(other._filters),
-                                                      _evaluated(false) {}
+                                                      _evaluated(false) {
+                LOG(DEBUG) << "BaseQuerySet<Args...>::BaseQuerySet(BaseQuerySet other)";
+            }
 
             bool empty() const {
                 LOG(DEBUG) << "BaseQuerySet[" << this << "]::empty";
@@ -58,9 +62,15 @@ namespace {
         protected:
             using BaseQs = BaseQuerySet<Args...>;
         public:
-            BaseReturnQuerySet(const utils::ImplDataSource<Args...>& datasource) : BaseQs(datasource) {};
-            BaseReturnQuerySet(const BaseReturnQuerySet& other) : BaseQs(other) {}
-            BaseReturnQuerySet(const BaseQs& other) : BaseQs(other) { }
+            BaseReturnQuerySet(const utils::ImplDataSource<Args...>& datasource) : BaseQs(datasource) {
+                LOG(DEBUG) << "BaseReturnQuerySet<R, Args...>::BaseReturnQuerySet(datasource)";
+            };
+            BaseReturnQuerySet(const BaseReturnQuerySet& other) : BaseQs(other) {
+                LOG(DEBUG) << "BaseReturnQuerySet<R, Args...>::BaseReturnQuerySet(BaseReturnQuerySet other)";
+            }
+            BaseReturnQuerySet(const BaseQs& other) : BaseQs(other) {
+                LOG(DEBUG) << "BaseReturnQuerySet<R, Args...>::BaseReturnQuerySet(BaseQs other)";
+            }
 
             // Filtering functions
             template<typename T>
@@ -159,9 +169,12 @@ class QuerySet : public BaseReturnQuerySet<QuerySet<Args...>, Args...> {
         using BaseQs = BaseReturnQuerySet<QuerySet<Args...>, Args...>;
     public:
         QuerySet(const utils::ImplDataSource<Args...>& datasource) : BaseQs(datasource) {
+            LOG(DEBUG) << "QuerySet<Args...>::QuerySet(datasource)";
         }
 
-        QuerySet(const BaseQs& other) : BaseQs(other) {}
+        QuerySet(const BaseQs& other) : BaseQs(other) {
+            LOG(DEBUG) << "QuerySet<Args...>::QuerySet(other)";
+        }
 
         const utils::queryset<Args...>& get() const {
             LOG(DEBUG) << "QuerySet[" << this << "]::get";

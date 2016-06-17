@@ -1,4 +1,4 @@
-#int    std::string float
-1   hola    1.f
-2   bye 2.f
-3   ciao    3.f
+#int	std::string	float
+1	hola	1.f
+2	bye	2.f
+3	ciao	3.f
