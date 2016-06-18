@@ -22,6 +22,7 @@ namespace utils {
             std::getline(is, item, '\t');  // TODO: I need this workaround because there can be empty fields (is >> t consumes all space/tab elements that are adjacent).
             std::stringstream iss(item);
             T t; iss >> t;
+            SPDLOG_DEBUG(spdlog::get("qs"), "Read 'item={}' to type '{}' equals to '{}'", item, typeid(t).name(), t);
             return t;
         }
 
@@ -36,7 +37,7 @@ namespace utils {
         
     template<typename... Args>
     std::tuple<Args...> parse(std::istringstream& stream) {
-        return std::tuple<Args...> { read<Args>(stream)... };
+        return std::tuple<Args...>{read<Args>(stream)...}; // Initializator list is generated back to front!
     }
         
     template<typename... Args>

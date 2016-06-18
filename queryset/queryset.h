@@ -161,6 +161,11 @@ class QuerySet : public BaseReturnQuerySet<QuerySet<Args...>, Args...> {
             return this->get().size();
         }
 
+        template <typename T>
+        const std::vector<T> value_list() const {
+            return utils::list<T>(this->get());
+        }
+
         // Grouping by field types
         template <typename T>
         GroupedQuerySet<T, Args...> groupBy() {
