@@ -2,7 +2,7 @@ from conans import ConanFile, CMake
 
 class QuerysetCPP(ConanFile):
     name = "queryset-cpp"
-    version = "0.1"
+    version = "0.2"
     requires = "Boost/1.60.0@lasote/stable", "spdlog/0.1@memsharded/testing"
     generators = "cmake"
     settings = "os", "compiler", "build_type", "arch"

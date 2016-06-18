@@ -2,7 +2,8 @@ project(queryset-cpp)
 cmake_minimum_required(VERSION 2.8.12)
 
 add_executable (test_models main.cpp
-                            test_model.cpp)
+                            test_model.cpp
+                            test_model_custom.cpp)
 
 target_link_libraries (test_models
                        ${Boost_LIBRARIES}

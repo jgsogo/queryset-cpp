@@ -35,21 +35,15 @@ namespace utils {
         public:
             using qs_type = typename ImplDataSource<Args...>::qs_type;
         public:
-            MemoryQueryset() : _qs(std::make_shared<qs_type>()) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "MemoryQueryset<Args...>::MemoryQueryset()");
-            }
-            MemoryQueryset(const MemoryQueryset& other) : _qs(other._qs), ImplDataSource<Args...>(other) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "MemoryQueryset<Args...>::MemoryQueryset(const MemoryQueryset& other)");
-            }
+            MemoryQueryset() : _qs(std::make_shared<qs_type>()) {}
+            MemoryQueryset(const MemoryQueryset& other) : _qs(other._qs), ImplDataSource<Args...>(other) {}
             virtual ~MemoryQueryset() {}
 
             void operator >>(const typename qs_type::value_type& item) {
                 _qs->push_back(item);
             }
 
-            virtual qs_type apply(const utils::FilterContainer<Args...>& filters) const {
-                SPDLOG_DEBUG(spdlog::get("qs"), "MemoryQueryset<Args...>::apply(filters)");
-                return filters.apply(*_qs);
+            virtual qs_type apply(const utils::FilterContainer<Args...>& filters) const {return filters.apply(*_qs);
             }
 
             std::size_t size() const {
@@ -64,17 +58,11 @@ namespace utils {
         public:
             using qs_type = typename ImplDataSource<Args...>::qs_type;
         public:
-            FileQueryset(const std::string& filename) : _filename(filename) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "FileQueryset<Args...>::FileQueryset(filename='{}')", filename);
-            }
-            FileQueryset(const FileQueryset& other) : _filename(other._filename), ImplDataSource<Args...>(other) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "FileQueryset<Args...>::FileQueryset(const FileQueryset& other)");
-            }
+            FileQueryset(const std::string& filename) : _filename(filename) {}
+            FileQueryset(const FileQueryset& other) : _filename(other._filename), ImplDataSource<Args...>(other) {}
             virtual ~FileQueryset() {}
 
-            virtual qs_type apply(const utils::FilterContainer<Args...>& filters) const {
-                SPDLOG_DEBUG(spdlog::get("qs"), "FileQueryset<Args...>::apply(filters)");
-                queryset<Args...> result;
+            virtual qs_type apply(const utils::FilterContainer<Args...>& filters) const {queryset<Args...> result;
                 read_file(_filename, result);
                 return filters.apply(result);
             }

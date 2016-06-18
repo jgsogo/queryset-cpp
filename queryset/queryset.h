@@ -13,17 +13,12 @@ namespace {
     template <typename... Args>
     class BaseQuerySet {
         public:
-            BaseQuerySet(const utils::ImplDataSource<Args...>& datasource) : _datasource(datasource), _evaluated(false) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "BaseQuerySet<Args...>::BaseQuerySet(datasource)");
-            };
+            BaseQuerySet(const utils::ImplDataSource<Args...>& datasource) : _datasource(datasource), _evaluated(false) {};
             BaseQuerySet(const BaseQuerySet& other) : _datasource(other._datasource),
                                                       _filters(other._filters),
-                                                      _evaluated(false) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "BaseQuerySet<Args...>::BaseQuerySet(BaseQuerySet other)");
-            }
+                                                      _evaluated(false) {}
 
             bool empty() const {
-                SPDLOG_DEBUG(spdlog::get("qs"), "BaseQuerySet[{}]::empty", (void*)this);
                 if (!_evaluated) {
                     this->eval();
                 }
@@ -31,7 +26,6 @@ namespace {
             }
 
             virtual bool is_evaluated() const {
-                SPDLOG_DEBUG(spdlog::get("qs"), "BaseQuerySet[{}]::is_evaluated", (void*)this);
                 return _evaluated;
             }
             virtual void reset() {_evaluated = false;}
@@ -41,7 +35,6 @@ namespace {
             const utils::queryset<Args...>& eval() const {
                 SPDLOG_DEBUG(spdlog::get("qs"), "BaseQuerySet[{}]::eval", (void*)this);
                 if (!_evaluated) {
-                    SPDLOG_DEBUG(spdlog::get("qs"), "BaseQuerySet[{}]::eval -- do evaluation", (void*)this);
                     _qs = _datasource.apply(_filters);
                     _evaluated = true;
                 }
@@ -62,20 +55,13 @@ namespace {
         protected:
             using BaseQs = BaseQuerySet<Args...>;
         public:
-            BaseReturnQuerySet(const utils::ImplDataSource<Args...>& datasource) : BaseQs(datasource) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "BaseReturnQuerySet<R, Args...>::BaseReturnQuerySet(datasource)");
-            };
-            BaseReturnQuerySet(const BaseReturnQuerySet& other) : BaseQs(other) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "BaseReturnQuerySet<R, Args...>::BaseReturnQuerySet(BaseReturnQuerySet other)");
-            }
-            BaseReturnQuerySet(const BaseQs& other) : BaseQs(other) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "BaseReturnQuerySet<R, Args...>::BaseReturnQuerySet(BaseQs other)");
-            }
+            BaseReturnQuerySet(const utils::ImplDataSource<Args...>& datasource) : BaseQs(datasource) {};
+            BaseReturnQuerySet(const BaseReturnQuerySet& other) : BaseQs(other) {}
+            BaseReturnQuerySet(const BaseQs& other) : BaseQs(other) {}
 
             // Filtering functions
             template<typename T>
             R& filter(const T &filter_value) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "BaseReturnQuerySet[{}]::filter by {}={}.", (void*)this, typeid(filter_value).name(), filter_value);
                 assert(!BaseQs::is_evaluated());
                 BaseQs::_filters.add_filter(filter_value);
                 return static_cast<R&>(*this);
@@ -83,7 +69,6 @@ namespace {
 
             template<typename T>
             R& filter(const std::vector<T> &filter_value) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "BaseReturnQuerySet[{}]::filter by {}={}.", (void*)this, typeid(filter_value).name(), filter_value);
                 assert(!BaseQs::is_evaluated());
                 BaseQs::_filters.add_filter(filter_value);
                 return static_cast<R&>(*this);
@@ -91,7 +76,6 @@ namespace {
 
             template<typename... T>
             R& filter(const std::tuple<T...> &filter_value) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "BaseReturnQuerySet[{}]::filter by {}.", (void*)this, typeid(filter_value).name());
                 assert(!BaseQs::is_evaluated());
                 BaseQs::_filters.add_filter(filter_value);
                 return static_cast<R&>(*this);
@@ -113,12 +97,10 @@ class GroupedQuerySet : public BaseReturnQuerySet<GroupedQuerySet<T, Args...>, A
                                                                     _evaluated(false) {}
 
         const std::map<T, QuerySet<Args...>>& get() const {
-            SPDLOG_DEBUG(spdlog::get("qs"), "GroupedQuerySet[{}]::get", (void*)this);
             return this->eval();
         }
 
         virtual bool is_evaluated() const {
-            SPDLOG_DEBUG(spdlog::get("qs"), "GroupedQuerySet[{}]::is_evaluated", (void*)this);
             return _evaluated;
         }
         virtual void reset() {_evaluated = false;}
@@ -128,7 +110,6 @@ class GroupedQuerySet : public BaseReturnQuerySet<GroupedQuerySet<T, Args...>, A
         const std::map<T, QuerySet<Args...>>& eval() const {
             SPDLOG_DEBUG(spdlog::get("qs"), "GroupedQuerySet[{}]::eval", (void*)this);
             if (!_evaluated) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "GroupedQuerySet[{}]::eval -- do evaluation", (void*)this);
                 auto qs = this->BaseQs::eval();
                 auto values = utils::list<T>(qs);
                 for (auto& v: values) {
@@ -168,28 +149,21 @@ template <typename... Args>
 class QuerySet : public BaseReturnQuerySet<QuerySet<Args...>, Args...> {
         using BaseQs = BaseReturnQuerySet<QuerySet<Args...>, Args...>;
     public:
-        QuerySet(const utils::ImplDataSource<Args...>& datasource) : BaseQs(datasource) {
-            SPDLOG_DEBUG(spdlog::get("qs"), "QuerySet<Args...>::QuerySet(datasource)");
-        }
+        QuerySet(const utils::ImplDataSource<Args...>& datasource) : BaseQs(datasource) {}
 
-        QuerySet(const BaseQs& other) : BaseQs(other) {
-            SPDLOG_DEBUG(spdlog::get("qs"), "QuerySet<Args...>::QuerySet(other)");
-        }
+        QuerySet(const BaseQs& other) : BaseQs(other) {}
 
         const utils::queryset<Args...>& get() const {
-            SPDLOG_DEBUG(spdlog::get("qs"), "QuerySet[{}]::get", (void*)this);
             return this->eval();
         }
 
         std::size_t count() const {
-            SPDLOG_DEBUG(spdlog::get("qs"), "QuerySet[{}]::count", (void*)this);
             return this->get().size();
         }
 
         // Grouping by field types
         template <typename T>
         GroupedQuerySet<T, Args...> groupBy() {
-            SPDLOG_DEBUG(spdlog::get("qs"), "QuerySet[{}]::groupBy", (void*)this);
             assert (!BaseQs::is_evaluated());
             return GroupedQuerySet<T, Args...>(*this);
         }

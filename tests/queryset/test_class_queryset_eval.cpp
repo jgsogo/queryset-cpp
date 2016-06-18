@@ -35,12 +35,16 @@ BOOST_AUTO_TEST_CASE(eval_once)
     QuerySet<int, std::string, float> qs(initial_qs);
     auto f0 = qs.filter(0).get();
     BOOST_CHECK_EQUAL(f0.size(), 3);
+    #ifdef _DEBUG
     BOOST_REQUIRE_THROW(qs.filter(1).get(), boost::execution_exception);
-
+    #endif
+    
     auto qs2 = qs; // qs2 copy from qs (already filtered for int=0)
     auto f1 = qs2.filter(1).get();
     BOOST_CHECK_EQUAL(f1.size(), 0);
-    BOOST_REQUIRE_THROW(qs2.filter(0).get(), boost::execution_exception);
+    #ifdef _DEBUG
+    BOOST_REQUIRE_THROW(qs2.filter(0).get(), boost::execution_exception);    
+    #endif
 }
 
 BOOST_AUTO_TEST_SUITE_END()

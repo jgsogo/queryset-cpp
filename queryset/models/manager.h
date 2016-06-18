@@ -5,17 +5,14 @@
 #include "../datasource.h"
 #include "../queryset.h"
 
+
 namespace qs {
 
     template <typename... Args>
     class BaseManager {
         public:
-            BaseManager() {
-                SPDLOG_DEBUG(spdlog::get("qs"), "BaseManager<Args...>::BaseManager()");
-            };
-            virtual ~BaseManager() {
-                SPDLOG_DEBUG(spdlog::get("qs"), "BaseManager<Args...>::~BaseManager()");
-            };
+            BaseManager() {};
+            virtual ~BaseManager() {};
 
             virtual ::QuerySet<Args...> all() const = 0;
     };
@@ -27,12 +24,8 @@ namespace qs {
     template <typename... Args>
     class Manager<std::string, Args...> : public BaseManager<Args...> {
         public:
-            Manager(const std::string& filename) : _datasource(filename) {
-                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, Args...>[{}]::Manager(filename='{}')", (void*)this, filename);
-            };
-            virtual ~Manager() {
-                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, Args...>[{}]::~Manager()", (void*)this);
-            };
+            Manager(const std::string& filename) : _datasource(filename) {};
+            virtual ~Manager() {};
 
             virtual ::QuerySet<Args...> all() const {
                 SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, Args...>[{}]::all()", (void*)this);
@@ -45,12 +38,8 @@ namespace qs {
     template <typename... Args>
     class Manager<void, Args...> : public BaseManager<Args...> {
         public:
-            Manager() {
-                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<Args...>[{}]::Manager()", (void*)this);
-            };
-            virtual ~Manager() {
-                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<Args...>[{}]::~Manager()", (void*)this);
-            };
+            Manager() {};
+            virtual ~Manager() {};
 
             virtual ::QuerySet<Args...> all() const {
                 SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, Args...>[{}]::all()", (void*)this);
@@ -60,5 +49,11 @@ namespace qs {
         protected:
             utils::MemoryQueryset<Args...> _datasource;
     };
+
+    template <typename... Args>
+    using FileManager = Manager<std::string, Args...>;
+
+    template <typename... Args>
+    using MemoryManager = Manager<void, Args...>;
 
 }
