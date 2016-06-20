@@ -1,5 +1,5 @@
 project(queryset-cpp)
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.1)
 
 add_executable (test_queryset print_helper.hpp 
                               main.cpp
@@ -11,6 +11,7 @@ add_executable (test_queryset print_helper.hpp
                               test_datasource_file.cpp)
 target_link_libraries (test_queryset
                        ${Boost_LIBRARIES}
+                       Threads::Threads
                        )
 
 add_test(NAME TestQuerySet COMMAND $<TARGET_FILE:test_queryset>)
