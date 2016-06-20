@@ -9,7 +9,7 @@
 
 namespace qs {
 
-    template <typename TManager = Manager<void, Args...>, typename... Args>
+    template <typename TManager, typename... Args>
     class BaseModel {
         public:
             BaseModel() {};
