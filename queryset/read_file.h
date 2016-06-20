@@ -35,11 +35,26 @@ namespace utils {
 
     }
         
-    template<typename... Args>
-    std::tuple<Args...> parse(std::istringstream& stream) {
-        return std::tuple<Args...>{read<Args>(stream)...}; // Initializator list is generated back to front!
+    template <typename T>
+    std::tuple<T> parse(std::istringstream& stream) {
+        return std::tuple<T>{read<T>(stream)};
     }
-        
+
+    template<typename T, typename... Ts, typename = typename std::enable_if<(sizeof...(Ts) > 0), bool>::type>
+    std::tuple<T, Ts...> parse(std::istringstream& stream) {
+        // TODO: Function below preferred        
+        auto t1 = parse<T>(stream);
+        auto t2 = parse<Ts...>(stream);
+        return std::tuple_cat(t1, t2);
+    }
+    /*
+    TODO: Initialization order fails! :/
+    template <typename... Args>
+    std::tuple<Args...> parse(std::istringstream& stream) {
+        return std::tuple<Args...>{read<Args>(stream)...}
+    }
+    */
+
     template<typename... Args>
     void read_file(const std::string& filename, queryset<Args...>& data) {
         std::ifstream infile(filename);

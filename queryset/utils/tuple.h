@@ -15,6 +15,7 @@ namespace utils {
         //  - remove ith type of tuple: http://stackoverflow.com/questions/14852593/removing-the-first-type-of-a-stdtuple
         //  - integer sequence with one out: http://stackoverflow.com/questions/27124920/compile-time-generate-integer-sequence-with-one-left-out
         //  - iterate a tuple: http://stackoverflow.com/questions/1198260/iterate-over-tuple
+        //  - reverse tuple: https://stackoverflow.com/questions/17178075/how-do-i-reverse-a-tuple/17178399#17178399
         
         // Projection
         namespace {
@@ -191,7 +192,45 @@ namespace utils {
             f(std::get<I>(t));
             for_each<I + 1, FuncT, Tp...>(t, f);
         }
-        
+
+        /*
+        // Reverse a tuple
+        template <typename... Ts>
+        struct tuple_reverse;
+
+        template <>
+        struct tuple_reverse<std::tuple<>>
+        {
+            using type = std::tuple<>;
+        };
+
+        template <typename T, typename... Ts>
+        struct tuple_reverse<std::tuple<T, Ts...>>
+        {
+            using head = std::tuple<T>;
+            using tail = typename tuple_reverse<std::tuple<Ts...>>::type;
+
+            using type = decltype(std::tuple_cat(std::declval<tail>(), std::declval<head>()));
+        };
+
+        template<typename T, typename TT = typename std::remove_reference<T>::type, size_t... I>
+        auto
+            reverse_impl(T&& t, std::index_sequence<I...>)
+            -> std::tuple<typename std::tuple_element<sizeof...(I)-1 - I, TT>::type...>
+        {
+            return std::make_tuple(std::get<sizeof...(I)-1 - I>(std::forward<T>(t))...);
+        }
+
+        template<typename T, typename TT = typename std::remove_reference<T>::type>
+        auto
+            reverse(T&& t)
+            -> decltype(reverse_impl(std::forward<T>(t),
+                redi::make_index_sequence<std::tuple_size<TT>::value>()))
+        {
+            return reverse_impl(std::forward<T>(t),
+                redi::make_index_sequence<std::tuple_size<TT>::value>());
+        }
+        */
     }
 }
 
