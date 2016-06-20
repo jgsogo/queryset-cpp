@@ -28,9 +28,9 @@ matrix:
 install:
   # install cmake 2.8.12 manually, see
   #     * https://github.com/travis-ci-tester/travis-test-cmake
-  - wget http://www.cmake.org/files/v2.8/cmake-2.8.12.tar.gz
-  - tar xf cmake-2.8.12.tar.gz
-  - cd cmake-2.8.12
+  - wget http://www.cmake.org/files/v3.5/cmake-3.5.2.tar.gz
+  - tar xf cmake-3.5.2.tar.gz
+  - cd cmake-3.5.2
   - ./bootstrap --system-curl
   - make
   - sudo make install
