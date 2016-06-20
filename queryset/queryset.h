@@ -166,6 +166,10 @@ class QuerySet : public BaseReturnQuerySet<QuerySet<Args...>, Args...> {
             return utils::list<T>(this->get());
         }
 
+        const std::tuple<Args...>& operator[](const std::size_t& pos) const {
+            return this->eval()[pos];
+        }
+
         // Grouping by field types
         template <typename T>
         GroupedQuerySet<T, Args...> groupBy() {
