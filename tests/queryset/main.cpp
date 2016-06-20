@@ -1,15 +1,20 @@
 
 #define BOOST_TEST_MODULE "Test queryset"
-#define BOOST_TEST_NO_MAIN
 #include <boost/test/unit_test.hpp>
 #include "spdlog/spdlog.h"
+#include <iostream>
 
-// entry point:
-int main(int argc, char* argv[])
-{
-    auto console = spdlog::stdout_logger_mt("qs");
-    console->set_level(spdlog::level::debug);
-    console->info("Logging queryset-cpp: test queryset");
+struct GlobalConfig {
+    GlobalConfig() {
+        std::cout << "global setup\n";
+        auto console = spdlog::stdout_logger_mt("qs");
+        console->set_level(spdlog::level::debug);
+        console->info("Logging queryset-cpp: test queryset utils");
+    }
 
-    return boost::unit_test_framework::unit_test_main(init_unit_test, argc, argv);
-}
+    ~GlobalConfig() {
+        std::cout << "global teardown\n";
+    }
+};
+
+BOOST_GLOBAL_FIXTURE(GlobalConfig);
