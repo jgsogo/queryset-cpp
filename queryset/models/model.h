@@ -48,7 +48,7 @@ namespace qs {
             friend std::istream& operator >> (std::istream & lhs, BaseModel<TManager>& rhs)
             {
                 // Read just one value, tipically primary key
-                lhs >> std::get<0>(_data);
+                lhs >> std::get<0>(rhs._data);
                 return lhs;
             }
         protected:
