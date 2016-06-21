@@ -11,10 +11,13 @@ namespace qs {
     template <typename... Args>
     class BaseManager {
         public:
+            typedef typename std::tuple<Args...> tuple;
+            typedef typename QuerySet<Args...> QuerySet;
+        public:
             BaseManager() {};
             virtual ~BaseManager() {};
 
-            virtual ::QuerySet<Args...> all() const = 0;
+            virtual QuerySet all() const = 0;
     };
 
 
@@ -27,9 +30,9 @@ namespace qs {
             Manager(const std::string& filename) : _datasource(filename) {};
             virtual ~Manager() {};
 
-            virtual ::QuerySet<Args...> all() const {
+            virtual QuerySet all() const {
                 SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, Args...>[{}]::all()", (void*)this);
-                return ::QuerySet<Args...>(_datasource);
+                return QuerySet(_datasource);
             }
         protected:
             utils::FileQueryset<Args...> _datasource;
@@ -41,9 +44,9 @@ namespace qs {
             Manager() {};
             virtual ~Manager() {};
 
-            virtual ::QuerySet<Args...> all() const {
+            virtual QuerySet all() const {
                 SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, Args...>[{}]::all()", (void*)this);
-                return ::QuerySet<Args...>(_datasource);
+                return QuerySet(_datasource);
             }
 
         protected:

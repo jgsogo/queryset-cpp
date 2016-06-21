@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(manager_default)
 BOOST_AUTO_TEST_CASE(manager_memory)
 {
     typedef qs::MemoryManager<int, float> MyManager;
-    typedef qs::BaseModel<MyManager, int, float> MyModel;
+    typedef qs::BaseModel<MyManager> MyModel;
     BOOST_CHECK_EQUAL(MyModel::objects().all().count(), 0);
     
     MyModel m;
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(manager_file)
     fs::path full_path = test_data_dir / fs::path("ex_filequeryset.tsv");
 
     typedef qs::FileManager<int, std::string, float> MyManager;
-    typedef qs::BaseModel<MyManager, int, std::string, float> MyModel;
+    typedef qs::BaseModel<MyManager> MyModel;
     BOOST_CHECK_EQUAL(MyModel::objects(full_path.string()).all().count(), 3);
 
     MyModel m;

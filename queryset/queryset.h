@@ -105,6 +105,22 @@ class GroupedQuerySet : public BaseReturnQuerySet<GroupedQuerySet<T, Args...>, A
         }
         virtual void reset() {_evaluated = false;}
 
+        typename std::map<T, QuerySet<Args...>>::const_iterator begin() const {
+            return this->get().begin();
+        }
+
+        typename std::map<T, QuerySet<Args...>>::const_iterator end() const {
+            return this->get().end();
+        }
+
+        typename std::map<T, QuerySet<Args...>>::const_reverse_iterator rbegin() const {
+            return this->get().rbegin();
+        }
+
+        typename std::map<T, QuerySet<Args...>>::const_reverse_iterator rend() const {
+            return this->get().rend();
+        }
+
     protected:
         // Eval (cache) queryset (make it protected?)
         const std::map<T, QuerySet<Args...>>& eval() const {

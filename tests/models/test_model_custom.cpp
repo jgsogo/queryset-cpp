@@ -16,7 +16,7 @@ class MyModelManager : public qs::FileManager<int, std::string, float> {
         MyModelManager() : qs::FileManager<int, std::string, float>(filename()) {};
         MyModelManager(const std::string& filename) : qs::FileManager<int, std::string, float>(filename) {};
 };
-typedef qs::BaseModel<MyModelManager, int, std::string, float> MyModel;
+typedef qs::BaseModel<MyModelManager> MyModel;
 
 
 BOOST_AUTO_TEST_SUITE(model_custom)
