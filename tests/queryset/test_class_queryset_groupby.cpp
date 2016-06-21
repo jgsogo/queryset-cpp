@@ -3,6 +3,7 @@
 
 #include "print_helper.hpp"
 #include "../../queryset/queryset.h"
+#include "spdlog/spdlog.h"
 
 typedef ::utils::MemoryQueryset<int, std::string, float> myqueryset;
 typedef std::tuple<int, std::string, float> mytuple;
@@ -34,8 +35,10 @@ BOOST_FIXTURE_TEST_SUITE(queryset_class, Fixture)
         auto f4 = qs.groupBy<int>().get();
         BOOST_CHECK_EQUAL(f4.size(), 3);
 
-        const ::utils::queryset<int, std::string, float>& f4_int0 = f4.find(0)->second.get();
-        BOOST_CHECK_EQUAL(f4_int0.size(), 3);
+        SPDLOG_DEBUG(spdlog::get("qs"), "-----------------------");
+        BOOST_CHECK_EQUAL(f4.find(0)->second.count(), 3);
+        BOOST_CHECK_EQUAL(f4.find(1)->second.count(), 3);
+        BOOST_CHECK_EQUAL(f4.find(2)->second.count(), 3);
     }
 #ifdef WIP
     BOOST_AUTO_TEST_CASE(group_by_compound)

@@ -43,7 +43,9 @@ namespace utils {
                 _qs->push_back(item);
             }
 
-            virtual qs_type apply(const utils::FilterContainer<Args...>& filters) const {return filters.apply(*_qs);
+            virtual qs_type apply(const utils::FilterContainer<Args...>& filters) const {
+                SPDLOG_DEBUG(spdlog::get("qs"), "DB HIT! -- MemoryQueryset::apply");
+                return filters.apply(*_qs);
             }
 
             std::size_t size() const {
@@ -63,6 +65,7 @@ namespace utils {
             virtual ~FileQueryset() {}
 
             virtual qs_type apply(const utils::FilterContainer<Args...>& filters) const {queryset<Args...> result;
+                SPDLOG_DEBUG(spdlog::get("qs"), "DB HIT! -- FileQueryset::apply");
                 read_file(_filename, result);
                 return filters.apply(result);
             }
