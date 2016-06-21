@@ -1,7 +1,7 @@
 project(queryset-cpp)
 cmake_minimum_required(VERSION 3.1)
 
-add_executable (test_queryset print_helper.hpp 
+add_executable (test_queryset ../print_helper.hpp 
                               main.cpp
                               test_class_queryset_eval.cpp
                               test_class_queryset_filter.cpp

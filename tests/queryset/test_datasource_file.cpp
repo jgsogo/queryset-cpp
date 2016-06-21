@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 
-#include "../utils/print_helper.hpp"
+#include "../print_helper.hpp"
 #include "../../queryset/datasource.h"
 #include "../config_tests.h"
 

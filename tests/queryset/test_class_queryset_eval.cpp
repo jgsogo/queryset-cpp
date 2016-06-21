@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/execution_monitor.hpp>  // for execution_exception
 
-#include "print_helper.hpp"
+#include "../print_helper.hpp"
 #include "../../queryset/queryset.h"
 
 

@@ -1,7 +1,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "print_helper.hpp"
+#include "../print_helper.hpp"
 #include "../../queryset/utils/queryset.h"
 
 typedef ::utils::queryset<int, std::string, float> myqueryset;

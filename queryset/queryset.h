@@ -170,6 +170,22 @@ class QuerySet : public BaseReturnQuerySet<QuerySet<Args...>, Args...> {
             return this->eval()[pos];
         }
 
+        typename utils::queryset<Args...>::const_iterator begin() const {
+            return this->get().begin();
+        }
+
+        typename utils::queryset<Args...>::const_iterator end() const {
+            return this->get().end();
+        }
+
+        typename utils::queryset<Args...>::const_reverse_iterator rbegin() const {
+            return this->get().rbegin();
+        }
+
+        typename utils::queryset<Args...>::const_reverse_iterator rend() const {
+            return this->get().rend();
+        }
+
         // Grouping by field types
         template <typename T>
         GroupedQuerySet<T, Args...> groupBy() {

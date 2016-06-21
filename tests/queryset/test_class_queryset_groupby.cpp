@@ -1,7 +1,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "print_helper.hpp"
+#include "../print_helper.hpp"
 #include "../../queryset/queryset.h"
 #include "spdlog/spdlog.h"
 
@@ -35,7 +35,6 @@ BOOST_FIXTURE_TEST_SUITE(queryset_class, Fixture)
         auto f4 = qs.groupBy<int>().get();
         BOOST_CHECK_EQUAL(f4.size(), 3);
 
-        SPDLOG_DEBUG(spdlog::get("qs"), "-----------------------");
         BOOST_CHECK_EQUAL(f4.find(0)->second.count(), 3);
         BOOST_CHECK_EQUAL(f4.find(1)->second.count(), 3);
         BOOST_CHECK_EQUAL(f4.find(2)->second.count(), 3);

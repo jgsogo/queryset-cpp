@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/execution_monitor.hpp>  // for execution_exception
 
-#include "print_helper.hpp"
+#include "../print_helper.hpp"
 #include "../../queryset/queryset.h"
 
 
@@ -42,6 +42,27 @@ BOOST_AUTO_TEST_CASE(operator_random_access)
     BOOST_CHECK_EQUAL(std::get<0>(f4), 1);
     BOOST_CHECK_EQUAL(std::get<1>(f4), "bye");
     BOOST_CHECK_EQUAL(std::get<2>(f4), 1.1f);
+}
+
+BOOST_AUTO_TEST_CASE(iterator)
+{
+    QuerySet<int, std::string, float> qs(initial_qs);
+    auto b = qs.begin();
+    auto e = qs.end();
+    BOOST_CHECK_EQUAL(std::get<0>(*b), 0);
+    BOOST_CHECK_EQUAL(std::get<1>(*b), "hola");
+    BOOST_CHECK_EQUAL(std::get<2>(*b), 0.f);
+    BOOST_CHECK_EQUAL(std::distance(b, e), 9);
+
+    auto rb = qs.rbegin();
+    auto re = qs.rend();
+    BOOST_CHECK_EQUAL(std::distance(rb, re), 9);
+    
+    BOOST_CHECK_EQUAL(*rb, *(--e));
+    BOOST_CHECK_EQUAL(*b, *(--re));
+
+    // for-loop
+    for (auto item : qs) {}
 }
 
 BOOST_AUTO_TEST_SUITE_END()
