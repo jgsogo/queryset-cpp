@@ -175,6 +175,7 @@ namespace utils {
         void print_tuple_impl(std::basic_ostream<Ch, Tr>& os,
                               const Tuple & t,
                               std::index_sequence<Is...>) {
+            using ::operator<<;
             using swallow = int[]; // guaranties left to right order
             (void)swallow {
                 0, (void(os << (Is == 0 ? "" : ", ") << std::get<Is>(t)), 0)...
