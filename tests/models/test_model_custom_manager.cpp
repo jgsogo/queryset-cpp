@@ -6,6 +6,19 @@
 #include "../config_tests.h"
 
 
+class MyModel;
+
+class MyModelManager : public qs::FileManager<MyModel, int, std::string, float> {
+    using BaseManager = qs::FileManager<MyModel, int, std::string, float>;
+    public:
+        MyModelManager(const std::string& filename) : BaseManager(filename) {};
+        virtual ~MyModelManager() {};
+
+        virtual BaseManager::QuerySet all() const {
+            return BaseManager::all().filter<int>(1);
+        }
+};
+
 class MyModel : public qs::BaseModel<MyModel, int, std::string, float> {
     using BaseModel = qs::BaseModel<MyModel, int, std::string, float>;
     public:
@@ -17,17 +30,21 @@ class MyModel : public qs::BaseModel<MyModel, int, std::string, float> {
         }
 
         // with a custom manager
+        static MyModelManager& objects(const std::string& filename) {
+            static MyModelManager manager(filename);
+            return manager;
+        }
 
 };
 
-BOOST_AUTO_TEST_SUITE(model_custom)
+BOOST_AUTO_TEST_SUITE(model_custom_manager)
 
 BOOST_AUTO_TEST_CASE(count)
 {
     namespace fs = boost::filesystem;
     fs::path full_path = test_data_dir / fs::path("ex_filequeryset.tsv");
 
-    BOOST_CHECK_EQUAL(MyModel::objects(full_path.string()).all().count(), 3);
+    BOOST_CHECK_EQUAL(MyModel::objects(full_path.string()).all().count(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(custom_method)
