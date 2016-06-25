@@ -3,6 +3,7 @@
 
 #include <tuple>
 #include <utility>
+#include <ostream>
 
 namespace utils {
     namespace tuple {
