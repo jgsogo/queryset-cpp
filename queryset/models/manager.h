@@ -68,9 +68,9 @@ namespace qs {
             Manager() {};
             virtual ~Manager() {};
 
-            virtual QuerySet all() const {
+            virtual typename Base::QuerySet all() const {
                 SPDLOG_DEBUG(spdlog::get("qs"), "Manager<void, TModel>[{}]::all()", (void*)this);
-                return QuerySet(_datasource);
+                return typename Base::QuerySet(_datasource);
             }
 
         protected:

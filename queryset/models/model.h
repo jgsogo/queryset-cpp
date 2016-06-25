@@ -72,26 +72,26 @@ namespace qs {
             using BaseImpl = _detail::BaseModelImpl<tpk, Args...>;
             public:
                 BaseModel() {};
-                BaseModel(const tuple& data) : BaseImpl(data) {};
+                BaseModel(const typename BaseImpl::tuple& data) : BaseImpl(data) {};
                 virtual ~BaseModel() {};
 
                 //static std::string name() { return _detail::name<TModel, tpk, Args...>; }
 
                 static MemoryManager<TModel>& objects() {
                     //static_assert(std::is_base_of<BaseManager<Args...>, TManager>::value, "First template argument to qs::Model must be the model itself.");
-                    static typename MemoryManager<TModel> manager;
+                    static MemoryManager<TModel> manager;
                     return manager;
                 }
 
                 template <typename T, typename... Ts>
                 static Manager<T, TModel>& objects(const T& t, Ts... ts) {
                     //static_assert(std::is_base_of<BaseManager<Args...>, TManager>::value, "First template argument to qs::Model must be the model itself.");
-                    static typename Manager<T, TModel> manager(t, ts...);
+                    static Manager<T, TModel> manager(t, ts...);
                     return manager;
                 }
 
                 virtual void print(std::ostream& os) const {
-                    os << _detail::helper<TModel, tpk, Args...>::name() << "[" << pk() << "]";
+                    os << _detail::helper<TModel, tpk, Args...>::name() << "[" << BaseImpl::pk() << "]";
                 }
             protected:
                 friend bool operator==(const BaseModel<TModel, tpk, Args...>& lhs, const BaseModel<TModel, tpk, Args...>& rhs) {
@@ -121,14 +121,14 @@ namespace qs {
             using QuerySet = qs::TypedQuerySet<TModel, tpk, Args...>;
         public:
             BaseModel() {};
-            BaseModel(const tuple& data) : BaseImpl(data) {};
+            BaseModel(const typename BaseImpl::tuple& data) : BaseImpl(data) {};
             virtual ~BaseModel() = 0;
 
         protected:
             void eval() const {
-                if (!_evaluated) {
-                    _data = TModel::objects().all().get(pk());
-                    _evaluated = true;
+                if (!BaseImpl::_evaluated) {
+                    BaseImpl::_data = TModel::objects().all().get(BaseImpl::pk());
+                    BaseImpl::_evaluated = true;
                 }
             }
     };
@@ -140,19 +140,17 @@ namespace qs {
     class BaseModel<void, tpk, Args...> : public _detail::BaseModel<BaseModel<void, tpk, Args...>, tpk, Args...> {
         using BaseImpl = _detail::BaseModel<void, tpk, Args...>;
         public:
-            using QuerySet = QuerySet<tpk, Args...>;
+            using QuerySet = ::QuerySet<tpk, Args...>;
         public:
             BaseModel() {};
-            BaseModel(const tuple& data) : BaseImpl(data) {};
+            BaseModel(const typename BaseImpl::tuple& data) : BaseImpl(data) {};
             virtual ~BaseModel() = 0;
 
         protected:
             void eval() const {
-                if (!_evaluated) {
-                    tuple data = _detail::BaseModel<BaseModel, tpk, Args...>::objects().all().get(pk());
-                    assert(std::get<0>(data) == pk());
-                    _data = data;
-                    _evaluated = true;
+                if (!BaseImpl::_evaluated) {
+                    BaseImpl::_data = _detail::BaseModel<BaseModel, tpk, Args...>::objects().all().get(BaseImpl::pk());
+                    BaseImpl::_evaluated = true;
                 }
             }
     };
@@ -162,9 +160,10 @@ namespace qs {
 
     template <typename tpk, typename... Args>
     class Model final : public BaseModel<void, tpk, Args...> {
+        using BaseM = BaseModel<void, tpk, Args...>;
         public:
             Model() {};
-            Model(const tuple& data) : BaseModel<void, tpk, Args...>(data) {};
+            Model(const typename BaseM::tuple& data) : BaseM(data) {};
             virtual ~Model() {};
     };
 
