@@ -33,17 +33,17 @@ BOOST_FIXTURE_TEST_SUITE(queryset_class, Fixture)
 BOOST_AUTO_TEST_CASE(eval_once)
 {
     QuerySet<int, std::string, float> qs(initial_qs);
-    auto f0 = qs.filter(0).get();
-    BOOST_CHECK_EQUAL(f0.size(), 3);
+    auto f0 = qs.filter(0);
+    BOOST_CHECK_EQUAL(f0.count(), 3);
     #ifdef _DEBUG
-    BOOST_REQUIRE_THROW(qs.filter(1).get(), boost::execution_exception);
+    BOOST_REQUIRE_THROW(f0.filter(1), boost::execution_exception);
     #endif
     
     auto qs2 = qs; // qs2 copy from qs (already filtered for int=0)
-    auto f1 = qs2.filter(1).get();
-    BOOST_CHECK_EQUAL(f1.size(), 0);
+    auto f1 = qs2.filter(1);
+    BOOST_CHECK_EQUAL(f1.count(), 0);
     #ifdef _DEBUG
-    BOOST_REQUIRE_THROW(qs2.filter(0).get(), boost::execution_exception);    
+    BOOST_REQUIRE_THROW(f1.filter(0), boost::execution_exception);
     #endif
 }
 

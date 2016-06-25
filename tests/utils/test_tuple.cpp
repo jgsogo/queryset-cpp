@@ -126,4 +126,10 @@ BOOST_AUTO_TEST_CASE(tuple_gt)
     BOOST_CHECK_GT(a, (mytuple{ 2, "hola", -1.f }));
 }
 
+BOOST_AUTO_TEST_CASE(tuple_get)
+{
+    mytuple a{2, "hola", 0.f};
+    BOOST_CHECK_EQUAL(std::get<std::string>(a), "hola");
+}
+
 BOOST_AUTO_TEST_SUITE_END()

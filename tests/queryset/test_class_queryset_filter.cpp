@@ -32,29 +32,29 @@ BOOST_FIXTURE_TEST_SUITE(queryset_class, Fixture)
 BOOST_AUTO_TEST_CASE(filter_int)
 {
     QuerySet<int, std::string, float> qs(initial_qs);
-    auto f1 = qs.filter(0).get();
-    BOOST_CHECK_EQUAL(f1.size(), 3);
+    auto f1 = qs.filter(0);
+    BOOST_CHECK_EQUAL(f1.count(), 3);
 }
 
 BOOST_AUTO_TEST_CASE(filter_concat)
 {
     QuerySet<int, std::string, float> qs(initial_qs);
-    auto f2 = qs.filter(0).filter<std::string>("hola").get();
-    BOOST_CHECK_EQUAL(f2.size(), 1);
+    auto f2 = qs.filter(0).filter<std::string>("hola");
+    BOOST_CHECK_EQUAL(f2.count(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(filter_empty)
 {
     QuerySet<int, std::string, float> qs(initial_qs);
-    auto f3 = qs.filter(0).filter(1).get();
-    BOOST_CHECK_EQUAL(f3.size(), 0);
+    auto f3 = qs.filter(0).filter(1);
+    BOOST_CHECK_EQUAL(f3.count(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(filter_tuple)
 {
     QuerySet<int, std::string, float> qs(initial_qs);
-    auto f4 = qs.filter(std::make_tuple<int, std::string>(0, "hola")).get();
-    BOOST_CHECK_EQUAL(f4.size(), 1);
+    auto f4 = qs.filter(std::make_tuple<int, std::string>(0, "hola"));
+    BOOST_CHECK_EQUAL(f4.count(), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

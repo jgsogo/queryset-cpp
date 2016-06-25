@@ -32,12 +32,12 @@ BOOST_FIXTURE_TEST_SUITE(queryset_class, Fixture)
     BOOST_AUTO_TEST_CASE(group_by_single)
     {
         QuerySet<int, std::string, float> qs(initial_qs);
-        auto f4 = qs.groupBy<int>().get();
-        BOOST_CHECK_EQUAL(f4.size(), 3);
+        auto f4 = qs.groupBy<int>();
+        BOOST_CHECK_EQUAL(f4.count(), 3);
 
-        BOOST_CHECK_EQUAL(f4.find(0)->second.count(), 3);
-        BOOST_CHECK_EQUAL(f4.find(1)->second.count(), 3);
-        BOOST_CHECK_EQUAL(f4.find(2)->second.count(), 3);
+        BOOST_CHECK_EQUAL(f4.at(0).count(), 3);
+        BOOST_CHECK_EQUAL(f4.at(1).count(), 3);
+        BOOST_CHECK_EQUAL(f4.at(2).count(), 3);
     }
 #ifdef WIP
     BOOST_AUTO_TEST_CASE(group_by_compound)

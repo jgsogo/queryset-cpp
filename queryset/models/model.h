@@ -13,8 +13,8 @@ namespace qs {
     template <typename TManager>
     class BaseModel {
         public:
-            BaseModel() {};
-            BaseModel(const typename TManager::tuple& data) : _data(data) {};
+            BaseModel() : _evaluated(false) {};
+            BaseModel(const typename TManager::tuple& data) : _data(data), _evaluated(true) {};
             virtual ~BaseModel() {};
 
             static std::string name() { BaseModel m; return typeid(m).name(); }
@@ -32,36 +32,50 @@ namespace qs {
                 return manager;
             }
 
-            virtual void serialize(std::ostream& os) const {
-                os << _data;
+            typename TManager::pk pk() const {
+                return std::get<0>(_data);
+            }
+
+            virtual void print(std::ostream& os) const {
+                os << BaseModel<TManager>::name() << "[" << pk() << "]";
             }
         protected:
+            void eval() const {
+                if (!_evaluated) {
+                    TManager::tuple data = BaseModel<TManager>::objects().all().get(pk());
+                    assert(std::get<0>(data) == pk());
+                    _data = data;
+                    _evaluated = true;
+                }
+            }
+
             friend bool operator==(const BaseModel<TManager>& lhs, const BaseModel<TManager>& rhs) {
-                return lhs._data == rhs._data;
+                return lhs.pk() == rhs.pk();
             }
 
             friend bool operator<(const BaseModel<TManager>& lhs, const BaseModel<TManager>& rhs) {
-                return lhs._data < rhs._data;
+                return lhs.pk() < rhs.pk();
             }
 
             // assign value
             friend std::istream& operator >> (std::istream & lhs, BaseModel<TManager>& rhs)
             {
-                // Read just one value, tipically primary key
+                // Read just one value: primary key
                 lhs >> std::get<0>(rhs._data);
                 return lhs;
             }
         protected:
-            typename TManager::tuple _data;
+            mutable typename TManager::tuple _data;
+            mutable bool _evaluated;
     };
 
-    template <typename... Args>
-    using Model = BaseModel<Manager<void, Args...>>;
+    template <typename pk, typename... Args>
+    using Model = BaseModel<Manager<void, pk, Args...>>;
 
 }
 
 template<class Ch, class Tr, typename TManager>
 std::basic_ostream<Ch, Tr>& operator<<(std::basic_ostream<Ch, Tr>& os, const qs::BaseModel<TManager>& rhs) {
-    rhs.serialize(os);
+    rhs.print(os);
     return os;
 }

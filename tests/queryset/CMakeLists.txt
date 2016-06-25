@@ -8,7 +8,8 @@ add_executable (test_queryset ../print_helper.hpp
                               test_class_queryset_groupby.cpp
                               test_class_queryset_operators.cpp
                               test_datasource_memory.cpp
-                              test_datasource_file.cpp)
+                              test_datasource_file.cpp
+                              test_datasource_get.cpp)
 target_link_libraries (test_queryset
                        ${Boost_LIBRARIES}
                        Threads::Threads

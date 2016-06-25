@@ -7,6 +7,7 @@
 #include "datasource.h"
 #include "filters.h"
 #include "group_by.h"
+#include "exceptions.h"
 
 
 namespace {
@@ -95,30 +96,35 @@ class GroupedQuerySet : public BaseReturnQuerySet<GroupedQuerySet<T, Args...>, A
         GroupedQuerySet(const BaseQuerySet<Args...>& other) : BaseQs(other), _evaluated(false) {}
         GroupedQuerySet(const GroupedQuerySet<T, Args...>& other) : BaseQs(other),
                                                                     _evaluated(false) {}
-
-        const std::map<T, QuerySet<Args...>>& get() const {
-            return this->eval();
+        
+        std::size_t count() const {
+            return this->eval().size();
         }
 
         virtual bool is_evaluated() const {
             return _evaluated;
         }
+
         virtual void reset() {_evaluated = false;}
 
+        typename const QuerySet<Args...>& at(const T& t) const {
+            return this->eval().at(t);
+        }
+
         typename std::map<T, QuerySet<Args...>>::const_iterator begin() const {
-            return this->get().begin();
+            return this->eval().begin();
         }
 
         typename std::map<T, QuerySet<Args...>>::const_iterator end() const {
-            return this->get().end();
+            return this->eval().end();
         }
 
         typename std::map<T, QuerySet<Args...>>::const_reverse_iterator rbegin() const {
-            return this->get().rbegin();
+            return this->eval().rbegin();
         }
 
         typename std::map<T, QuerySet<Args...>>::const_reverse_iterator rend() const {
-            return this->get().rend();
+            return this->eval().rend();
         }
 
     protected:
@@ -169,17 +175,30 @@ class QuerySet : public BaseReturnQuerySet<QuerySet<Args...>, Args...> {
 
         QuerySet(const BaseQs& other) : BaseQs(other) {}
 
-        const utils::queryset<Args...>& get() const {
-            return this->eval();
+        const std::tuple<Args...> get(const typename std::tuple_element<0, std::tuple<Args...>>::type& t) {
+            using T = typename std::tuple_element<0, std::tuple<Args...>>::type;
+            auto r = utils::filter<Args...>(this->eval(), t);
+            //auto r = this->filter<T>(t);
+            if (r.size() > 1) {
+                SPDLOG_DEBUG(spdlog::get("qs"), "QuerySet[{}]::get({}) -- multiple found ({} found)", (void*)this, t, r.size());
+                throw qs::multiple_found<T>(t);
+            }
+            else if (r.size() == 0) {
+                SPDLOG_DEBUG(spdlog::get("qs"), "QuerySet[{}]::get({}) -- not found", (void*)this, t);
+                throw qs::not_found<T>(t);
+            }
+            else {
+                return r[0];
+            }
         }
 
         std::size_t count() const {
-            return this->get().size();
+            return this->eval().size();
         }
 
         template <typename T>
         const std::vector<T> value_list() const {
-            return utils::list<T>(this->get());
+            return utils::list<T>(this->eval());
         }
 
         const std::tuple<Args...>& operator[](const std::size_t& pos) const {
@@ -187,19 +206,19 @@ class QuerySet : public BaseReturnQuerySet<QuerySet<Args...>, Args...> {
         }
 
         typename utils::queryset<Args...>::const_iterator begin() const {
-            return this->get().begin();
+            return this->eval().begin();
         }
 
         typename utils::queryset<Args...>::const_iterator end() const {
-            return this->get().end();
+            return this->eval().end();
         }
 
         typename utils::queryset<Args...>::const_reverse_iterator rbegin() const {
-            return this->get().rbegin();
+            return this->eval().rbegin();
         }
 
         typename utils::queryset<Args...>::const_reverse_iterator rend() const {
-            return this->get().rend();
+            return this->eval().rend();
         }
 
         // Grouping by field types
