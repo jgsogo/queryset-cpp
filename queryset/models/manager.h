@@ -5,13 +5,37 @@
 #include "../datasource.h"
 #include "queryset_typed.h"
 
-
 namespace qs {
 
-    template <typename TModel, typename pk, typename...Args>
+    namespace _detail {
+        // Get templated parameters from typed class
+        // Credit: http://stackoverflow.com/questions/4691657/is-it-possible-to-store-a-template-parameter-pack-without-expanding-it
+        template <typename T, typename... Args>
+        struct expand {
+            typedef utils::FileQueryset<T, Args...> FileQueryset;
+            typedef utils::MemoryQueryset<T, Args...> MemoryQueryset;
+        };
+
+        template <typename T, typename... Args>
+        struct expand<QuerySet<T, Args...>>
+        {
+            typedef typename expand<T, Args...>::FileQueryset FileQueryset;
+            typedef typename expand<T, Args...>::MemoryQueryset MemoryQueryset;
+        };
+
+        template <typename Type, typename... Args>
+        struct expand<TypedQuerySet<Type, Args...>>
+        {
+            typedef typename expand<Args...>::FileQueryset FileQueryset;
+            typedef typename expand<Args...>::MemoryQueryset MemoryQueryset;
+        };
+
+    }
+
+    template <typename TModel>
     class BaseManager {
         public:
-            typedef typename qs::TypedQuerySet<TModel, pk, Args...> QuerySet;
+            using QuerySet = typename TModel::QuerySet;
         public:
             BaseManager() {};
             virtual ~BaseManager() {};
@@ -19,54 +43,44 @@ namespace qs {
             virtual QuerySet all() const = 0;
     };
 
-    template <typename pk, typename...Args>
-    class BaseManager<void, pk, Args...> {
-        public:
-            typedef typename QuerySet<pk, Args...> QuerySet;
-        public:
-            BaseManager() {};
-            virtual ~BaseManager() {};
-
-            virtual QuerySet all() const = 0;
-    };
-
-
-    template <typename TDataSource, typename TModel, typename pk, typename... Args>
+    template <typename TDataSource, typename TModel>
     class Manager;
 
-    template <typename TModel, typename pk, typename... Args>
-    class Manager<std::string, TModel, pk, Args...> : public BaseManager<TModel, pk, Args...> {
+    template <typename TModel>
+    class Manager<std::string, TModel> : public BaseManager<TModel> {
+        using Base = BaseManager<TModel>;
         public:
             Manager(const std::string& filename) : _datasource(filename) {};
             virtual ~Manager() {};
 
-            virtual QuerySet all() const {
-                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, pk, Args...>[{}]::all()", (void*)this);
-                return QuerySet(_datasource);
+            virtual typename Base::QuerySet all() const {
+                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, TModel>[{}]::all()", (void*)this);
+                return typename Base::QuerySet(_datasource);
             }
         protected:
-            utils::FileQueryset<pk, Args...> _datasource;
+            typename _detail::expand<typename Base::QuerySet>::FileQueryset _datasource;
     };
 
-    template <typename TModel, typename pk, typename... Args>
-    class Manager<void, TModel, pk, Args...> : public BaseManager<TModel, pk, Args...> {
+    template <typename TModel>
+    class Manager<void, TModel> : public BaseManager<TModel> {
+        using Base = BaseManager<TModel>;
         public:
             Manager() {};
             virtual ~Manager() {};
 
             virtual QuerySet all() const {
-                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, Args...>[{}]::all()", (void*)this);
+                SPDLOG_DEBUG(spdlog::get("qs"), "Manager<void, TModel>[{}]::all()", (void*)this);
                 return QuerySet(_datasource);
             }
 
         protected:
-            utils::MemoryQueryset<pk, Args...> _datasource;
+            typename _detail::expand<typename Base::QuerySet>::MemoryQueryset _datasource;
     };
 
-    template <typename TModel, typename pk, typename... Args>
-    using FileManager = Manager<std::string, TModel, pk, Args...>;
+    template <typename TModel>
+    using FileManager = Manager<std::string, TModel>;
 
-    template <typename TModel, typename pk, typename... Args>
-    using MemoryManager = Manager<void, TModel, pk, Args...>;
+    template <typename TModel>
+    using MemoryManager = Manager<void, TModel>;
 
 }

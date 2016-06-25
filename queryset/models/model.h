@@ -2,10 +2,12 @@
 #pragma once
 
 #include <type_traits>
+#include <iostream>
 
 #include "spdlog/spdlog.h"
+
 #include "manager.h"
-#include <iostream>
+#include "queryset_typed.h"
 
 
 namespace qs {
@@ -26,6 +28,10 @@ namespace qs {
                     return std::get<0>(_data);
                 }
 
+                operator tuple() const {
+                    return _data;
+                }
+
             protected:
                 mutable tuple _data;
                 mutable bool _evaluated;
@@ -33,22 +39,20 @@ namespace qs {
 
         template <typename T1, typename T2>
         std::ostream& type_name(std::ostream& os) {
-            T1 t1; T2 t2;
-            os << typeid(t1).name() << ", " << typeid(t2).name();
+            os << typeid(T1).name() << ", " << typeid(T2).name();
             return os;
         }
 
         template <typename T1, typename T2, typename... Ts, typename = typename std::enable_if<(sizeof...(Ts) > 0), bool>::type>
         std::ostream& type_name(std::ostream& os) {
-            T1 t;
-            os << typeid(t).name() << ", ";
+            os << typeid(T1).name() << ", ";
             return type_name<T2, Ts...>(os);
         }
 
         template <typename TModel, typename tpk, typename... Args>
         struct helper {
             static std::string name() {
-                TModel m; return typeid(m).name();
+                return typeid(TModel).name();
             }
         };
 
@@ -73,16 +77,16 @@ namespace qs {
 
                 //static std::string name() { return _detail::name<TModel, tpk, Args...>; }
 
-                static MemoryManager<TModel, tpk, Args...>& objects() {
+                static MemoryManager<TModel>& objects() {
                     //static_assert(std::is_base_of<BaseManager<Args...>, TManager>::value, "First template argument to qs::Model must be the model itself.");
-                    static typename MemoryManager<TModel, tpk, Args...> manager;
+                    static typename MemoryManager<TModel> manager;
                     return manager;
                 }
 
                 template <typename T, typename... Ts>
-                static Manager<T, TModel, tpk, Args...>& objects(const T& t, Ts... ts) {
+                static Manager<T, TModel>& objects(const T& t, Ts... ts) {
                     //static_assert(std::is_base_of<BaseManager<Args...>, TManager>::value, "First template argument to qs::Model must be the model itself.");
-                    static typename Manager<T, TModel, tpk, Args...> manager(t, ts...);
+                    static typename Manager<T, TModel> manager(t, ts...);
                     return manager;
                 }
 
@@ -114,43 +118,55 @@ namespace qs {
     class BaseModel : public _detail::BaseModel<TModel, tpk, Args...> {
         using BaseImpl = _detail::BaseModel<TModel, tpk, Args...>;
         public:
-            BaseModel() {};
-            BaseModel(const tuple& data) : BaseImpl(data) {};
-            virtual ~BaseModel() {};
-
-        protected:
-            void eval() const {
-                if (!_evaluated) {
-                    tuple data = TModel::objects().all().get(pk());
-                    assert(std::get<0>(data) == pk());
-                    _data = data;
-                    _evaluated = true;
-                }
-            }
-    };
-
-
-    template <typename tpk, typename... Args>
-    class BaseModel<void, tpk, Args...> : public _detail::BaseModel<void, tpk, Args...> {
-        using BaseImpl = _detail::BaseModel<void, tpk, Args...>;
+            using QuerySet = qs::TypedQuerySet<TModel, tpk, Args...>;
         public:
             BaseModel() {};
             BaseModel(const tuple& data) : BaseImpl(data) {};
-            virtual ~BaseModel() {};
+            virtual ~BaseModel() = 0;
 
         protected:
             void eval() const {
                 if (!_evaluated) {
-                    tuple data = _detail::BaseModel<void, tpk, Args...>::objects().all().get(pk());
+                    _data = TModel::objects().all().get(pk());
+                    _evaluated = true;
+                }
+            }
+    };
+    template <typename TModel, typename tpk, typename... Args>
+    BaseModel<TModel, tpk, Args...>::~BaseModel() {};
+
+
+    template <typename tpk, typename... Args>
+    class BaseModel<void, tpk, Args...> : public _detail::BaseModel<BaseModel<void, tpk, Args...>, tpk, Args...> {
+        using BaseImpl = _detail::BaseModel<void, tpk, Args...>;
+        public:
+            using QuerySet = QuerySet<tpk, Args...>;
+        public:
+            BaseModel() {};
+            BaseModel(const tuple& data) : BaseImpl(data) {};
+            virtual ~BaseModel() = 0;
+
+        protected:
+            void eval() const {
+                if (!_evaluated) {
+                    tuple data = _detail::BaseModel<BaseModel, tpk, Args...>::objects().all().get(pk());
                     assert(std::get<0>(data) == pk());
                     _data = data;
                     _evaluated = true;
                 }
             }
     };
+    template <typename tpk, typename... Args>
+    BaseModel<void, tpk, Args...>::~BaseModel() {};
+
 
     template <typename tpk, typename... Args>
-    using Model = BaseModel<void, tpk, Args...>;
+    class Model final : public BaseModel<void, tpk, Args...> {
+        public:
+            Model() {};
+            Model(const tuple& data) : BaseModel<void, tpk, Args...>(data) {};
+            virtual ~Model() {};
+    };
 
 }
 
