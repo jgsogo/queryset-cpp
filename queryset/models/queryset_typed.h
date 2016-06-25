@@ -19,7 +19,7 @@ namespace qs {
         GroupedTypedQuerySet(const BaseQuerySet<Args...>& other) : BaseQs(other) {}
         GroupedTypedQuerySet(const GroupedQuerySet<T, Args...>& other) : BaseQs(other) {}
 
-        typename const TypedQuerySet<Type, Args...>& at(const T& t) const {
+        const TypedQuerySet<Type, Args...>& at(const T& t) const {
             return this->eval().at(t);
         }
     };

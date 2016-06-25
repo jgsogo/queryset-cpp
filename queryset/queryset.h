@@ -107,7 +107,7 @@ class GroupedQuerySet : public BaseQuerySet<Args...> {
 
         virtual void reset() {_evaluated = false;}
 
-        typename const QuerySet<Args...>& at(const T& t) const {
+        const QuerySet<Args...>& at(const T& t) const {
             return this->eval().at(t);
         }
 
