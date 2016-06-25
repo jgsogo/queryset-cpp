@@ -88,8 +88,8 @@ template <typename... Args>
 class QuerySet;
 
 template <typename T, typename... Args>
-class GroupedQuerySet : public BaseReturnQuerySet<GroupedQuerySet<T, Args...>, Args...> {
-        using BaseQs = BaseReturnQuerySet<GroupedQuerySet<T, Args...>, Args...>;
+class GroupedQuerySet : public BaseQuerySet<Args...> {
+        using BaseQs = BaseQuerySet<Args...>;
     public:
         GroupedQuerySet(const utils::ImplDataSource<Args...>& datasource) : BaseQs(datasource), _evaluated(false) {}
         //GroupedQuerySet(const BaseQs& other) : BaseQs(other), _evaluated(false) {}
