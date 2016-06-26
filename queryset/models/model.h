@@ -7,12 +7,11 @@
 #include "spdlog/spdlog.h"
 
 #include "manager.h"
-#include "queryset_typed.h"
 
 
 namespace qs {
 
-    namespace _detail {
+    namespace _impl {
 
         template <typename tpk, typename... Args>
         class BaseModelImpl {
@@ -68,14 +67,14 @@ namespace qs {
         };
 
         template <typename TModel, typename tpk, typename... Args>
-        class BaseModel : public _detail::BaseModelImpl<tpk, Args...> {
-            using BaseImpl = _detail::BaseModelImpl<tpk, Args...>;
+        class BaseModel : public _impl::BaseModelImpl<tpk, Args...> {
+            using BaseImpl = _impl::BaseModelImpl<tpk, Args...>;
             public:
                 BaseModel() {};
                 BaseModel(const typename BaseImpl::tuple& data) : BaseImpl(data) {};
                 virtual ~BaseModel() {};
 
-                //static std::string name() { return _detail::name<TModel, tpk, Args...>; }
+                //static std::string name() { return _impl::name<TModel, tpk, Args...>; }
 
                 static MemoryManager<TModel>& objects() {
                     //static_assert(std::is_base_of<BaseManager<Args...>, TManager>::value, "First template argument to qs::Model must be the model itself.");
@@ -91,15 +90,23 @@ namespace qs {
                 }
 
                 virtual void print(std::ostream& os) const {
-                    os << _detail::helper<TModel, tpk, Args...>::name() << "[" << BaseImpl::pk() << "]";
+                    os << _impl::helper<TModel, tpk, Args...>::name() << "[" << BaseImpl::pk() << "]";
                 }
             protected:
+                // Equality
                 friend bool operator==(const BaseModel<TModel, tpk, Args...>& lhs, const BaseModel<TModel, tpk, Args...>& rhs) {
                     return lhs.pk() == rhs.pk();
                 }
+                friend bool operator==(const BaseModel<TModel, tpk, Args...>& lhs, const tpk& rhs) {
+                    return lhs.pk() == rhs;
+                }
 
+                // Comparaison
                 friend bool operator<(const BaseModel<TModel, tpk, Args...>& lhs, const BaseModel<TModel, tpk, Args...>& rhs) {
                     return lhs.pk() < rhs.pk();
+                }
+                friend bool operator<(const BaseModel<TModel, tpk, Args...>& lhs, const tpk& rhs) {
+                    return lhs.pk() < rhs;
                 }
 
                 // assign value
@@ -115,10 +122,10 @@ namespace qs {
 
 
     template <typename TModel, typename tpk, typename... Args>
-    class BaseModel : public _detail::BaseModel<TModel, tpk, Args...> {
-        using BaseImpl = _detail::BaseModel<TModel, tpk, Args...>;
+    class BaseModel : public _impl::BaseModel<TModel, tpk, Args...> {
+        using BaseImpl = _impl::BaseModel<TModel, tpk, Args...>;
         public:
-            using QuerySet = qs::TypedQuerySet<TModel, tpk, Args...>;
+            using QuerySet = _impl::QuerySet<TModel, tpk, Args...>;
         public:
             BaseModel() {};
             BaseModel(const typename BaseImpl::tuple& data) : BaseImpl(data) {};
@@ -137,10 +144,10 @@ namespace qs {
 
 
     template <typename tpk, typename... Args>
-    class BaseModel<void, tpk, Args...> : public _detail::BaseModel<BaseModel<void, tpk, Args...>, tpk, Args...> {
-        using BaseImpl = _detail::BaseModel<void, tpk, Args...>;
+    class BaseModel<void, tpk, Args...> : public _impl::BaseModel<BaseModel<void, tpk, Args...>, tpk, Args...> {
+        using BaseImpl = _impl::BaseModel<void, tpk, Args...>;
         public:
-            using QuerySet = ::QuerySet<tpk, Args...>;
+            using QuerySet = _impl::QuerySet<void, tpk, Args...>;;
         public:
             BaseModel() {};
             BaseModel(const typename BaseImpl::tuple& data) : BaseImpl(data) {};
@@ -149,7 +156,7 @@ namespace qs {
         protected:
             void eval() const {
                 if (!BaseImpl::_evaluated) {
-                    BaseImpl::_data = _detail::BaseModel<BaseModel, tpk, Args...>::objects().all().get(BaseImpl::pk());
+                    BaseImpl::_data = _impl::BaseModel<BaseModel, tpk, Args...>::objects().all().get(BaseImpl::pk());
                     BaseImpl::_evaluated = true;
                 }
             }
@@ -167,6 +174,14 @@ namespace qs {
             virtual ~Model() {};
     };
 
+}
+
+namespace std {
+    // TODO: Not a customization point for the standard library.... weird.
+    template<size_t I, typename TModel, typename tpk, typename... Args>
+    auto get(const qs::BaseModel<TModel, tpk, Args...>& c) {
+        return std::get<I>(std::tuple<tpk, Args...>(c));
+    }
 }
 
 template<class Ch, class Tr, typename TModel, typename tpk, typename... Args>

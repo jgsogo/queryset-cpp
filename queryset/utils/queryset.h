@@ -15,10 +15,19 @@ namespace utils {
     template <typename T, typename... Args>
     std::vector<T> list(const queryset<Args...>& qs) {
         std::vector<T> result;
-        std::transform(qs.begin(), qs.end(), std::back_inserter(result), [](auto& item) { 
+        std::transform(qs.begin(), qs.end(), std::back_inserter(result), [](auto& item) {
             constexpr std::size_t index = ::utils::tuple::index<T, Args...>();
             return std::get<index>(item);
-            });
+        });
+        return result;
+    }
+    template <typename T, typename... Args, class Iter>
+    std::vector<T> list(Iter first, Iter last) {
+        std::vector<T> result;
+        std::transform(first, last, std::back_inserter(result), [](auto& item) {
+            constexpr std::size_t index = ::utils::tuple::index<T, Args...>();
+            return std::get<index>(item);
+        });
         return result;
     }
 

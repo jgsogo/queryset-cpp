@@ -3,17 +3,17 @@
 
 #include "spdlog/spdlog.h"
 #include "../datasource.h"
-#include "queryset_typed.h"
+#include "../_impl/queryset.h"
 
 namespace qs {
 
-    namespace _detail {
+    namespace _impl {
         // Get templated parameters from typed class
         // Credit: http://stackoverflow.com/questions/4691657/is-it-possible-to-store-a-template-parameter-pack-without-expanding-it
         template <typename T, typename... Args>
         struct expand {
-            typedef utils::FileQueryset<T, Args...> FileQueryset;
-            typedef utils::MemoryQueryset<T, Args...> MemoryQueryset;
+            typedef FileQueryset<T, Args...> FileQueryset;
+            typedef MemoryQueryset<T, Args...> MemoryQueryset;
         };
 
         template <typename T, typename... Args>
@@ -22,14 +22,14 @@ namespace qs {
             typedef typename expand<T, Args...>::FileQueryset FileQueryset;
             typedef typename expand<T, Args...>::MemoryQueryset MemoryQueryset;
         };
-
+        /*
         template <typename Type, typename... Args>
         struct expand<TypedQuerySet<Type, Args...>>
         {
             typedef typename expand<Args...>::FileQueryset FileQueryset;
             typedef typename expand<Args...>::MemoryQueryset MemoryQueryset;
         };
-
+        */
     }
 
     template <typename TModel>
@@ -58,7 +58,7 @@ namespace qs {
                 return typename Base::QuerySet(_datasource);
             }
         protected:
-            typename _detail::expand<typename Base::QuerySet>::FileQueryset _datasource;
+            typename _impl::expand<typename Base::QuerySet>::FileQueryset _datasource;
     };
 
     template <typename TModel>
@@ -74,7 +74,7 @@ namespace qs {
             }
 
         protected:
-            typename _detail::expand<typename Base::QuerySet>::MemoryQueryset _datasource;
+            typename _impl::expand<typename Base::QuerySet>::MemoryQueryset _datasource;
     };
 
     template <typename TModel>

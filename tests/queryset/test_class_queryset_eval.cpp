@@ -6,7 +6,7 @@
 #include "../../queryset/queryset.h"
 
 
-typedef ::utils::MemoryQueryset<int, std::string, float> myqueryset;
+typedef qs::MemoryQueryset<int, std::string, float> myqueryset;
 typedef std::tuple<int, std::string, float> mytuple;
 
 struct Fixture {

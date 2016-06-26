@@ -6,9 +6,10 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include "utils/queryset.h"
-
 #include <iostream>
+
+#include "utils/queryset.h"
+#include "_impl/utils.h"
 
 namespace utils {
         
@@ -55,8 +56,8 @@ namespace utils {
     }
     */
 
-    template<typename... Args>
-    void read_file(const std::string& filename, queryset<Args...>& data) {
+    template<typename Type, typename... Args>
+    void read_file(const std::string& filename, typename qs::_impl::utils_queryset<Type, Args...>::type& data) {
         std::ifstream infile(filename);
         if (!infile.good()) {
             std::stringstream os; os << "Cannot open file: '" << filename << "'";

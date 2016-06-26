@@ -4,7 +4,7 @@
 #include "../print_helper.hpp"
 #include "../../queryset/datasource.h"
 
-typedef ::utils::MemoryQueryset<int, std::string, float> myQuerySet;
+typedef qs::MemoryQueryset<int, std::string, float> myQuerySet;
 typedef myQuerySet::qs_type::value_type mytuple;
 
 

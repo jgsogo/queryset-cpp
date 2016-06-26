@@ -7,7 +7,14 @@ file(GLOB queryset_SRC
     "*.hpp"
 )
 
-add_library(queryset ${queryset_SRC})
+file(GLOB queryset_impl_SRC
+    "_impl/*.h"
+    "_impl/*.cpp"
+    "_impl/*.hpp"
+)
+
+source_group(impl FILES ${queryset_impl_SRC} )
+add_library(queryset ${queryset_SRC} ${queryset_impl_SRC})
 set_target_properties(queryset PROPERTIES LINKER_LANGUAGE CXX)
 
 add_subdirectory(utils)

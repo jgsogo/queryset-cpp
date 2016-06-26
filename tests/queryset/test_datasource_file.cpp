@@ -6,7 +6,7 @@
 #include "../../queryset/datasource.h"
 #include "../config_tests.h"
 
-typedef ::utils::FileQueryset<int, std::string, float> myQuerySet;
+typedef qs::FileQueryset<int, std::string, float> myQuerySet;
 typedef myQuerySet::qs_type::value_type mytuple;
 
 
@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(basic)
     fs::path full_path = test_data_dir / fs::path("ex_filequeryset.tsv");
 
     myQuerySet fileqs(full_path.string());
-    utils::FilterContainer<int, std::string, float> filters;
+    qs::FilterContainer<int, std::string, float> filters;
     auto qs = fileqs.apply(filters);
 
     BOOST_CHECK_EQUAL(qs.size(), 3);
