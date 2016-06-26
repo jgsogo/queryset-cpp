@@ -12,6 +12,7 @@ namespace utils {
         T value; // the wrapped value
 
         explicit strong_typedef(const T& val): value(val){}; // constructor
+        strong_typedef(const strong_typedef& other) : value(other.value) {}; // constructor
         strong_typedef(){value={};}; // default, zero-initialization
 
         // operator overloading, basic example: 

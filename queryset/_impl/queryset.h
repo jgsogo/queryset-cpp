@@ -126,7 +126,9 @@ namespace qs {
 
                 template <typename T>
                 const std::vector<T> value_list() const {
-                    return utils::list<T>(this->eval());
+                    const queryset_type& qs_ = this->eval();
+                    auto values = utils::list<T, Args...>(qs_.begin(), qs_.end());
+                    return values;
                 }
 
                 const value_type& operator[](const std::size_t& pos) const {
@@ -152,7 +154,7 @@ namespace qs {
                 // Grouping by field types
                 template <typename T>
                 GroupedQuerySet<T, Type, Args...> groupBy() {
-                    assert(!BaseQs::is_evaluated());
+                    // assert(!BaseQs::is_evaluated()); // TODO: Can I group-by after filtering?
                     return GroupedQuerySet<T, Type, Args...>(*this);
                 }
 

@@ -63,17 +63,17 @@ namespace qs {
                 BaseReturnQuerySet(const BaseQs& other) : BaseQs(other) {}
 
                 // Filtering functions
-                template<typename T>
+                template<typename T, typename U=T>
                 R& filter(const T &filter_value) {
                     assert(!BaseQs::is_evaluated());
-                    BaseQs::_filters.add_filter(filter_value);
+                    BaseQs::_filters.add_filter<T, U>(filter_value);
                     return static_cast<R&>(*this);
                 }
 
-                template<typename T>
+                template<typename T, typename U=T>
                 R& filter(const std::vector<T> &filter_value) {
                     assert(!BaseQs::is_evaluated());
-                    BaseQs::_filters.add_filter(filter_value);
+                    BaseQs::_filters.add_filter<T, U>(filter_value);
                     return static_cast<R&>(*this);
                 }
 
