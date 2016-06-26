@@ -48,10 +48,33 @@ namespace qs {
                     return result;
                 }
 
-                template <typename T, typename U=T>
+                template <typename T>
+                void add_filter(const std::vector<T>& t) {
+                    // Check if there is a single filter for this type
+                    constexpr std::size_t index = utils::tuple::index<T, Args...>();
+
+                    std::vector<T> t_sorted(t.size());
+                    std::partial_sort_copy(t.begin(), t.end(), t_sorted.begin(), t_sorted.end());
+
+                    if (_value_filters_apply[index]) {
+                        std::set<T>& t_filters = std::get<index>(_value_filters);
+                        std::set<T> v;
+                        std::set_intersection(t_sorted.begin(), t_sorted.end(),
+                            t_filters.begin(), t_filters.end(),
+                            std::inserter(v, v.end()));
+                        _is_empty = v.empty();
+                        std::get<index>(_value_filters) = v;
+                    }
+                    else {
+                        std::set<T> v(t_sorted.begin(), t_sorted.end());
+                        std::get<index>(_value_filters) = v;
+                    }
+                }
+
+                template <typename T>
                 void add_filter(const T& t) {
-                    constexpr std::size_t index = utils::tuple::index<U, Args...>();
-                    std::set<U>& t_filters = std::get<index>(_value_filters);
+                    constexpr std::size_t index = utils::tuple::index<T, Args...>();
+                    std::set<T>& t_filters = std::get<index>(_value_filters);
                     if (_value_filters_apply[index]) {
                         _is_empty = std::find(t_filters.begin(), t_filters.end(), t) == t_filters.end();
                         if (!_is_empty) {
@@ -62,29 +85,6 @@ namespace qs {
                     else {
                         _value_filters_apply[index] = true;
                         t_filters.insert(t);
-                    }
-                }
-
-                template <typename T, typename U=T>
-                void add_filter(const std::vector<T>& t) {
-                    // Check if there is a single filter for this type
-                    constexpr std::size_t index = utils::tuple::index<U, Args...>();
-
-                    std::vector<U> t_sorted(t.size());
-                    std::partial_sort_copy(t.begin(), t.end(), t_sorted.begin(), t_sorted.end());
-
-                    if (_value_filters_apply[index]) {
-                        std::set<U>& t_filters = std::get<index>(_value_filters);
-                        std::set<U> v;
-                        std::set_intersection(t_sorted.begin(), t_sorted.end(),
-                            t_filters.begin(), t_filters.end(),
-                            std::inserter(v, v.end()));
-                        _is_empty = v.empty();
-                        std::get<index>(_value_filters) = v;
-                    }
-                    else {
-                        std::set<U> v(t_sorted.begin(), t_sorted.end());
-                        std::get<index>(_value_filters) = v;
                     }
                 }
 

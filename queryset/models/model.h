@@ -31,6 +31,11 @@ namespace qs {
                     return _data;
                 }
 
+                template <std::size_t I>
+                auto get() const {
+                    return std::get<I>(_data);
+                }
+
             protected:
                 mutable tuple _data;
                 mutable bool _evaluated;
@@ -174,14 +179,12 @@ namespace qs {
             virtual ~Model() {};
     };
 
-}
-
-namespace std {
-    // TODO: Not a customization point for the standard library.... weird.
-    template<size_t I, typename TModel, typename tpk, typename... Args>
-    auto get(const qs::BaseModel<TModel, tpk, Args...>& c) {
-        return std::get<I>(std::tuple<tpk, Args...>(c));
+    // std::get delegate, we not always have a std::tuple here
+    template <std::size_t I, typename TModel, typename tpk, typename... Args>
+    auto getter(const BaseModel<TModel, tpk, Args...>& item) {
+        return item.template get<I>();
     }
+
 }
 
 template<class Ch, class Tr, typename TModel, typename tpk, typename... Args>

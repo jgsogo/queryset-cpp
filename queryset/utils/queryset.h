@@ -11,13 +11,20 @@ namespace utils {
     template <typename... Args>
     using queryset = std::vector<std::tuple<Args...>>;
 
+    // std::get delegate, we not always have a std::tuple here
+    template <std::size_t I, typename... Args>
+    auto getter(const std::tuple<Args...>& item) {
+        return std::get<I>(item);
+    }
+
     // We can list a queryset for one of its values (it is like projecting and then flattening to a vector)
     template <typename T, typename... Args>
     std::vector<T> list(const queryset<Args...>& qs) {
         std::vector<T> result;
         std::transform(qs.begin(), qs.end(), std::back_inserter(result), [](auto& item) {
             constexpr std::size_t index = ::utils::tuple::index<T, Args...>();
-            return std::get<index>(item);
+            //return std::get<index>(item);
+            return getter<index>(item);
         });
         return result;
     }
@@ -26,7 +33,7 @@ namespace utils {
         std::vector<T> result;
         std::transform(first, last, std::back_inserter(result), [](auto& item) {
             constexpr std::size_t index = ::utils::tuple::index<T, Args...>();
-            return std::get<index>(item);
+            return getter<index>(item);
         });
         return result;
     }
