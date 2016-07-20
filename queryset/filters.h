@@ -4,8 +4,8 @@
 #include <set>
 #include <bitset>
 #include <iterator>
-#include "utils/queryset.h"
 
+#include "utils/queryset.h"
 #include "_impl/utils.h"
 
 
@@ -68,6 +68,7 @@ namespace qs {
                     else {
                         std::set<T> v(t_sorted.begin(), t_sorted.end());
                         std::get<index>(_value_filters) = v;
+                        _value_filters_apply[index] = true;
                     }
                 }
 

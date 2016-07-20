@@ -57,5 +57,13 @@ BOOST_AUTO_TEST_CASE(filter_tuple)
     BOOST_CHECK_EQUAL(f4.count(), 1);
 }
 
+BOOST_AUTO_TEST_CASE(filter_vector)
+{
+    QuerySet<int, std::string, float> qs(initial_qs);
+    std::vector<int> filters = { 0, 1 };
+    auto f4 = qs.filter<int>(filters);
+    BOOST_CHECK_EQUAL(f4.count(), 6);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
