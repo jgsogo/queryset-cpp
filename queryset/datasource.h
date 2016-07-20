@@ -46,7 +46,7 @@ namespace qs {
                 }
 
                 virtual qs_type apply(const FilterContainer<Type, Args...>& filters) const {
-                    SPDLOG_DEBUG(spdlog::get("qs"), "DB HIT! -- MemoryQueryset::apply");
+                    spdlog::get("qs")->info("DB HIT! -- FileQueryset::apply");
                     return filters.apply(*_qs);
                 }
 
@@ -62,19 +62,25 @@ namespace qs {
             public:
                 using qs_type = typename ImplDataSource<Type, Args...>::qs_type;
             public:
-                FileQueryset(const std::string& filename) : _filename(filename) {}
-                FileQueryset(const FileQueryset& other) : _filename(other._filename), ImplDataSource<Type, Args...>(other) {}
+                FileQueryset(const std::string& filename, const bool cache = true) : _filename(filename), _cache(cache), _evaluated(false) {}
+                FileQueryset(const FileQueryset& other) : _filename(other._filename), ImplDataSource<Type, Args...>(other), _cache(false), _evaluated(false) {}
                 virtual ~FileQueryset() {}
 
                 virtual qs_type apply(const FilterContainer<Type, Args...>& filters) const {
-                    qs_type result;
-                    SPDLOG_DEBUG(spdlog::get("qs"), "DB HIT! -- FileQueryset::apply");
-                    utils::read_file<Type, Args...>(_filename, result);
-                    return filters.apply(result);
+                    if (!_cache || !_evaluated) {
+                        spdlog::get("qs")->info("DB HIT! -- FileQueryset::apply");
+                        _filedata.clear();
+                        utils::read_file<Type, Args...>(_filename, _filedata);
+                        _evaluated = true;
+                    }
+                    return filters.apply(_filedata);
                 }
 
         protected:
                 const std::string _filename;
+                bool _cache;
+                mutable bool _evaluated;
+                mutable qs_type _filedata;
         };
     }
 
