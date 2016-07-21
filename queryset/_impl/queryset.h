@@ -61,7 +61,7 @@ namespace qs {
                         auto values = utils::list<T, Args...>(qs.begin(), qs.end());
                         if (_lazy) {
                             for (auto& v : values) {
-                                _qs.insert(std::make_pair(v, QuerySet<Type, Args...>(_datasource).filter(v)));
+                                _qs.insert(std::make_pair(v, QuerySet<Type, Args...>(BaseQs::_datasource).filter(v)));
                             }
                         }
                         else {
@@ -71,7 +71,8 @@ namespace qs {
                             }
                             constexpr std::size_t index = utils::tuple::index<T, Args...>();
                             for (auto& item : qs) {
-                                data[utils::getter<index>(item)] >> item;
+                                const std::tuple<Args...>& tt = utils_queryset<Type, Args...>::as_tuple(item);
+                                data[utils::getter<index>(tt)] >> item;
                             }
                             for (auto& d : data) {
                                 _qs.insert(std::make_pair(d.first, static_cast<QuerySet<Type, Args...>>(d.second)));
