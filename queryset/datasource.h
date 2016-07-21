@@ -46,7 +46,7 @@ namespace qs {
                 }
 
                 virtual qs_type apply(const FilterContainer<Type, Args...>& filters) const {
-                    spdlog::get("qs")->info("DB HIT! -- FileQueryset::apply");
+                    SPDLOG_DEBUG(spdlog::get("qs"), "DB HIT! -- FileQueryset::apply");
                     return filters.apply(*_qs);
                 }
 
@@ -68,7 +68,7 @@ namespace qs {
 
                 virtual qs_type apply(const FilterContainer<Type, Args...>& filters) const {
                     if (!_cache || !_evaluated) {
-                        spdlog::get("qs")->info("DB HIT! -- FileQueryset::apply");
+                        SPDLOG_DEBUG(spdlog::get("qs"), "DB HIT! -- FileQueryset::apply -- {}", _filename);
                         _filedata.clear();
                         utils::read_file<Type, Args...>(_filename, _filedata);
                         _evaluated = true;

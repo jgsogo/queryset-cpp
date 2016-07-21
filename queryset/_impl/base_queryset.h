@@ -16,41 +16,38 @@ namespace qs {
             public:
                 typedef typename utils_queryset<Type, Args...>::type queryset_type;
             public:
-                BaseQuerySet(const ImplDataSource<Type, Args...>& datasource) : _datasource(datasource), _evaluated(false) {};
+                BaseQuerySet(const ImplDataSource<Type, Args...>& datasource) : _datasource(datasource) {};
                 BaseQuerySet(const BaseQuerySet& other) : _datasource(other._datasource),
                     _filters(other._filters),
-                    _evaluated(false) {}
+                    _qs(other._qs) {}
 
                 bool empty() const {
-                    if (!_evaluated) {
+                    if (!_qs) {
                         this->eval();
                     }
-                    return _qs.empty();
+                    return _qs->empty();
                 }
 
                 virtual bool is_evaluated() const {
-                    return _evaluated;
+                    return (bool)_qs;
                 }
-                virtual void reset() { _evaluated = false; }
+                virtual void reset() { _qs.reset(); }
 
             protected:
                 // Eval (cache) queryset (make it protected?)
                 const queryset_type& eval() const {
-                    SPDLOG_DEBUG(spdlog::get("qs"), "BaseQuerySet[{}]::eval", (void*)this);
-                    if (!_evaluated) {
-                        _qs = _datasource.apply(_filters);
-                        _evaluated = true;
+                    if (!_qs) {
+                        SPDLOG_DEBUG(spdlog::get("qs"), "BaseQuerySet[{}]::eval", (void*)this);
+                        _qs = std::make_shared<queryset_type>(_datasource.apply(_filters));
                     }
-                    return _qs;
+                    return *_qs.get();
                 }
 
             protected:
                 FilterContainer<Type, Args...> _filters;
-
-            private:
                 const ImplDataSource<Type, Args...>& _datasource;
-                mutable queryset_type _qs;
-                mutable bool _evaluated;
+            private:
+                mutable std::shared_ptr<queryset_type> _qs;
         };
 
         template<typename R, typename Type, typename... Args>

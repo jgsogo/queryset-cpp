@@ -178,10 +178,13 @@ namespace qs {
             Model(const typename BaseM::tuple& data) : BaseM(data) {};
             virtual ~Model() {};
     };
+}
+ 
 
+namespace utils {
     // std::get delegate, we not always have a std::tuple here
     template <std::size_t I, typename TModel, typename tpk, typename... Args>
-    auto getter(const BaseModel<TModel, tpk, Args...>& item) {
+    auto getter(const qs::BaseModel<TModel, tpk, Args...>& item) {
         return item.template get<I>();
     }
 

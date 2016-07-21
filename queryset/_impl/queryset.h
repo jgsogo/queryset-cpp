@@ -10,14 +10,17 @@ namespace qs {
         template <typename Type, typename... Args>
         class QuerySet;
 
+        template <typename Type, typename... Args>
+        class OnMemoryQuerySet;
+
         template <typename T, typename Type, typename... Args>
         class GroupedQuerySet : public qs::_impl::BaseQuerySet<Type, Args...> {
             using BaseQs = qs::_impl::BaseQuerySet<Type, Args...>;
             public:
-                GroupedQuerySet(const ImplDataSource<Type, Args...>& datasource) : BaseQs(datasource), _evaluated(false) {}
-                GroupedQuerySet(const BaseQs& other) : BaseQs(other), _evaluated(false) {}
-                GroupedQuerySet(const GroupedQuerySet<T, Type, Args...>& other) : BaseQs(other),
-                    _evaluated(false) {}
+                GroupedQuerySet(const ImplDataSource<Type, Args...>& datasource, const bool lazy = false) : BaseQs(datasource), _evaluated(false), _lazy(lazy) {}
+                GroupedQuerySet(const BaseQs& other, const bool lazy = false) : BaseQs(other), _evaluated(false), _lazy(lazy) {}
+                GroupedQuerySet(const GroupedQuerySet<T, Type, Args...>& other, const bool lazy = false) : BaseQs(other),
+                    _evaluated(false), _lazy(lazy) {}
 
                 std::size_t count() const {
                     return this->eval().size();
@@ -50,14 +53,29 @@ namespace qs {
                 }
 
             protected:
-                // Eval (cache) queryset (make it protected?)
+                // Eval lazy queryset
                 const std::map<T, QuerySet<Type, Args...>>& eval() const {
-                    SPDLOG_DEBUG(spdlog::get("qs"), "GroupedQuerySet[{}]::eval", (void*)this);
                     if (!_evaluated) {
+                        SPDLOG_DEBUG(spdlog::get("qs"), "GroupedQuerySet[{}]::eval", (void*)this);
                         auto qs = this->BaseQs::eval();
                         auto values = utils::list<T, Args...>(qs.begin(), qs.end());
-                        for (auto& v : values) {
-                            _qs.insert(std::make_pair(v, QuerySet<Type, Args...>(*this).filter(v)));
+                        if (_lazy) {
+                            for (auto& v : values) {
+                                _qs.insert(std::make_pair(v, QuerySet<Type, Args...>(_datasource).filter(v)));
+                            }
+                        }
+                        else {
+                            std::map<T, OnMemoryQuerySet<Type, Args...>> data;
+                            for (auto& v : values) {
+                                data.insert(std::make_pair(v, OnMemoryQuerySet<Type, Args...>()));
+                            }
+                            constexpr std::size_t index = utils::tuple::index<T, Args...>();
+                            for (auto& item : qs) {
+                                data[utils::getter<index>(item)] >> item;
+                            }
+                            for (auto& d : data) {
+                                _qs.insert(std::make_pair(d.first, static_cast<QuerySet<Type, Args...>>(d.second)));
+                            }
                         }
                         _evaluated = true;
                     }
@@ -67,6 +85,7 @@ namespace qs {
             private:
                 mutable std::map<T, QuerySet<Type, Args...>> _qs;
                 mutable bool _evaluated;
+                const bool _lazy;
         };
 
         #ifdef WIP
@@ -153,9 +172,9 @@ namespace qs {
 
                 // Grouping by field types
                 template <typename T>
-                GroupedQuerySet<T, Type, Args...> groupBy() {
+                GroupedQuerySet<T, Type, Args...> groupBy(const bool lazy = true) {
                     // assert(!BaseQs::is_evaluated()); // TODO: Can I group-by after filtering?
-                    return GroupedQuerySet<T, Type, Args...>(*this);
+                    return GroupedQuerySet<T, Type, Args...>(*this, lazy);
                 }
 
                 #ifdef WIP
@@ -165,6 +184,28 @@ namespace qs {
                 }
                 #endif
         };
+
+
+        template <typename Type, typename... Args>
+        class OnMemoryQuerySet {
+            using DataSource = MemoryQueryset<Type, Args...>;
+            public:
+                OnMemoryQuerySet() {};
+                
+                void operator >> (const typename std::conditional<std::is_same<Type, void>::value, std::tuple<Args...>, Type>::type& item) {
+                    _memory_qs >> item;
+                }
+
+                operator QuerySet<Type, Args...>() const {
+                    QuerySet<Type, Args...> ret(_memory_qs);
+                    ret.count(); // TODO: Force evaluation, make it friend and hide this class
+                    return ret;
+                }
+
+            protected:
+                DataSource _memory_qs;
+        };
+
 
     }
 }
