@@ -11,7 +11,7 @@ namespace qs {
         struct utils_queryset {
             typedef typename std::vector<Type> type;
             static const std::tuple<Args...>& as_tuple(const Type& item) {
-                return static_cast<std::tuple<Args...>>(item);
+                return static_cast<std::tuple<Args...>&>(item);
             };
         };
 

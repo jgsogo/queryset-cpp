@@ -27,7 +27,7 @@ namespace qs {
                     return std::get<0>(_data);
                 }
 
-                operator tuple() const {
+                operator tuple&() const {
                     return _data;
                 }
 
