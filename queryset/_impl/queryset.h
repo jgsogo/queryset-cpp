@@ -120,13 +120,17 @@ namespace qs {
                 QuerySet(const BaseQs& other) : BaseQs(other) {}
 
                 const value_type get(const typename std::tuple_element<0, std::tuple<Args...>>::type& t) {
-                    using T = typename std::tuple_element<0, std::tuple<Args...>>::type;
-                    auto r = this->filter(t);
-                    if (r.count() > 1) {
+					using T = typename std::tuple_element<0, std::tuple<Args...>>::type;
+
+					FilterContainer<Type, Args...> filter;
+					filter.add_filter(t);
+					auto r = filter.apply(this->eval());
+                    
+                    if (r.size() > 1) {
                         SPDLOG_DEBUG(spdlog::get("qs"), "QuerySet[{}]::get({}) -- multiple found ({} found)", (void*)this, t, r.size());
                         throw qs::multiple_found<T>(t);
                     }
-                    else if (r.count() == 0) {
+                    else if (r.size() == 0) {
                         SPDLOG_DEBUG(spdlog::get("qs"), "QuerySet[{}]::get({}) -- not found", (void*)this, t);
                         throw qs::not_found<T>(t);
                     }
