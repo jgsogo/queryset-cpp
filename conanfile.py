@@ -3,7 +3,7 @@ from conans import ConanFile, CMake
 class QuerysetCPP(ConanFile):
     name = "queryset-cpp"
     version = "0.4"
-    requires = "Boost/1.60.0@lasote/stable", "spdlog/0.9.0@memsharded/stable"
+    requires = "Boost/1.60.0@lasote/stable", "spdlog/0.9.0@memsharded/stable", "SQLite3cc/0.1.1@monsdar/testing"
     generators = "cmake"
     settings = "os", "compiler", "build_type", "arch"
     exports = "conanfile.py", "CMakeLists.txt", "queryset/*" , "tests/*"

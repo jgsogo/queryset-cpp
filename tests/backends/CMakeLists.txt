@@ -10,6 +10,7 @@ add_executable (test_backends ../print_helper.hpp
                               ${_TESTS})
 target_link_libraries (test_backends
                        ${Boost_LIBRARIES}
+                       ${CONAN_LIBS_SQLITE3CC}
                        Threads::Threads
                        )
 set_target_properties(test_backends PROPERTIES FOLDER tests)
