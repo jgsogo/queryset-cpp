@@ -11,8 +11,6 @@ channel = os.getenv("CONAN_CHANNEL", default_channel)
 username = os.getenv("CONAN_USERNAME", default_user)
 
 class QuerysetCPPTest(ConanFile):
-    name = "QuerysetCPPTest"
-    version = "0.1"
     settings = "os", "compiler", "arch", "build_type"
     generators = "cmake"
     requires = "queryset-cpp/0.4@%s/%s" % (username, channel)
