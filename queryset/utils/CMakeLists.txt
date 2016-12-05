@@ -8,4 +8,4 @@ file(GLOB utils_SRC
 )
 
 add_library(utils ${utils_SRC})
-# set_target_properties(utils PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(utils PROPERTIES LINKER_LANGUAGE CXX)
