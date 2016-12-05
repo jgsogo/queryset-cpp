@@ -1,5 +1,6 @@
-from conan.packager import ConanMultiPackager
+
 import os
+from conan.packager import ConanMultiPackager
 
 
 username = os.getenv("CONAN_USERNAME", "jgsogo")
@@ -12,4 +13,5 @@ if __name__ == "__main__":
                                  apple_clang_versions = ["5.0", "5.1", "6.0", "6.1", "7.0", "7.3", "8.0"]
                                 )
     builder.add_common_builds()
+    print("{} builds ahead!".format(len(builder.builds)))
     builder.run()
