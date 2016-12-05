@@ -1,4 +1,7 @@
+
+import os
 from conans import ConanFile, CMake
+
 
 class QuerysetCPP(ConanFile):
     name = "queryset-cpp"
@@ -6,7 +9,7 @@ class QuerysetCPP(ConanFile):
     requires = "Boost/1.60.0@lasote/stable", "spdlog/0.9.0@memsharded/stable"
     generators = "cmake"
     settings = "os", "compiler", "build_type", "arch"
-    exports = "conanfile.py", "CMakeLists.txt", "queryset/*" , "tests/*"
+    exports = "conanfile.py", "CMakeLists.txt", "queryset/*", "tests/*"
     url = "https://github.com/jgsogo/queryset-cpp"
 
     def imports(self):
@@ -20,9 +23,16 @@ class QuerysetCPP(ConanFile):
 
     def package(self):
         self.copy("*.h", dst="include")
-        self.copy("*.lib", dst="lib", src="lib")
-        self.copy("*.a", dst="lib", src="lib")
+        # self.copy("*.lib", dst="lib", src="lib")
+        # self.copy("*.a", dst="lib", src="lib")
 
     def package_info(self):
         #self.cpp_info.libs = ["queryset-cpp"]  # Do not generates .lib
         pass
+
+    def test(self):
+        # equal to ./bin/portaudio_conan_test, but portable win: .\bin\portaudio_conan_test
+        self.run(os.path.join(".", "bin", "test_models"))
+        self.run(os.path.join(".", "bin", "test_queryset"))
+        self.run(os.path.join(".", "bin", "test_queryset_utils"))
+
