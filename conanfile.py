@@ -1,5 +1,6 @@
 
 import os
+import fnmatch
 from conans import ConanFile, CMake
 
 
@@ -18,7 +19,12 @@ class QuerysetCPP(ConanFile):
       
     def build(self):
         cmake = CMake(self.settings)
-        self.run('cmake %s %s' % (self.conanfile_directory, cmake.command_line))
+        print("*"*100)
+        print(self.scope.dev)
+        print(vars(self.scope))
+        print(self.scope.BUILD_TEST)
+        flag_build_tests = "-DBUILD_TEST:BOOL=ON" if self.scope.BUILD_TEST else ""
+        self.run('cmake "%s" %s %s' % (self.conanfile_directory, cmake.command_line, flag_build_tests))
         self.run("cmake --build . %s" % cmake.build_config)
 
     def package(self):
@@ -31,8 +37,8 @@ class QuerysetCPP(ConanFile):
         pass
 
     def test(self):
-        # equal to ./bin/portaudio_conan_test, but portable win: .\bin\portaudio_conan_test
-        self.run(os.path.join(".", "bin", "test_models"))
-        self.run(os.path.join(".", "bin", "test_queryset"))
-        self.run(os.path.join(".", "bin", "test_queryset_utils"))
+        bin_directory = os.path.join(".", "bin")
+        for file in os.listdir(bin_directory):
+            if fnmatch.fnmatch(file, 'test_*.txt'):
+                self.run(os.path.join(bin_directory, file))
 

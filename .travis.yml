@@ -37,5 +37,17 @@ install:
   - chmod ugo+x ./.travis/install.sh
   - chmod ugo+x ./.travis/run.sh
   - ./.travis/install.sh
+
 script:
+  # Compile and run library tests
+  - mkdir build
+  - cd build
+  - $CONAN_ENV conan install .. -s compiler=$COMPILER_NAME -s compiler.version=$COMPILER_VERSION $CONAN_EXTRA --scope queryset-cpp:BUILD_TEST=ON
+  - cmake -DCMAKE_CXX_COMPILER=$COMPILER -DBUILD_TEST=ON .. && cmake --build .
+  - cd bin
+  - ./test_queryset_utils
+  - ./test_queryset
+  - ./test_models
+  - cd ../..  
+  # Execute conan-package-tools
   - ./.travis/run.sh
