@@ -11,4 +11,4 @@ conan_basic_setup()
 
 add_executable(queryset_cpp main.cpp)
 include_directories(${CONAN_INCLUDE_DIRS})
-target_link_libraries(queryset_cpp ${CONAN_LIBRARIES})
+target_link_libraries(queryset_cpp ${CONAN_LIBS})
