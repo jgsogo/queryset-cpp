@@ -5,7 +5,6 @@ environment:
     PYTHON_ARCH: "32"
 
     CONAN_UPLOAD: 1
-    CONAN_REFERENCE: "queryset-cpp/0.4"
     CONAN_USERNAME: "jgsogo"
     CONAN_CHANNEL: "ci"
     CONAN_TOTAL_PAGES: 4
