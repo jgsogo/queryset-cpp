@@ -19,13 +19,11 @@ class QuerysetCPP(ConanFile):
       
     def build(self):
         cmake = CMake(self.settings)
-        print("*"*100)
-        print(self.scope.dev)
-        print(vars(self.scope))
-        print(self.scope.BUILD_TEST)
         flag_build_tests = "-DBUILD_TEST:BOOL=ON" if self.scope.BUILD_TEST else ""
         self.run('cmake "%s" %s %s' % (self.conanfile_directory, cmake.command_line, flag_build_tests))
         self.run("cmake --build . %s" % cmake.build_config)
+        if flag_build_tests:
+            self.test()
 
     def package(self):
         self.copy("*.h", dst="include")
