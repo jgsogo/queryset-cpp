@@ -19,3 +19,4 @@ set_target_properties(queryset PROPERTIES LINKER_LANGUAGE CXX)
 
 add_subdirectory(utils)
 add_subdirectory(models)
+add_subdirectory(backends)

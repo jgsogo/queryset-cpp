@@ -3,10 +3,10 @@
 #include <boost/filesystem.hpp>
 
 #include "../print_helper.hpp"
-#include "../../queryset/datasource.h"
+#include "../../queryset/backends/filesystem.h"
 #include "../config_tests.h"
 
-typedef qs::FileQueryset<int, std::string, float> myQuerySet;
+typedef qs::backends::FileQueryset<int, std::string, float> myQuerySet;
 typedef myQuerySet::qs_type::value_type mytuple;
 
 

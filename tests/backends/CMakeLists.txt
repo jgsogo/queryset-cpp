@@ -5,13 +5,14 @@ file(GLOB _TESTS
     "test_*.cpp"
 )
 
-add_executable (test_queryset ../print_helper.hpp 
+add_executable (test_backends ../print_helper.hpp 
                               main.cpp
                               ${_TESTS})
-target_link_libraries (test_queryset
+target_link_libraries (test_backends
                        ${Boost_LIBRARIES}
+                       ${CONAN_LIBS}
                        Threads::Threads
                        )
-set_target_properties(test_queryset PROPERTIES FOLDER tests)
+set_target_properties(test_backends PROPERTIES FOLDER tests)
 
-add_test(NAME TestQuerySet COMMAND $<TARGET_FILE:test_queryset>)
+add_test(NAME TestBackends COMMAND $<TARGET_FILE:test_backends>)

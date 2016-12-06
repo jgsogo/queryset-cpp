@@ -4,6 +4,7 @@
 #include "spdlog/spdlog.h"
 #include "../datasource.h"
 #include "../_impl/queryset.h"
+#include "../backends/filesystem.h"
 
 namespace qs {
 

@@ -16,7 +16,7 @@ namespace qs {
             public:
                 typedef typename utils_queryset<Type, Args...>::type queryset_type;
             public:
-                BaseQuerySet(const ImplDataSource<Type, Args...>& datasource) : _datasource(datasource) {};
+                BaseQuerySet(const ImplDataSource<Type, Args...>& datasource) : _datasource(datasource), _filters(datasource.create_filter()) {};
                 BaseQuerySet(const BaseQuerySet& other) : _datasource(other._datasource),
                     _filters(other._filters),
                     _qs(other._qs) {}

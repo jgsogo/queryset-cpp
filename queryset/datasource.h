@@ -6,8 +6,6 @@
 
 #include "utils/queryset.h"
 #include "filters.h"
-#include "read_file.h"
-
 
 namespace qs {
 
@@ -29,6 +27,7 @@ namespace qs {
                 ImplDataSource(const ImplDataSource& other) : DataSource(other) {}
                 virtual ~ImplDataSource() {}
 
+				virtual FilterContainer<Type, Args...> create_filter() const = 0;
                 virtual qs_type apply(const FilterContainer<Type, Args...>& filters) const = 0;
         };
 
@@ -45,6 +44,10 @@ namespace qs {
                     _qs->push_back(item);
                 }
 
+				virtual FilterContainer<Type, Args...> create_filter() const {
+					return FilterContainer<Type, Args...>();
+				}
+
                 virtual qs_type apply(const FilterContainer<Type, Args...>& filters) const {
                     SPDLOG_DEBUG(spdlog::get("qs"), "DB HIT! -- FileQueryset::apply");
                     return filters.apply(*_qs);
@@ -57,43 +60,12 @@ namespace qs {
                 std::shared_ptr<qs_type> _qs;
         };
 
-        template <typename Type, typename... Args>
-        class FileQueryset : public ImplDataSource<Type, Args...> {
-            public:
-                using qs_type = typename ImplDataSource<Type, Args...>::qs_type;
-            public:
-                FileQueryset(const std::string& filename, const bool cache = true) : _filename(filename), _cache(cache), _evaluated(false) {}
-                FileQueryset(const FileQueryset& other) : _filename(other._filename), ImplDataSource<Type, Args...>(other), _cache(false), _evaluated(false) {}
-                virtual ~FileQueryset() {}
-
-                virtual qs_type apply(const FilterContainer<Type, Args...>& filters) const {
-                    if (!_cache || !_evaluated) {
-                        SPDLOG_DEBUG(spdlog::get("qs"), "DB HIT! -- FileQueryset::apply -- {}", _filename);
-                        _filedata.clear();
-                        utils::read_file<Type, Args...>(_filename, _filedata);
-                        _evaluated = true;
-                    }
-                    return filters.apply(_filedata);
-                }
-
-        protected:
-                const std::string _filename;
-                bool _cache;
-                mutable bool _evaluated;
-                mutable qs_type _filedata;
-        };
+        
     }
 
     template <typename... Args>
     using MemoryQueryset = _impl::MemoryQueryset<void, Args...>;
 
-    template <typename... Args>
-    using FileQueryset = _impl::FileQueryset<void, Args...>;
-
     template <typename Type, typename... Args>
     using TypedMemoryQueryset = _impl::MemoryQueryset<Type, Args...>;
-
-    template <typename Type, typename... Args>
-    using TypedFileQueryset = _impl::FileQueryset<Type, Args...>;
-
 }
