@@ -27,6 +27,7 @@ namespace qs {
                 ImplDataSource(const ImplDataSource& other) : DataSource(other) {}
                 virtual ~ImplDataSource() {}
 
+				virtual FilterContainer<Type, Args...> create_filter() const = 0;
                 virtual qs_type apply(const FilterContainer<Type, Args...>& filters) const = 0;
         };
 
@@ -42,6 +43,10 @@ namespace qs {
                 void operator >>(const typename qs_type::value_type& item) {
                     _qs->push_back(item);
                 }
+
+				virtual FilterContainer<Type, Args...> create_filter() const {
+					return FilterContainer<Type, Args...>();
+				}
 
                 virtual qs_type apply(const FilterContainer<Type, Args...>& filters) const {
                     SPDLOG_DEBUG(spdlog::get("qs"), "DB HIT! -- FileQueryset::apply");

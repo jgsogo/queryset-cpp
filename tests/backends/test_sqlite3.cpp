@@ -13,6 +13,9 @@ typedef myQuerySet::qs_type::value_type mytuple;
 
 
 struct Fixture {
+	const fs::path database = fs::temp_directory_path() / fs::unique_path();
+	sqlite::connection connection;
+
 	Fixture() : connection(database.string()) {
 		connection.busy_timeout(1000);
 
@@ -24,7 +27,7 @@ struct Fixture {
 		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << 1 << "jgsogo" << 1.0 << sqlite::exec;
 		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << 2 << "conan" << 0.9 << sqlite::exec;
 		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << 3 << "lasote" << 1.0 << sqlite::exec;
-		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << 3 << "jgsogo" << 0.9 << sqlite::exec;
+		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << 4 << "jgsogo" << 0.9 << sqlite::exec;
 	}
 
 	~Fixture() {
@@ -32,8 +35,6 @@ struct Fixture {
 		boost::filesystem::remove(database);
 	}
 
-	sqlite::connection connection;
-	fs::path database = fs::temp_directory_path() / fs::unique_path();
 };
 
 BOOST_FIXTURE_TEST_SUITE(backends_sqlite3, Fixture)
