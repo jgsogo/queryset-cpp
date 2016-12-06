@@ -28,7 +28,7 @@ class QuerysetCPP(ConanFile):
         if flag_build_tests:
             self.run('cmake "%s" %s %s' % (self.conanfile_directory, cmake.command_line, flag_build_tests))
             self.run("cmake --build . %s" % cmake.build_config)
-            self.test()
+            self.run("ctest")
 
     def package(self):
         self.copy("*.h", dst="include")
@@ -39,9 +39,4 @@ class QuerysetCPP(ConanFile):
         #self.cpp_info.libs = ["queryset-cpp"]  # Do not generates .lib
         pass
 
-    def test(self):
-        bin_directory = os.path.join(".", "bin")
-        for file in os.listdir(bin_directory):
-            if fnmatch.fnmatch(file, 'test_*.txt'):
-                self.run(os.path.join(bin_directory, file))
 
