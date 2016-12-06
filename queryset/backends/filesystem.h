@@ -16,10 +16,6 @@ namespace qs {
 				FileQueryset(const FileQueryset& other) : _filename(other._filename), _impl::ImplDataSource<Type, Args...>(other), _cache(false), _evaluated(false) {}
 				virtual ~FileQueryset() {}
 
-				virtual _impl::FilterContainer<Type, Args...> create_filter() const {
-					return _impl::FilterContainer<Type, Args...>();
-				}
-
 				virtual qs_type apply(const _impl::FilterContainer<Type, Args...>& filters) const {
 					if (!_cache || !_evaluated) {
 						SPDLOG_DEBUG(spdlog::get("qs"), "DB HIT! -- FileQueryset::apply -- {}", _filename);

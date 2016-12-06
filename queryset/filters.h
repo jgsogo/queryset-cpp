@@ -19,7 +19,7 @@ namespace qs {
 				using queryset_type = typename qs::_impl::utils_queryset<Type, Args...>::type;
             public:
                 FilterContainer() : _is_empty(false) {}
-                virtual ~FilterContainer() {}
+                ~FilterContainer() {}
 
                 bool pass(const std::tuple<Args...>& t) const {
                     bool pass = true;
@@ -29,7 +29,7 @@ namespace qs {
                     return pass;
                 }
 
-                virtual queryset_type apply(const queryset_type& qs) const {
+                queryset_type apply(const queryset_type& qs) const {
                     // Corner cases
                     if (_is_empty) {
                         return queryset_type();
@@ -97,6 +97,13 @@ namespace qs {
                     this->add_filter(std::get<0>(t));
                 }
 
+				const std::tuple<std::set<Args>...> get_value_filters() const {
+					return _value_filters;
+				}
+
+				const std::bitset<sizeof...(Args)> get_value_filters_apply() const {
+					return _value_filters_apply;
+				}
             protected:
 				bool empty() const {
 					return _is_empty;

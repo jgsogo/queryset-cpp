@@ -194,6 +194,17 @@ namespace utils {
             for_each<I + 1, FuncT, Tp...>(t, f);
         }
 
+		template<std::size_t I = 0, typename FuncT, typename... Tp>
+		inline typename std::enable_if<I == sizeof...(Tp), void>::type
+		enumerate(const std::tuple<Tp...> &, FuncT) { }
+
+		template<std::size_t I = 0, typename FuncT, typename... Tp>
+		inline typename std::enable_if<I < sizeof...(Tp), void>::type
+		enumerate(const std::tuple<Tp...>& t, FuncT f) {
+			f(I, std::get<I>(t));
+			enumerate<I + 1, FuncT, Tp...>(t, f);
+		}
+
         /*
         // Reverse a tuple
         template <typename... Ts>

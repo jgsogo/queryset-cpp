@@ -49,4 +49,82 @@ BOOST_AUTO_TEST_CASE(basic)
 	BOOST_CHECK_EQUAL(qs.size(), 4);
 }
 
+BOOST_AUTO_TEST_CASE(filter_one_string)
+{
+	myQuerySet backend(connection, "people");
+
+	qs::FilterContainer<int, std::string, float> filters;
+	filters.add_filter<std::string>("jgsogo");
+	auto qs = backend.apply(filters);
+
+	BOOST_CHECK_EQUAL(qs.size(), 2);
+}
+
+BOOST_AUTO_TEST_CASE(filter_one_numeric)
+{
+	myQuerySet backend(connection, "people");
+
+	qs::FilterContainer<int, std::string, float> filters;
+	filters.add_filter<float>(1.0);
+	auto qs = backend.apply(filters);
+
+	BOOST_CHECK_EQUAL(qs.size(), 2);
+}
+
+BOOST_AUTO_TEST_CASE(filter_several_string)
+{
+	myQuerySet backend(connection, "people");
+
+	qs::FilterContainer<int, std::string, float> filters;
+	filters.add_filter<std::string>({ "jgsogo", "conan" });
+	auto qs = backend.apply(filters);
+
+	BOOST_CHECK_EQUAL(qs.size(), 3);
+}
+
+BOOST_AUTO_TEST_CASE(filter_several_numeric)
+{
+	myQuerySet backend(connection, "people");
+
+	qs::FilterContainer<int, std::string, float> filters;
+	filters.add_filter<float>({ 1.0f, 0.9f });
+	auto qs = backend.apply(filters);
+
+	BOOST_CHECK_EQUAL(qs.size(), 4);
+}
+
+BOOST_AUTO_TEST_CASE(filter_combined)
+{
+	myQuerySet backend(connection, "people");
+
+	qs::FilterContainer<int, std::string, float> filters;
+	filters.add_filter<std::string>("jgsogo");
+	filters.add_filter<float>(1.0);
+	auto qs = backend.apply(filters);
+
+	BOOST_CHECK_EQUAL(qs.size(), 1);
+}
+
+BOOST_AUTO_TEST_CASE(filter_no_match_string)
+{
+	myQuerySet backend(connection, "people");
+
+	qs::FilterContainer<int, std::string, float> filters;
+	filters.add_filter<std::string>("----");
+	auto qs = backend.apply(filters);
+
+	BOOST_CHECK_EQUAL(qs.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(filter_no_match_numeric)
+{
+	myQuerySet backend(connection, "people");
+
+	qs::FilterContainer<int, std::string, float> filters;
+	filters.add_filter<int>(23);
+	auto qs = backend.apply(filters);
+
+	BOOST_CHECK_EQUAL(qs.size(), 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

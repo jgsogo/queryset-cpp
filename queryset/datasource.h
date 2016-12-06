@@ -27,7 +27,10 @@ namespace qs {
                 ImplDataSource(const ImplDataSource& other) : DataSource(other) {}
                 virtual ~ImplDataSource() {}
 
-				virtual FilterContainer<Type, Args...> create_filter() const = 0;
+				virtual _impl::FilterContainer<Type, Args...> create_filter() const {
+					return _impl::FilterContainer<Type, Args...>();
+				}
+
                 virtual qs_type apply(const FilterContainer<Type, Args...>& filters) const = 0;
         };
 
