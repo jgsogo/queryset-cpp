@@ -28,7 +28,7 @@ class QuerysetCPP(ConanFile):
         if flag_build_tests:
             self.run('cmake "%s" %s %s' % (self.conanfile_directory, cmake.command_line, flag_build_tests))
             self.run("cmake --build . %s" % cmake.build_config)
-            self.run("ctest")
+            self.run("ctest -C {}".format(self.settings.build_type))
 
     def package(self):
         self.copy("*.h", dst="include")
