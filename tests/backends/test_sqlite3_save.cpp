@@ -37,19 +37,39 @@ struct Fixture {
 
 };
 
-BOOST_FIXTURE_TEST_SUITE(backends_sqlite3_groupby, Fixture)
+BOOST_FIXTURE_TEST_SUITE(backends_sqlite3_save, Fixture)
 
-BOOST_AUTO_TEST_CASE(group_by_single)
+BOOST_AUTO_TEST_CASE(add_one)
 {
-    // TODO: La ejecución del group_by se puede delegar hasta la base de datos (en teoría será más rápida que la que se hace en C++)
     qs::backends::Sqlite3DataSource<int, std::string, float> sqlite3(connection, "people");
     QuerySet<int, std::string, float> qs(sqlite3);
-    auto f4 = qs.groupBy<std::string>();
-    BOOST_CHECK_EQUAL(f4.count(), 3);
+    BOOST_CHECK_EQUAL(qs.count(), 4);
+    
+    // Add one item to db
+    std::tuple<int, std::string, float> item{ 5, "sqlite3", 1.0 };
+    sqlite3.insert(item);
+    BOOST_CHECK_EQUAL(qs.count(), 4); // Query cache needs to be reseted.
+    qs.reset();
+    BOOST_CHECK_EQUAL(qs.count(), 5);
+}
 
-    BOOST_CHECK_EQUAL(f4.at("jgsogo").count(), 2);
-    BOOST_CHECK_EQUAL(f4.at("conan").count(), 1);
-    BOOST_CHECK_EQUAL(f4.at("lasote").count(), 1);
+BOOST_AUTO_TEST_CASE(delete_one)
+{
+    qs::backends::Sqlite3DataSource<int, std::string, float> sqlite3(connection, "people");
+    {
+        QuerySet<int, std::string, float> qs(sqlite3);
+        BOOST_CHECK_EQUAL(qs.count(), 4);
+    }
+    {
+        QuerySet<int, std::string, float> qs(sqlite3);
+        qs.filter(1);
+        BOOST_CHECK_EQUAL(qs.count(), 1);
+        qs.remove();
+    }
+    {
+        QuerySet<int, std::string, float> qs(sqlite3);
+        BOOST_CHECK_EQUAL(qs.count(), 3);
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

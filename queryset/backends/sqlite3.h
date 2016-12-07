@@ -23,6 +23,16 @@ namespace qs {
 			return std::tuple_cat(t1, t2);
 		}
 
+        struct joiner {
+            joiner(std::ostringstream& os, const std::string& sep) : _os(os), _sep(sep) {};
+            template <class T>
+            void operator()(const std::size_t& i, const T& it) { _os << (i != 0 ? _sep : "") << it; };
+            template <>
+            void operator()<std::string>(const std::size_t& i, const std::string& it) { _os << (i != 0 ? _sep : "") << "\"" + it + "\""; };
+            std::ostringstream& _os;
+            const std::string _sep;
+        };
+
 		template <typename Type, typename... Args>
 		class Sqlite3DataSource : public _impl::ImplDataSource<Type, Args...> {
             protected:
@@ -62,21 +72,7 @@ namespace qs {
 					qs_type ret;
 					// Build query to database
 					std::ostringstream sql; sql << "SELECT * FROM " << _table_name;
-					auto filters_apply = filters.get_value_filters_apply();
-					if (filters_apply.any()) {
-						sql << " WHERE ";
-                        std::vector<std::string> clauses;
-						const auto& value_filters = filters.get_value_filters();
-						::utils::tuple::enumerate(value_filters, [this, &clauses](const auto& i, const auto& values) {
-							if (values.size() == 1) {
-                                clauses.push_back(_column_names[i] + equal_clause(*values.begin()));
-							}
-							else if (values.size() > 1) {
-                                clauses.push_back(_column_names[i] + equal_clause(values));
-							}
-						});
-                        sql << utils::join(clauses, " AND ");
-					}
+                    where_clause(sql, filters);
 
 					sqlite::query q1(_connection, sql.str());
 					for (sqlite::query::iterator it = q1.begin(); it != q1.end(); it++) {
@@ -85,6 +81,40 @@ namespace qs {
 					}
 					return ret;
 				}
+
+                virtual void remove(const FilterContainer<Type, Args...>& filters) const {
+                    std::ostringstream sql; sql << "DELETE FROM " << _table_name;
+                    where_clause(sql, filters);
+                    sqlite::query q1(_connection, sql.str());
+                };
+
+                void insert(const std::tuple<Args...>& item) {
+                    std::ostringstream sql; sql << "INSERT INTO " + _table_name + " VALUES(";
+                    joiner strfy(sql, ", ");
+                    ::utils::tuple::enumerate(item, strfy);
+                    sql << ")";
+                    _connection.make_command(sql.str())->exec();
+                }
+
+            protected:
+                std::ostringstream& where_clause(std::ostringstream& sql, const FilterContainer<Type, Args...>& filters) const {
+                    auto filters_apply = filters.get_value_filters_apply();
+                    if (filters_apply.any()) {
+                        sql << " WHERE ";
+                        std::vector<std::string> clauses;
+                        const auto& value_filters = filters.get_value_filters();
+                        ::utils::tuple::enumerate(value_filters, [this, &clauses](const auto& i, const auto& values) {
+                            if (values.size() == 1) {
+                                clauses.push_back(_column_names[i] + equal_clause(*values.begin()));
+                            }
+                            else if (values.size() > 1) {
+                                clauses.push_back(_column_names[i] + equal_clause(values));
+                            }
+                        });
+                        sql << utils::join(clauses, " AND ");
+                    }
+                    return sql;
+                }
 
 			protected:
 				sqlite::connection& _connection;

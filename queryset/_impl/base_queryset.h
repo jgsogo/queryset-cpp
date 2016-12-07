@@ -33,6 +33,11 @@ namespace qs {
                 }
                 virtual void reset() { _qs.reset(); }
 
+                void remove() {
+                    _datasource.remove(_filters);
+                    this->reset(); // TODO: ¿Quiero invalidar la queryset para que no se vuelva a utilizar?
+                }
+
             protected:
                 // Eval (cache) queryset (make it protected?)
                 const queryset_type& eval() const {
