@@ -121,11 +121,16 @@ BOOST_AUTO_TEST_CASE(filter_no_match_numeric)
 {
     myDataSource backend(connection, "people");
 
-	qs::FilterContainer<int, std::string, float> filters;
-	filters.add_filter<int>(23);
-	auto qs = backend.apply(filters);
+    qs::FilterContainer<int, std::string, float> filters;
+    filters.add_filter<int>(23);
+    auto qs = backend.apply(filters);
 
-	BOOST_CHECK_EQUAL(qs.size(), 0);
+    BOOST_CHECK_EQUAL(qs.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(filter_invalid_table)
+{
+    BOOST_CHECK_THROW(myDataSource backend(connection, "invalid-table"), sqlite::sqlite_error);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
