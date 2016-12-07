@@ -24,7 +24,7 @@ namespace qs {
 		}
 
 		template <typename Type, typename... Args>
-		class Sqlite3Queryset : public _impl::ImplDataSource<Type, Args...> {
+		class Sqlite3DataSource : public _impl::ImplDataSource<Type, Args...> {
             protected:
                 template <typename T> std::string equal_clause(const T& value) const {
                     return " = " + std::to_string(value);
@@ -42,7 +42,7 @@ namespace qs {
                 }
 
 			public:
-				Sqlite3Queryset(sqlite::connection& conn, const std::string& table_name) :
+                Sqlite3DataSource(sqlite::connection& conn, const std::string& table_name) :
 					_connection(conn),
 					_table_name(table_name) {
 					// Get column names
@@ -51,12 +51,12 @@ namespace qs {
 						_column_names[i] = q1.column_name(i);
 					}
 				}
-				Sqlite3Queryset(const Sqlite3Queryset& other) : 
+                Sqlite3DataSource(const Sqlite3DataSource& other) :
 					_connection(other._connection), 
 					_table_name(other._table_name), 
 					_column_names(other._column_names),
 					_impl::ImplDataSource<Type, Args...>(other) {}
-				virtual ~Sqlite3Queryset() {}
+				virtual ~Sqlite3DataSource() {}
 
 				virtual qs_type apply(const _impl::FilterContainer<Type, Args...>& filters) const {
 					qs_type ret;
@@ -96,9 +96,9 @@ namespace qs {
 
 	namespace backends {
 		template <typename... Args>
-		using Sqlite3Queryset = _impl::Sqlite3Queryset<void, Args...>;
+		using Sqlite3DataSource = _impl::Sqlite3DataSource<void, Args...>;
 
 		template <typename Type, typename... Args>
-		using TypedSqlite3Queryset = _impl::Sqlite3Queryset<Type, Args...>;
+		using TypedSqlite3DataSource = _impl::Sqlite3DataSource<Type, Args...>;
 	}
 }

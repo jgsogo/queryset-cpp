@@ -6,7 +6,7 @@
 #include "../../queryset/queryset.h"
 
 
-typedef ::qs::MemoryQueryset<std::size_t, std::string, float> myqueryset;
+typedef ::qs::MemoryDataSource<std::size_t, std::string, float> myDataSource;
 typedef std::tuple<std::size_t, std::string, float> mytuple;
 
 struct FixtureGet {
@@ -25,7 +25,7 @@ struct FixtureGet {
     }
     ~FixtureGet() {}
 
-    myqueryset initial_qs;
+    myDataSource initial_qs;
 };
 
 BOOST_FIXTURE_TEST_SUITE(queryset_class, FixtureGet)

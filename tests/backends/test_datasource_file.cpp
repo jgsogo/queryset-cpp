@@ -6,8 +6,8 @@
 #include "../../queryset/backends/filesystem.h"
 #include "../config_tests.h"
 
-typedef qs::backends::FileQueryset<int, std::string, float> myQuerySet;
-typedef myQuerySet::qs_type::value_type mytuple;
+typedef qs::backends::FileDataSource<int, std::string, float> myDataSource;
+typedef myDataSource::qs_type::value_type mytuple;
 
 
 BOOST_AUTO_TEST_SUITE(datasource_file)
@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE(basic)
     namespace fs = boost::filesystem;
     fs::path full_path = test_data_dir / fs::path("ex_filequeryset.tsv");
 
-    myQuerySet fileqs(full_path.string());
+    myDataSource fileqs(full_path.string());
     qs::FilterContainer<int, std::string, float> filters;
     auto qs = fileqs.apply(filters);
 

@@ -8,13 +8,13 @@ namespace qs {
 	namespace _impl {
 
 		template <typename Type, typename... Args>
-		class FileQueryset : public _impl::ImplDataSource<Type, Args...> {
+		class FileDataSource : public _impl::ImplDataSource<Type, Args...> {
 			public:
 				using qs_type = typename _impl::ImplDataSource<Type, Args...>::qs_type;
 			public:
-				FileQueryset(const std::string& filename, const bool cache = true) : _filename(filename), _cache(cache), _evaluated(false) {}
-				FileQueryset(const FileQueryset& other) : _filename(other._filename), _impl::ImplDataSource<Type, Args...>(other), _cache(false), _evaluated(false) {}
-				virtual ~FileQueryset() {}
+                FileDataSource(const std::string& filename, const bool cache = true) : _filename(filename), _cache(cache), _evaluated(false) {}
+                FileDataSource(const FileDataSource& other) : _filename(other._filename), _impl::ImplDataSource<Type, Args...>(other), _cache(false), _evaluated(false) {}
+				virtual ~FileDataSource() {}
 
 				virtual qs_type apply(const _impl::FilterContainer<Type, Args...>& filters) const {
 					if (!_cache || !_evaluated) {
@@ -37,10 +37,10 @@ namespace qs {
 	namespace backends {
 
 		template <typename... Args>
-		using FileQueryset = _impl::FileQueryset<void, Args...>;
+		using FileDataSource = _impl::FileDataSource<void, Args...>;
 
 		template <typename Type, typename... Args>
-		using TypedFileQueryset = _impl::FileQueryset<Type, Args...>;
+		using TypedFileDataSource = _impl::FileDataSource<Type, Args...>;
 
 	}
 }

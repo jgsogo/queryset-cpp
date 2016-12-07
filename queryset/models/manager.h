@@ -13,15 +13,15 @@ namespace qs {
         // Credit: http://stackoverflow.com/questions/4691657/is-it-possible-to-store-a-template-parameter-pack-without-expanding-it
         template <typename T, typename... Args>
         struct expand {
-            typedef FileQueryset<T, Args...> FileQuerysetType;
-            typedef MemoryQueryset<T, Args...> MemoryQuerysetType;
+            typedef FileDataSource<T, Args...> FileDataSourceType;
+            typedef MemoryDataSource<T, Args...> MemoryDataSourceType;
         };
 
         template <typename T, typename... Args>
         struct expand<QuerySet<T, Args...>>
         {
-            typedef typename expand<T, Args...>::FileQuerysetType FileQuerysetType;
-            typedef typename expand<T, Args...>::MemoryQuerysetType MemoryQuerysetType;
+            typedef typename expand<T, Args...>::FileDataSourceType FileDataSourceType;
+            typedef typename expand<T, Args...>::MemoryDataSourceType MemoryDataSourceType;
         };
     }
 
@@ -51,7 +51,7 @@ namespace qs {
                 return typename Base::QuerySet(_datasource);
             }
         protected:
-            typename _impl::expand<typename Base::QuerySet>::FileQuerysetType _datasource;
+            typename _impl::expand<typename Base::QuerySet>::FileDataSourceType _datasource;
     };
 
     template <typename TModel>
@@ -67,7 +67,7 @@ namespace qs {
             }
 
         protected:
-            typename _impl::expand<typename Base::QuerySet>::MemoryQuerysetType _datasource;
+            typename _impl::expand<typename Base::QuerySet>::MemoryDataSourceType _datasource;
     };
 
     template <typename TModel>

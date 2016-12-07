@@ -8,8 +8,8 @@
 
 namespace fs = boost::filesystem;
 
-typedef qs::backends::Sqlite3Queryset<int, std::string, float> myQuerySet;
-typedef myQuerySet::qs_type::value_type mytuple;
+typedef qs::backends::Sqlite3DataSource<int, std::string, float> myDataSource;
+typedef myDataSource::qs_type::value_type mytuple;
 
 
 struct Fixture {
@@ -41,7 +41,7 @@ BOOST_FIXTURE_TEST_SUITE(backends_sqlite3, Fixture)
 
 BOOST_AUTO_TEST_CASE(basic)
 {
-	myQuerySet backend(connection, "people");
+    myDataSource backend(connection, "people");
 
 	qs::FilterContainer<int, std::string, float> filters;
 	auto qs = backend.apply(filters);
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(basic)
 
 BOOST_AUTO_TEST_CASE(filter_one_string)
 {
-	myQuerySet backend(connection, "people");
+    myDataSource backend(connection, "people");
 
 	qs::FilterContainer<int, std::string, float> filters;
 	filters.add_filter<std::string>("jgsogo");
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(filter_one_string)
 
 BOOST_AUTO_TEST_CASE(filter_one_numeric)
 {
-	myQuerySet backend(connection, "people");
+    myDataSource backend(connection, "people");
 
 	qs::FilterContainer<int, std::string, float> filters;
 	filters.add_filter<float>(1.0);
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(filter_one_numeric)
 BOOST_AUTO_TEST_CASE(filter_several_string, *boost::unit_test::disabled())
 {
     // TODO: To enable this text I need REGEXP function on sqlite3.
-	myQuerySet backend(connection, "people");
+    myDataSource backend(connection, "people");
 
 	qs::FilterContainer<int, std::string, float> filters;
 	filters.add_filter<std::string>({ "jgsogo", "conan" });
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(filter_several_string, *boost::unit_test::disabled())
 
 BOOST_AUTO_TEST_CASE(filter_several_numeric)
 {
-	myQuerySet backend(connection, "people");
+    myDataSource backend(connection, "people");
 
 	qs::FilterContainer<int, std::string, float> filters;
 	filters.add_filter<float>({ 1.0f, 0.9f });
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(filter_several_numeric)
 
 BOOST_AUTO_TEST_CASE(filter_combined)
 {
-	myQuerySet backend(connection, "people");
+    myDataSource backend(connection, "people");
 
 	qs::FilterContainer<int, std::string, float> filters;
 	filters.add_filter<std::string>("jgsogo");
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(filter_combined)
 
 BOOST_AUTO_TEST_CASE(filter_no_match_string)
 {
-	myQuerySet backend(connection, "people");
+    myDataSource backend(connection, "people");
 
 	qs::FilterContainer<int, std::string, float> filters;
 	filters.add_filter<std::string>("----");
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(filter_no_match_string)
 
 BOOST_AUTO_TEST_CASE(filter_no_match_numeric)
 {
-	myQuerySet backend(connection, "people");
+    myDataSource backend(connection, "people");
 
 	qs::FilterContainer<int, std::string, float> filters;
 	filters.add_filter<int>(23);

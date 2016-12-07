@@ -35,13 +35,13 @@ namespace qs {
         };
 
         template <typename Type, typename... Args>
-        class MemoryQueryset : public ImplDataSource<Type, Args...> {
+        class MemoryDataSource : public ImplDataSource<Type, Args...> {
             public:
                 using qs_type = typename ImplDataSource<Type, Args...>::qs_type;
             public:
-                MemoryQueryset() : _qs(std::make_shared<qs_type>()) {}
-                MemoryQueryset(const MemoryQueryset& other) : _qs(other._qs), ImplDataSource<Type, Args...>(other) {}
-                virtual ~MemoryQueryset() {}
+                MemoryDataSource() : _qs(std::make_shared<qs_type>()) {}
+                MemoryDataSource(const MemoryDataSource& other) : _qs(other._qs), ImplDataSource<Type, Args...>(other) {}
+                virtual ~MemoryDataSource() {}
 
                 void operator >>(const typename qs_type::value_type& item) {
                     _qs->push_back(item);
@@ -52,7 +52,7 @@ namespace qs {
 				}
 
                 virtual qs_type apply(const FilterContainer<Type, Args...>& filters) const {
-                    SPDLOG_DEBUG(spdlog::get("qs"), "DB HIT! -- FileQueryset::apply");
+                    SPDLOG_DEBUG(spdlog::get("qs"), "DB HIT! -- FileContainer::apply");
                     return filters.apply(*_qs);
                 }
 
@@ -67,8 +67,8 @@ namespace qs {
     }
 
     template <typename... Args>
-    using MemoryQueryset = _impl::MemoryQueryset<void, Args...>;
+    using MemoryDataSource = _impl::MemoryDataSource<void, Args...>;
 
     template <typename Type, typename... Args>
-    using TypedMemoryQueryset = _impl::MemoryQueryset<Type, Args...>;
+    using TypedMemoryDataSource = _impl::MemoryDataSource<Type, Args...>;
 }

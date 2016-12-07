@@ -188,7 +188,7 @@ namespace qs {
 
         template <typename Type, typename... Args>
         class OnMemoryQuerySet {
-            using DataSource = MemoryQueryset<Type, Args...>;
+            using DataSource = MemoryDataSource<Type, Args...>;
             public:
                 OnMemoryQuerySet() {};
                 
