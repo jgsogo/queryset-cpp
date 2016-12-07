@@ -71,8 +71,9 @@ BOOST_AUTO_TEST_CASE(filter_one_numeric)
 	BOOST_CHECK_EQUAL(qs.size(), 2);
 }
 
-BOOST_AUTO_TEST_CASE(filter_several_string)
+BOOST_AUTO_TEST_CASE(filter_several_string, *boost::unit_test::disabled())
 {
+    // TODO: To enable this text I need REGEXP function on sqlite3.
 	myQuerySet backend(connection, "people");
 
 	qs::FilterContainer<int, std::string, float> filters;

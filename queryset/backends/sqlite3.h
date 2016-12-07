@@ -4,6 +4,7 @@
 #include <numeric>
 #include <sqlite3cc.h>
 #include "../datasource.h"
+#include "../utils/join.h"
 
 namespace qs {
 	namespace _impl {
@@ -24,6 +25,22 @@ namespace qs {
 
 		template <typename Type, typename... Args>
 		class Sqlite3Queryset : public _impl::ImplDataSource<Type, Args...> {
+            protected:
+                template <typename T> std::string equal_clause(const T& value) const {
+                    return " = " + std::to_string(value);
+                }
+                template <typename T> std::string equal_clause(const std::set<T>& values) const {
+                    std::string sql = " IN (" + utils::join(values, ", ") + ")";
+                    return sql;
+                }
+                template <> std::string equal_clause<std::string>(const std::string& value) const {
+                    return " LIKE \"" + value + "\"";
+                }
+                template <> std::string equal_clause<std::string>(const std::set<std::string>& values) const {
+                    std::string sql = " REGEXP \"(" + utils::join(values, "|") + ")\"";
+                    return sql;
+                }
+
 			public:
 				Sqlite3Queryset(sqlite::connection& conn, const std::string& table_name) :
 					_connection(conn),
@@ -47,19 +64,18 @@ namespace qs {
 					std::ostringstream sql; sql << "SELECT * FROM " << _table_name;
 					auto filters_apply = filters.get_value_filters_apply();
 					if (filters_apply.any()) {
-						sql << " WHERE";
+						sql << " WHERE ";
+                        std::vector<std::string> clauses;
 						const auto& value_filters = filters.get_value_filters();
-						::utils::tuple::enumerate(value_filters, [this, &sql](const auto& i, const auto& values) {
+						::utils::tuple::enumerate(value_filters, [this, &clauses](const auto& i, const auto& values) {
 							if (values.size() == 1) {
-								sql << " " << _column_names[i] << " LIKE \"" << *values.begin() << "\"";
+                                clauses.push_back(_column_names[i] + equal_clause(*values.begin()));
 							}
 							else if (values.size() > 1) {
-								sql << " " << _column_names[i] << " IN (";
-								sql << *values.begin();
-								std::for_each(std::next(values.begin()), values.end(), [&sql](const auto& item) { sql << ", " << item; });
-								sql << ")";
+                                clauses.push_back(_column_names[i] + equal_clause(values));
 							}
 						});
+                        sql << utils::join(clauses, " AND ");
 					}
 
 					sqlite::query q1(_connection, sql.str());
