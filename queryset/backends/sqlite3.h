@@ -26,12 +26,14 @@ namespace qs {
         struct joiner {
             joiner(std::ostringstream& os, const std::string& sep) : _os(os), _sep(sep) {};
             template <class T>
-            void operator()(const std::size_t& i, const T& it) { _os << (i != 0 ? _sep : "") << it; };
-            template <>
-            void operator()<std::string>(const std::size_t& i, const std::string& it) { _os << (i != 0 ? _sep : "") << "\"" + it + "\""; };
+            inline void operator()(const std::size_t& i, const T& it);
             std::ostringstream& _os;
             const std::string _sep;
         };
+        template <>
+        inline void joiner::operator()<std::string>(const std::size_t& i, const std::string& it) { _os << (i != 0 ? _sep : "") << "\"" + it + "\""; }
+        template <class T>
+        inline void joiner::operator()(const std::size_t& i, const T& it) { _os << (i != 0 ? _sep : "") << it; }
 
 		template <typename Type, typename... Args>
 		class Sqlite3DataSource : public _impl::ImplDataSource<Type, Args...> {
