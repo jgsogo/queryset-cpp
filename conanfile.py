@@ -15,8 +15,7 @@ class QuerysetCPP(ConanFile):
     def requirements(self):
         self.requires.add("Boost/1.60.0@lasote/stable")
         self.requires.add("spdlog/0.9.0@memsharded/stable")
-        self.requires.add("SQLite3cc/0.1.1@monsdar/testing")
-        self.requires.add("sqlite3/3.15.2@jgsogo/stable") # This one is needed because sqlite3 dep in SQLite3cc/0.1.1@monsdar/testing does not copy libraries for debug version.
+        self.requires.add("sqlite3cc/0.1.1@jgsogo/stable")
 
     def imports(self):
         self.copy("*.dll", dst="bin", src="bin") # From bin to bin
