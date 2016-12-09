@@ -85,7 +85,7 @@ namespace qs {
                 virtual void remove(const FilterContainer<Type, Args...>& filters) const {
                     std::ostringstream sql; sql << "DELETE FROM " << _table_name;
                     where_clause(sql, filters);
-                    sqlite::query q1(_connection, sql.str());
+                    _connection.make_command(sql.str())->exec();
                 };
 
                 void insert(const std::tuple<Args...>& item) {
