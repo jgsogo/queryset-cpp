@@ -35,25 +35,25 @@ namespace qs {
         template <class T>
         inline void joiner::operator()(const std::size_t& i, const T& it) { _os << (i != 0 ? _sep : "") << it; }
 
-		template <typename Type, typename... Args>
-		class Sqlite3DataSource : public _impl::ImplDataSource<Type, Args...> {
-            protected:
-                template <typename T> std::string equal_clause(const T& value) const {
-                    return " = " + std::to_string(value);
-                }
-                template <typename T> std::string equal_clause(const std::set<T>& values) const {
-                    std::string sql = " IN (" + utils::join(values, ", ") + ")";
-                    return sql;
-                }
-                template <> std::string equal_clause<std::string>(const std::string& value) const {
-                    return " LIKE \"" + value + "\"";
-                }
-                template <> std::string equal_clause<std::string>(const std::set<std::string>& values) const {
-                    std::string sql = " REGEXP \"(" + utils::join(values, "|") + ")\"";
-                    return sql;
-                }
+        template <typename T> inline std::string equal_clause(const T& value) {
+            return " = " + std::to_string(value);
+        }
+        template <typename T> inline std::string equal_clause(const std::set<T>& values) {
+            std::string sql = " IN (" + utils::join(values, ", ") + ")";
+            return sql;
+        }
+        template <> inline std::string equal_clause<std::string>(const std::string& value) {
+            return " LIKE \"" + value + "\"";
+        }
+        template <> inline std::string equal_clause<std::string>(const std::set<std::string>& values) {
+            return " REGEXP \"(" + utils::join(values, "|") + ")\"";
+        }
 
-			public:
+        template <typename Type, typename... Args>
+        class Sqlite3DataSource : public _impl::ImplDataSource<Type, Args...> {
+            public:
+                using qs_type = typename _impl::ImplDataSource<Type, Args...>::qs_type;
+            public:
                 Sqlite3DataSource(sqlite::connection& conn, const std::string& table_name) :
 					_connection(conn),
 					_table_name(table_name) {
@@ -78,7 +78,8 @@ namespace qs {
 
 					sqlite::query q1(_connection, sql.str());
 					for (sqlite::query::iterator it = q1.begin(); it != q1.end(); it++) {
-						auto item = unpack<Args...>(*it);
+                                                sqlite::row r = *it; // TODO: Remove this copy
+						auto item = unpack<Args...>(r);
 						ret.push_back(item);
 					}
 					return ret;
