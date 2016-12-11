@@ -2,7 +2,7 @@
 #pragma once
 
 #include <exception>
-#include <ostream>
+#include <sstream>
 
 namespace qs {
     
@@ -32,3 +32,4 @@ namespace qs {
             T _pk;
     };
 }
+
