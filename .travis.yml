@@ -8,13 +8,26 @@ env:
     - CONAN_UPLOAD=1
     - CONAN_USERNAME="jgsogo"
     - CONAN_CHANNEL="ci"
-    - CONAN_TOTAL_PAGES=3
+    - CONAN_TOTAL_PAGES=16
     - CONAN_PIP_PACKAGE="conan bzr --upgrade"  # When using docker this is how we can install pacakges there (needed for sqlite3cc/dev@jgsogo/ci
 
   matrix:
     - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=1
     - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=2
     - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=3
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=4
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=5
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=6
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=7
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=8
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=9
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=10
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=11
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=12
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=13
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=14
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=15
+    - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=16
 matrix:
    include:
        - os: osx
@@ -27,6 +40,10 @@ matrix:
          env:
        - os: osx
          osx_image: xcode6.4 # apple-clang 6.1
+         language: generic
+         env:
+       - os: osx
+         osx_image: xcode8.0 # apple-clang 8.0
          language: generic
          env:
 
