@@ -1,5 +1,5 @@
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/list.hpp>
 
@@ -10,7 +10,7 @@ typedef boost::mpl::list<FixtureDataSource<MemoryDataSource>,
                          FixtureDataSource<FileDataSource>,
                          FixtureDataSource<SQLite3DataSource>> test_types;
 
-BOOST_AUTO_TEST_SUITE(datasource_common)
+BOOST_AUTO_TEST_SUITE(common_filter)
 
 BOOST_FIXTURE_TEST_CASE_TEMPLATE(basic, T, test_types, T)
 {
