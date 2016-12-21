@@ -1,6 +1,7 @@
 os: linux
 services:
    - docker
+   - mysql
 sudo: required
 language: python
 env:
@@ -46,6 +47,9 @@ matrix:
          osx_image: xcode8.0 # apple-clang 8.0
          language: generic
          env:
+
+before_install:
+  - mysql -e 'CREATE DATABASE queryset_cpp_test;'
 
 install:
   - chmod ugo+x ./.travis/install.sh
