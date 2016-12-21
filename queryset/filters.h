@@ -15,14 +15,11 @@ namespace qs {
 
         template <typename Type, typename... Args>
         class FilterContainer {
-            using queryset_type = typename qs::_impl::utils_queryset<Type, Args...>::type;
+			public:
+				using queryset_type = typename qs::_impl::utils_queryset<Type, Args...>::type;
             public:
                 FilterContainer() : _is_empty(false) {}
                 ~FilterContainer() {}
-
-                bool empty() const {
-                    return _is_empty;
-                }
 
                 bool pass(const std::tuple<Args...>& t) const {
                     bool pass = true;
@@ -100,7 +97,18 @@ namespace qs {
                     this->add_filter(std::get<0>(t));
                 }
 
+				const std::tuple<std::set<Args>...> get_value_filters() const {
+					return _value_filters;
+				}
+
+				const std::bitset<sizeof...(Args)> get_value_filters_apply() const {
+					return _value_filters_apply;
+				}
             protected:
+				bool empty() const {
+					return _is_empty;
+				}
+
                 template <class T>
                 static bool filter_pass(const std::set<T>& values, const std::bitset<sizeof...(Args)>& values_apply, const std::tuple<Args...>& t) {
                     constexpr std::size_t index = utils::tuple::index<T, Args...>();

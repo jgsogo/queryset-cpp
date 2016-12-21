@@ -4,15 +4,15 @@
 #include "../print_helper.hpp"
 #include "../../queryset/datasource.h"
 
-typedef qs::MemoryQueryset<int, std::string, float> myQuerySet;
-typedef myQuerySet::qs_type::value_type mytuple;
+typedef qs::MemoryDataSource<int, std::string, float> myDataSource;
+typedef myDataSource::qs_type::value_type mytuple;
 
 
 BOOST_AUTO_TEST_SUITE(datasource_memory)
 
 BOOST_AUTO_TEST_CASE(basic)
 {
-    myQuerySet memqs;
+    myDataSource memqs;
     BOOST_CHECK_EQUAL(memqs.size(), 0);
 
     // Append some tuples

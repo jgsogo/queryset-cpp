@@ -11,8 +11,8 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 
-#include "utils/queryset.h"
-#include "_impl/utils.h"
+#include "../utils/queryset.h"
+#include "../_impl/utils.h"
 
 namespace utils {
         

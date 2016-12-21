@@ -16,7 +16,7 @@ namespace qs {
             public:
                 typedef typename utils_queryset<Type, Args...>::type queryset_type;
             public:
-                BaseQuerySet(const ImplDataSource<Type, Args...>& datasource) : _datasource(datasource) {};
+                BaseQuerySet(const ImplDataSource<Type, Args...>& datasource) : _datasource(datasource), _filters(datasource.create_filter()) {};
                 BaseQuerySet(const BaseQuerySet& other) : _datasource(other._datasource),
                     _filters(other._filters),
                     _qs(other._qs) {}
@@ -32,6 +32,11 @@ namespace qs {
                     return (bool)_qs;
                 }
                 virtual void reset() { _qs.reset(); }
+
+                void remove() {
+                    _datasource.remove(_filters);
+                    this->reset(); // TODO: ¿Quiero invalidar la queryset para que no se vuelva a utilizar?
+                }
 
             protected:
                 // Eval (cache) queryset (make it protected?)

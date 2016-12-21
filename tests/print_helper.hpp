@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include "../queryset/utils/tuple.h"
 
 namespace boost {
