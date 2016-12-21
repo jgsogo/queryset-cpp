@@ -7,6 +7,7 @@ file(GLOB _TESTS
 
 add_executable (test_backends ../print_helper.hpp 
                               main.cpp
+                              fixture_datasource.hpp
                               ${_TESTS})
 target_link_libraries (test_backends
                        ${Boost_LIBRARIES}

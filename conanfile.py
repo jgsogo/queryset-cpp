@@ -15,7 +15,7 @@ class QuerysetCPP(ConanFile):
     def requirements(self):
         self.requires.add("Boost/1.60.0@lasote/stable")
         self.requires.add("spdlog/0.9.0@memsharded/stable")
-        self.requires.add("sqlite3cc/dev@jgsogo/ci")
+        self.requires.add("sqlite3cc/master@jgsogo/stable")
 
     def imports(self):
         self.copy("*.dll", dst="bin", src="bin") # From bin to bin
