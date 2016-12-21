@@ -1,12 +1,14 @@
 
-import os
-import fnmatch
 from conans import ConanFile, CMake
+
+VERSION = "0.4"
 
 
 class QuerysetCPP(ConanFile):
     name = "queryset-cpp"
-    version = "0.4"
+    version = VERSION
+
+    description = """C++ implementation of an ORM inspired by Python/Django"""
     generators = "cmake"
     settings = "os", "compiler", "build_type", "arch"
     exports = "conanfile.py", "CMakeLists.txt", "queryset/*", "tests/*"
