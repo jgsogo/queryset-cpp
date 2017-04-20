@@ -7,9 +7,9 @@ namespace qs {
 	namespace _impl {
 		template <typename Type, typename... Args>
 		class SQLite3FilterContainer : public FilterContainer<Type, Args...> {
-			using FilterContainer<Type, Args...>::queryset_type;
+			using queryset_type = typename FilterContainer<Type, Args...>::queryset_type;
 			public:
-				SQLite3FilterContainer() : FilterContainer() {}
+				SQLite3FilterContainer() : FilterContainer<Type, Args...>() {}
 				virtual ~SQLite3FilterContainer() {}
 
 				virtual queryset_type apply(const queryset_type& qs) const {

@@ -49,3 +49,7 @@ logs
 build*/
 tests/config_tests.h
 0_*.bat
+conanbuildinfo.cmake
+conaninfo.txt
+Testing
+

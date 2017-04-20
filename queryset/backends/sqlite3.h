@@ -24,6 +24,8 @@ namespace qs {
 
 		template <typename Type, typename... Args>
 		class Sqlite3Queryset : public _impl::ImplDataSource<Type, Args...> {
+		    public:
+		        using qs_type = typename _impl::ImplDataSource<Type, Args...>::qs_type;
 			public:
 				Sqlite3Queryset(sqlite::connection& conn, const std::string& table_name) : _connection(conn), _table_name(table_name){}
 				Sqlite3Queryset(const Sqlite3Queryset& other) : _connection(other._connection), _table_name(other._table_name), _impl::ImplDataSource<Type, Args...>(other) {}
@@ -39,7 +41,8 @@ namespace qs {
 					const _impl::SQLite3FilterContainer<Type, Args...>& filter = static_cast<const _impl::SQLite3FilterContainer<Type, Args...>&>(filters);
 					sqlite::query q1(_connection, "SELECT * FROM " + _table_name);
 					for (sqlite::query::iterator it = q1.begin(); it != q1.end(); it++) {
-						auto item = unpack<Args...>(*it);
+					    sqlite::row row = *it;
+						auto item = unpack<Args...>(row);
 						ret.push_back(item);
 					}
 					return ret;
