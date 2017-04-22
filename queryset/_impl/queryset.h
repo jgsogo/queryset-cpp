@@ -121,7 +121,6 @@ namespace qs {
 
                 const value_type get(const typename std::tuple_element<0, std::tuple<Args...>>::type& t) {
 					using T = typename std::tuple_element<0, std::tuple<Args...>>::type;
-
 					FilterContainer<Type, Args...> filter = BaseQs::_datasource.create_filter();
 					filter.add_filter(t);
 					auto r = filter.apply(this->eval());

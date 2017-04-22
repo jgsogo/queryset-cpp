@@ -50,4 +50,6 @@ build*/
 tests/config_tests.h
 0_*.bat
 Testing/
+conanbuildinfo.cmake
+conaninfo.txt
 
