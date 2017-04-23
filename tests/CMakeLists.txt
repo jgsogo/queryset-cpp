@@ -9,11 +9,6 @@ include_directories (${TEST_SOURCE_DIR}/src
                      ${Boost_INCLUDE_DIRS}
                     )
 
-if(UNIX)
-    add_definitions (-DBOOST_TEST_DYN_LINK)
-endif(UNIX)
-
-
 # Copy test data
 SET(TEST_DATA_PATH ${CMAKE_BINARY_DIR}/bin/test_data)
 file(MAKE_DIRECTORY ${TEST_DATA_PATH})
