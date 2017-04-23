@@ -81,18 +81,19 @@ namespace qs {
 
                 //static std::string name() { return _impl::name<TModel, tpk, Args...>; }
 
-                static MemoryManager<TModel>& objects() {
+                static BaseManager<TModel>& objects() {
                     //static_assert(std::is_base_of<BaseManager<Args...>, TManager>::value, "First template argument to qs::Model must be the model itself.");
                     static MemoryManager<TModel> manager;
                     return manager;
                 }
-
+				/*
                 template <typename T, typename... Ts>
                 static Manager<T, TModel>& objects(const T& t, Ts... ts) {
                     //static_assert(std::is_base_of<BaseManager<Args...>, TManager>::value, "First template argument to qs::Model must be the model itself.");
                     static Manager<T, TModel> manager(t, ts...);
                     return manager;
                 }
+				*/
 
                 virtual void print(std::ostream& os) const {
                     os << _impl::helper<TModel, tpk, Args...>::name() << "[" << BaseImpl::pk() << "]";

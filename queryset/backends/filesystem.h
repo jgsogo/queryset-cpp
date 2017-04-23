@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../datasource.h"
+#include "../models/manager.h"
 #include "read_file.h"
 
 namespace qs {
@@ -42,5 +43,10 @@ namespace qs {
 		template <typename Type, typename... Args>
 		using TypedFileDataSource = _impl::FileDataSource<Type, Args...>;
 
+	}
+
+	namespace manager {
+		template <typename TModel>
+		using FileManager = Manager<TModel, _impl::FileDataSource, std::string>;
 	}
 }
