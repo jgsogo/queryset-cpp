@@ -9,7 +9,7 @@ struct GlobalConfig {
         std::cout << "global setup\n";
         auto console = spdlog::stdout_logger_mt("qs");
         console->set_level(spdlog::level::debug);
-        console->info("Logging queryset-cpp: test queryset utils");
+        console->info("Logging queryset-cpp: test models");
     }
 
     ~GlobalConfig() {
