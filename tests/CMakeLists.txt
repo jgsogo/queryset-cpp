@@ -9,9 +9,9 @@ include_directories (${TEST_SOURCE_DIR}/src
                      ${Boost_INCLUDE_DIRS}
                     )
 
-IF(UNIX)
+if(UNIX)
     add_definitions (-DBOOST_TEST_DYN_LINK)
-ENDIF(UNIX)
+endif(UNIX)
 
 
 # Copy test data
