@@ -4,10 +4,11 @@
 
 #include "../../queryset/models/model.h"
 #include "../config_tests.h"
+#include "../../queryset/backends/filesystem.h"
 
 
-class MyModel : public qs::BaseModel<MyModel, int, std::string, float> {
-    using BaseModel = qs::BaseModel<MyModel, int, std::string, float>;
+class MyModel : public qs::BaseModel<MyModel, qs::manager::FileManager, int, std::string, float> {
+    using BaseModel = qs::BaseModel<MyModel, qs::manager::FileManager, int, std::string, float>;
     public:
         MyModel() : BaseModel() {}
         MyModel(const BaseModel::tuple& t) : BaseModel(t) {}

@@ -72,8 +72,8 @@ namespace qs {
         };
 
         template <typename TModel, typename tpk, typename... Args>
-        class BaseModel : public _impl::BaseModelImpl<tpk, Args...> {
-            using BaseImpl = _impl::BaseModelImpl<tpk, Args...>;
+        class BaseModel : public BaseModelImpl<tpk, Args...> {
+            using BaseImpl = BaseModelImpl<tpk, Args...>;
             public:
                 BaseModel() {};
                 BaseModel(const typename BaseImpl::tuple& data) : BaseImpl(data) {};
@@ -81,11 +81,6 @@ namespace qs {
 
                 //static std::string name() { return _impl::name<TModel, tpk, Args...>; }
 
-                static BaseManager<TModel>& objects() {
-                    //static_assert(std::is_base_of<BaseManager<Args...>, TManager>::value, "First template argument to qs::Model must be the model itself.");
-                    static MemoryManager<TModel> manager;
-                    return manager;
-                }
 				/*
                 template <typename T, typename... Ts>
                 static Manager<T, TModel>& objects(const T& t, Ts... ts) {
@@ -96,7 +91,7 @@ namespace qs {
 				*/
 
                 virtual void print(std::ostream& os) const {
-                    os << _impl::helper<TModel, tpk, Args...>::name() << "[" << BaseImpl::pk() << "]";
+                    os << helper<TModel, tpk, Args...>::name() << "[" << BaseImpl::pk() << "]";
                 }
             protected:
                 // Equality
@@ -127,15 +122,29 @@ namespace qs {
     }
 
 
-    template <typename TModel, typename tpk, typename... Args>
+    template <typename TModel,
+              template <typename TModel> class TManager,
+              typename tpk, typename... Args>
     class BaseModel : public _impl::BaseModel<TModel, tpk, Args...> {
         using BaseImpl = _impl::BaseModel<TModel, tpk, Args...>;
+        using Manager = TManager<TModel>;
         public:
             using QuerySet = _impl::QuerySet<TModel, tpk, Args...>;
         public:
             BaseModel() {};
             BaseModel(const typename BaseImpl::tuple& data) : BaseImpl(data) {};
             virtual ~BaseModel() = 0;
+
+            static Manager& objects() {
+                static Manager manager;
+                return manager;
+            }
+
+            template <typename... Args2>
+            static Manager& objects(Args2... args) {
+                static Manager manager(args...);
+                return manager;
+            }
 
         protected:
             void eval() const {
@@ -145,19 +154,32 @@ namespace qs {
                 }
             }
     };
-    template <typename TModel, typename tpk, typename... Args>
-    BaseModel<TModel, tpk, Args...>::~BaseModel() {};
+    template <typename TModel, template <typename TModel> class TManager, typename tpk, typename... Args>
+    BaseModel<TModel, TManager, tpk, Args...>::~BaseModel() {};
 
 
-    template <typename tpk, typename... Args>
-    class BaseModel<void, tpk, Args...> : public _impl::BaseModel<BaseModel<void, tpk, Args...>, tpk, Args...> {
+    template <template <typename TModel> class TManager,
+              typename tpk, typename... Args>
+    class BaseModel<void, TManager, tpk, Args...> : public _impl::BaseModel<BaseModel<void, TManager, tpk, Args...>, tpk, Args...> {
         using BaseImpl = _impl::BaseModel<void, tpk, Args...>;
+        using Manager = TManager<BaseModel<void, TManager, tpk, Args...>>;
         public:
             using QuerySet = _impl::QuerySet<void, tpk, Args...>;;
         public:
             BaseModel() {};
             BaseModel(const typename BaseImpl::tuple& data) : BaseImpl(data) {};
             virtual ~BaseModel() = 0;
+
+            static Manager& objects() {
+                static Manager manager;
+                return manager;
+            }
+
+            template <typename... Args2>
+            static Manager& objects(Args2... args) {
+                static Manager manager(args...);
+                return manager;
+            }
 
         protected:
             void eval() const {
@@ -167,30 +189,31 @@ namespace qs {
                 }
             }
     };
-    template <typename tpk, typename... Args>
-    BaseModel<void, tpk, Args...>::~BaseModel() {};
+    template <template <typename TModel> class TManager, typename tpk, typename... Args>
+    BaseModel<void, TManager, tpk, Args...>::~BaseModel() {};
 
 
-    template <typename tpk, typename... Args>
-    class Model final : public BaseModel<void, tpk, Args...> {
-        using BaseM = BaseModel<void, tpk, Args...>;
+    template <template <typename TModel> class TManager, typename tpk, typename... Args>
+    class Model final : public BaseModel<void, TManager, tpk, Args...> {
+        using BaseM = BaseModel<void, TManager, tpk, Args...>;
         public:
             Model() {};
             Model(const typename BaseM::tuple& data) : BaseM(data) {};
             virtual ~Model() {};
+
     };
 
     // std::get delegate, we not always have a std::tuple here
-    template <std::size_t I, typename TModel, typename tpk, typename... Args>
-    auto getter(const qs::BaseModel<TModel, tpk, Args...>& item) {
+    template <std::size_t I, typename TModel, template <typename TModel> class TManager, typename tpk, typename... Args>
+    auto getter(const qs::BaseModel<TModel, TManager, tpk, Args...>& item) {
         return item.template get<I>();
     }
 
 }
 
 
-template<class Ch, class Tr, typename TModel, typename tpk, typename... Args>
-std::basic_ostream<Ch, Tr>& operator<<(std::basic_ostream<Ch, Tr>& os, const qs::BaseModel<TModel, tpk, Args...>& rhs) {
+template<class Ch, class Tr, typename TModel, template <typename TModel> class TManager, typename tpk, typename... Args>
+std::basic_ostream<Ch, Tr>& operator<<(std::basic_ostream<Ch, Tr>& os, const qs::BaseModel<TModel, TManager, tpk, Args...>& rhs) {
     rhs.print(os);
     return os;
 }

@@ -11,14 +11,14 @@ namespace qs {
         // Get templated parameters from typed class
         // Credit: http://stackoverflow.com/questions/4691657/is-it-possible-to-store-a-template-parameter-pack-without-expanding-it
 		template <typename T, 
-				  template <typename T, typename... Args> typename TDataSource,
+				  template <typename T, typename... Args> class TDataSource,
 				  typename... Args>
 		struct expand {
-			typedef typename TDataSource<T, Args...> DataSourceType;
+			typedef TDataSource<T, Args...> DataSourceType;
 		};
 
         template <typename T, 
-				  template <typename T, typename... Args> typename TDataSource,
+				  template <typename T, typename... Args> class TDataSource,
 				  typename... Args>
         struct expand<QuerySet<T, Args...>, TDataSource>
         {
@@ -38,12 +38,12 @@ namespace qs {
     };
 
 	template <typename TModel,
-		template <typename T, typename... ArgsDataSource> typename TDataSource,
+		template <typename T, typename... ArgsDataSource> class TDataSource,
 		typename... Args>
 	class Manager : public BaseManager<TModel> {
 		using Base = BaseManager<TModel>;
 		public:
-			Manager(Args... args) : _datasource(args) {};
+			Manager(Args... args) : _datasource(args...) {};
 			virtual ~Manager() {};
 
 			virtual typename Base::QuerySet all() const {
@@ -55,7 +55,7 @@ namespace qs {
 	};
 
 	template <typename TModel,
-			  template <typename T, typename... ArgsDataSource> typename TDataSource>
+			  template <typename T, typename... ArgsDataSource> class TDataSource>
 	class Manager<TModel, TDataSource, void> : public BaseManager<TModel> {
 		using Base = BaseManager<TModel>;
 		public:
@@ -71,7 +71,8 @@ namespace qs {
 	};
 
 
-    template <typename TModel>
-    using MemoryManager = Manager<TModel, _impl::MemoryDataSource, void>;
-
+    namespace manager {
+        template <typename TModel>
+        using MemoryManager = Manager<TModel, _impl::MemoryDataSource, void>;
+    }
 }

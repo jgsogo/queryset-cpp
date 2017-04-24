@@ -4,11 +4,24 @@
 
 #include "../../queryset/models/model.h"
 #include "../config_tests.h"
+#include "../../queryset/backends/filesystem.h"
 
-class MyModelManager;
 
-class MyModel : public qs::BaseModel<MyModel, int, std::string, float> {
-    using BaseModel = qs::BaseModel<MyModel, int, std::string, float>;
+template <typename TModel>
+class MyModelManager : public qs::manager::FileManager<TModel> {
+    using BaseManager = typename qs::manager::FileManager<TModel>;
+    public:
+        MyModelManager(const std::string& filename) : BaseManager(filename) {};
+        virtual ~MyModelManager() {};
+
+        virtual typename BaseManager::QuerySet all() const {
+            return BaseManager::all().template filter<int>(1);
+        }
+};
+
+
+class MyModel : public qs::BaseModel<MyModel, MyModelManager, int, std::string, float> {
+    using BaseModel = qs::BaseModel<MyModel, MyModelManager, int, std::string, float>;
     public:
         MyModel() : BaseModel() {}
         MyModel(const BaseModel::tuple& t) : BaseModel(t) {}
@@ -16,26 +29,8 @@ class MyModel : public qs::BaseModel<MyModel, int, std::string, float> {
         std::size_t product() {
             return 12;
         }
-
-        // with a custom manager
-        static MyModelManager& objects(const std::string& filename);
 };
 
-class MyModelManager : public qs::FileManager<MyModel> {
-    using BaseManager = qs::FileManager<MyModel>;
-    public:
-        MyModelManager(const std::string& filename) : BaseManager(filename) {};
-        virtual ~MyModelManager() {};
-
-        virtual BaseManager::QuerySet all() const {
-            return BaseManager::all().filter<int>(1);
-        }
-};
-
-MyModelManager& MyModel::objects(const std::string& filename) {
-    static MyModelManager manager(filename);
-    return manager;
-}
 
 
 BOOST_AUTO_TEST_SUITE(model_custom_manager)

@@ -5,6 +5,7 @@
 #include <sqlite3cc.h>
 #include "../datasource.h"
 #include "../utils/join.h"
+#include "../models/manager.h"
 
 namespace qs {
 	namespace _impl {
@@ -134,4 +135,10 @@ namespace qs {
 		template <typename Type, typename... Args>
 		using TypedSqlite3DataSource = _impl::Sqlite3DataSource<Type, Args...>;
 	}
+
+	namespace manager {
+		template <typename TModel>
+		using Sqlite3Manager = Manager<TModel, _impl::Sqlite3DataSource, sqlite::connection, std::string>;
+	}
+
 }
