@@ -1,7 +1,7 @@
 
 from conans import ConanFile, CMake
 
-VERSION = "0.4"
+VERSION = "0.5"
 
 
 class QuerysetCPP(ConanFile):
