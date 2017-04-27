@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "spdlog/spdlog.h"
-
+#include "queryset/utils/to_string.h"
 #include "manager.h"
 
 
@@ -25,6 +25,10 @@ namespace qs {
 
                 tpk pk() const {
                     return std::get<0>(_data);
+                }
+
+                std::string to_string() const {
+                    return utils::to_string(pk());
                 }
 
                 operator tuple&() const {

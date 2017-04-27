@@ -5,6 +5,7 @@
 #include <sqlite3cc.h>
 #include "../datasource.h"
 #include "../utils/join.h"
+#include "../utils/to_string.h"
 #include "../models/manager.h"
 
 namespace qs {
@@ -37,7 +38,7 @@ namespace qs {
         inline void joiner::operator()(const std::size_t& i, const T& it) { _os << (i != 0 ? _sep : "") << it; }
 
         template <typename T> inline std::string equal_clause(const T& value) {
-            return " = " + std::to_string(value);
+            return " = " + utils::to_string(value);
         }
         template <typename T> inline std::string equal_clause(const std::set<T>& values) {
             std::string sql = " IN (" + utils::join(values, ", ") + ")";
@@ -138,7 +139,7 @@ namespace qs {
 
 	namespace manager {
 		template <typename TModel>
-		using Sqlite3Manager = Manager<TModel, _impl::Sqlite3DataSource, sqlite::connection, std::string>;
+		using Sqlite3Manager = Manager<TModel, _impl::Sqlite3DataSource, sqlite::connection&, const std::string&>;
 	}
 
 }
