@@ -9,13 +9,19 @@
 namespace utils {
 
     namespace {
-        template<typename T>
+        template<class T>
         struct HasToStringMethod
         {
-            template <typename U, U> struct SFINAE;
-            template <typename U> static std::uint8_t Test(SFINAE<std::string (*)(), &U::to_string>*);
-            template <typename U> static std::uint16_t Test(...);
-            static const bool Has = sizeof(Test<T>(0)) == sizeof(std::uint8_t);
+            typedef char(&Yes)[1];
+            typedef char(&No)[2];
+
+            template<class U>
+            static Yes test(U* data,
+                typename std::enable_if<std::is_same<
+                decltype(data->to_string()), std::string
+                >::value>::type * = 0);
+            static No test(...);
+            static const bool Has = sizeof(Yes) == sizeof(HasToStringMethod::test((typename std::remove_reference<T>::type*)0));
         };
 
         template <class T>
