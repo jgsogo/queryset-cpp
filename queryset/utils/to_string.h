@@ -8,7 +8,51 @@
 
 namespace utils {
 
+    namespace {
+        template<typename T>
+        struct HasToStringMethod
+        {
+            template <typename U, U> struct SFINAE;
+            template <typename U> static std::uint8_t Test(SFINAE<std::string (*)(), &U::to_string>*);
+            template <typename U> static std::uint16_t Test(...);
+            static const bool Has = sizeof(Test<T>(0)) == sizeof(std::uint8_t);
+        };
+
+        template <class T>
+        std::string to_string_impl(const T& t, std::false_type) {
+            return std::to_string(t);
+        }
+
+        template <class T>
+        std::string to_string_impl(const T& t, std::true_type) {
+            return t.to_string();
+        }
+    }
+
+    template <class T>
+    std::string to_string(const T& t) {
+        return to_string_impl(t, std::integral_constant<bool, HasToStringMethod<T>::Has>());
+    }
+
+    template <>
+    inline std::string to_string<std::string>(const std::string& t) {
+        return t;
+    }
+
+    /*
+
     // Use standard std::string if object does not have member function .to_string.
+    template<class T, typename = typename std::enable_if<std::is_same<decltype(std::declval<const T&>().to_string()), std::string>::value, std::string>::type>
+    auto to_string(const T& t, typename std::enable_if<std::is_same<decltype(std::declval<const T&>().to_string()), std::string>::value, std::string>::type* dummy = nullptr) {
+        return t.to_string();
+    }
+
+    template<class T, typename = typename std::enable_if<std::is_same<decltype(std::to_string(std::declval<T&>())), std::string>::value, std::string>::type>
+    auto to_string(const T& t, typename std::enable_if<std::is_same<decltype(std::to_string(std::declval<T&>())), std::string>::value, std::string>::type* dummy = nullptr) {
+        return std::to_string(t);
+    }
+    */
+    /*
     template<class T>
     typename std::enable_if<std::is_same<decltype(std::declval<const T&>().to_string()), std::string>::value, std::string>::type to_string(const T &t) {
         return t.to_string();
@@ -18,9 +62,11 @@ namespace utils {
     typename std::enable_if<std::is_same<decltype(std::to_string(std::declval<T&>())), std::string>::value, std::string>::type to_string(const T &t) {
         return std::to_string(t);
     }
-
+    */
+    /*
     // TODO: This should be a specialization of the previous ones
     inline std::string to_string(const std::string& v) {
         return v;
     }
+    */
 }
