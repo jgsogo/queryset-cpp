@@ -22,6 +22,7 @@ namespace qs {
         class ImplDataSource : public DataSource {
             public:
                 using qs_type = typename qs::_impl::utils_queryset<Type, Args...>::type;
+				using tuple_type = typename qs::_impl::utils_queryset<Type, Args...>::tuple_type;
             public:
                 ImplDataSource() {}
                 ImplDataSource(const ImplDataSource& other) : DataSource(other) {}

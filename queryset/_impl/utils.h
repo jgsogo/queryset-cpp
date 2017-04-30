@@ -10,6 +10,7 @@ namespace qs {
         template <typename Type, typename... Args>
         struct utils_queryset {
             typedef typename std::vector<Type> type;
+			typedef typename std::tuple<Args...> tuple_type;
             static const std::tuple<Args...>& as_tuple(const Type& item) {
                 return static_cast<std::tuple<Args...>&>(item);
             };
@@ -18,6 +19,7 @@ namespace qs {
         template <typename... Args>
         struct utils_queryset<void, Args...> {
             typedef typename utils::queryset<Args...> type;
+			typedef typename std::tuple<Args...> tuple_type;
             static const std::tuple<Args...>& as_tuple(const std::tuple<Args...>& item) {
                 return item;
             };

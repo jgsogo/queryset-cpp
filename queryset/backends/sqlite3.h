@@ -171,14 +171,14 @@ namespace qs {
 		template <typename TModel>
 		class Sqlite3Manager : public Manager<TModel, _impl::Sqlite3DataSource, sqlite::connection&, const std::string&> {
 			using DataSourceType = typename Manager<TModel, _impl::Sqlite3DataSource, sqlite::connection&, const std::string&>::DataSourceType;
-			using TupleType = typename DataSourceType::qs_type::value_type;
+			using TupleType = typename DataSourceType::tuple_type;
 			using ArrayType = typename std::array<std::string, std::tuple_size<TupleType>::value>;
 			public:
 				Sqlite3Manager(sqlite::connection& conn) : Manager(conn, _table_name) {}
 
 				static std::string create_table_sql() {
 					std::ostringstream sql; sql << "CREATE TABLE " + _table_name + " (";
-					joiner_pk<2> strfy(sql, ", ", _column_names);
+					joiner_pk<std::tuple_size<TupleType>::value> strfy(sql, ", ", _column_names);
 					::utils::tuple::enumerate(TupleType(), strfy);
 					sql << ")";
 					return sql.str();
