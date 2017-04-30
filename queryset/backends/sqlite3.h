@@ -160,8 +160,7 @@ namespace qs {
 				if (i == 0) { _os << " PRIMARY KEY"; }
 			}
 
-			template <class T> inline void operator()(const std::size_t& i, const T& it); // Not implemented, only certain types allowed.
-			template <> inline void operator()<std::string>(const std::size_t& i, const std::string&) { _on_type(i, "TEXT"); }
+			template <class T> inline void operator()(const std::size_t& i, const T&) { _on_type(i, "TEXT"); } // All is text except some fixed types.
 			template <> inline void operator()<int>(const std::size_t& i, const int&) { _on_type(i, "INT"); } // TODO: SFINAE for integral type
 			template <> inline void operator()<std::size_t>(const std::size_t& i, const std::size_t&) { _on_type(i, "INT"); }
 			template <> inline void operator()<float>(const std::size_t& i, const float&) { _on_type(i, "REAL"); } // TODO: SFINAE for real number typ
@@ -184,9 +183,9 @@ namespace qs {
 					return sql.str();
 				}
 
-				static void create_table(sqlite::connection& connection) {
+				static void create_table(sqlite::connection& conn) {
 					auto sql = create_table_sql();
-					connection.make_command(sql.str())->exec();
+					conn.make_command(sql)->exec();
 				}
 
 				static const std::string& table_name() { return _table_name; };
