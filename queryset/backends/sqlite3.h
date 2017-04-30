@@ -45,7 +45,6 @@ namespace qs {
 			}
 		}
 
-
         template <typename T> inline std::string equal_clause(const T& value) {
             return " = " + utils::to_string(value);
         }
@@ -65,10 +64,10 @@ namespace qs {
             public:
                 using qs_type = typename _impl::ImplDataSource<Type, Args...>::qs_type;
             public:
-                Sqlite3DataSource(sqlite::connection& conn, const std::string& table_name) :
+                Sqlite3DataSource(sqlite::connection& conn, const std::string& table_name) : 
 					_connection(conn),
 					_table_name(table_name) {
-					// Get column names
+					// Get column names                                                        
 					sqlite::query q1(_connection, "SELECT * FROM " + _table_name + " LIMIT 0");
 					for (auto i = 0; i < _column_names.size(); ++i) {
 						_column_names[i] = q1.column_name(i);
@@ -76,7 +75,7 @@ namespace qs {
 				}
                 Sqlite3DataSource(const Sqlite3DataSource& other) :
 					_connection(other._connection), 
-					_table_name(other._table_name), 
+					_table_name(other._table_name),
 					_column_names(other._column_names),
 					_impl::ImplDataSource<Type, Args...>(other) {}
 				virtual ~Sqlite3DataSource() {}
@@ -147,8 +146,56 @@ namespace qs {
 	}
 
 	namespace manager {
+
+		template <std::size_t N>
+		struct joiner_pk {
+			joiner_pk(std::ostringstream& os, const std::string& sep, const std::array<std::string, N>& column_names) : _os(os), _sep(sep), _column_names(column_names) {};
+			std::ostringstream& _os;
+			const std::string _sep;
+			const std::array<std::string, N>& _column_names;
+
+			void _on_type(const std::size_t& i, const std::string& column_type) {
+				if (i != 0) { _os << _sep; }
+				_os << _column_names[i] << " " << column_type;
+				if (i == 0) { _os << " PRIMARY KEY"; }
+			}
+
+			template <class T> inline void operator()(const std::size_t& i, const T& it); // Not implemented, only certain types allowed.
+			template <> inline void operator()<std::string>(const std::size_t& i, const std::string&) { _on_type(i, "TEXT"); }
+			template <> inline void operator()<int>(const std::size_t& i, const int&) { _on_type(i, "INT"); } // TODO: SFINAE for integral type
+			template <> inline void operator()<std::size_t>(const std::size_t& i, const std::size_t&) { _on_type(i, "INT"); }
+			template <> inline void operator()<float>(const std::size_t& i, const float&) { _on_type(i, "REAL"); } // TODO: SFINAE for real number typ
+			template <> inline void operator()<double>(const std::size_t& i, const double&) { _on_type(i, "REAL"); }
+		};
+
 		template <typename TModel>
-		using Sqlite3Manager = Manager<TModel, _impl::Sqlite3DataSource, sqlite::connection&, const std::string&>;
+		class Sqlite3Manager : public Manager<TModel, _impl::Sqlite3DataSource, sqlite::connection&, const std::string&> {
+			using DataSourceType = typename Manager<TModel, _impl::Sqlite3DataSource, sqlite::connection&, const std::string&>::DataSourceType;
+			using TupleType = typename DataSourceType::qs_type::value_type;
+			using ArrayType = typename std::array<std::string, std::tuple_size<TupleType>::value>;
+			public:
+				Sqlite3Manager(sqlite::connection& conn) : Manager(conn, _table_name) {}
+
+				static std::string create_table_sql() {
+					std::ostringstream sql; sql << "CREATE TABLE " + _table_name + " (";
+					joiner_pk<2> strfy(sql, ", ", _column_names);
+					::utils::tuple::enumerate(TupleType(), strfy);
+					sql << ")";
+					return sql.str();
+				}
+
+				static void create_table(sqlite::connection& connection) {
+					auto sql = create_table_sql();
+					connection.make_command(sql.str())->exec();
+				}
+
+				static const std::string& table_name() { return _table_name; };
+				static const ArrayType& column_names() { return _column_names; };
+			protected:
+				static const std::string _table_name;
+				static const ArrayType _column_names;
+		};
+
 	}
 
 }

@@ -44,6 +44,8 @@ namespace qs {
 	class Manager : public BaseManager<TModel> {
 		using Base = BaseManager<TModel>;
 		public:
+			using DataSourceType = typename _impl::expand<typename Base::QuerySet, TDataSource>::DataSourceType;
+		public:
 			Manager(Args... args) : _datasource(args...) {};
 			virtual ~Manager() {};
 
@@ -56,13 +58,15 @@ namespace qs {
 				_datasource.insert(item);
 			}
 		protected:
-			typename _impl::expand<typename Base::QuerySet, TDataSource>::DataSourceType _datasource;
+			DataSourceType _datasource;
 	};
 
 	template <typename TModel,
 			  template <typename T, typename... ArgsDataSource> class TDataSource>
 	class Manager<TModel, TDataSource, void> : public BaseManager<TModel> {
 		using Base = BaseManager<TModel>;
+		public:
+			using DataSourceType = typename _impl::expand<typename Base::QuerySet, TDataSource>::DataSourceType;
 		public:
 			Manager() {};
 			virtual ~Manager() {};
@@ -77,7 +81,7 @@ namespace qs {
 			}
 
 		protected:
-			typename _impl::expand<typename Base::QuerySet, TDataSource>::DataSourceType _datasource;
+			DataSourceType _datasource;
 	};
 
 
