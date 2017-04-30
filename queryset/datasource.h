@@ -33,8 +33,12 @@ namespace qs {
 
                 virtual qs_type apply(const FilterContainer<Type, Args...>& filters) const = 0;
                 virtual void remove(const FilterContainer<Type, Args...>& filters) const {
-                    throw std::runtime_error("Method delete not implemented");
+                    throw std::runtime_error("Method 'delete' not implemented");
                 };
+
+				virtual void insert(const std::tuple<Args...>& item) {
+					throw std::runtime_error("Method 'insert' not implemented");
+				}
         };
 
         template <typename Type, typename... Args>

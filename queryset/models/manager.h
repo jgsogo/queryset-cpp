@@ -35,6 +35,7 @@ namespace qs {
             virtual ~BaseManager() {};
 
             virtual QuerySet all() const = 0;
+			virtual void insert(const TModel& item) = 0;
     };
 
 	template <typename TModel,
@@ -49,6 +50,10 @@ namespace qs {
 			virtual typename Base::QuerySet all() const {
 				//SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, TModel>[{}]::all()", (void*)this);
 				return typename Base::QuerySet(_datasource);
+			}
+			
+			virtual void insert(const TModel& item) {
+				_datasource.insert(item);
 			}
 		protected:
 			typename _impl::expand<typename Base::QuerySet, TDataSource>::DataSourceType _datasource;
@@ -66,6 +71,11 @@ namespace qs {
 				//SPDLOG_DEBUG(spdlog::get("qs"), "Manager<std::string, TModel>[{}]::all()", (void*)this);
 				return typename Base::QuerySet(_datasource);
 			}
+
+			virtual void insert(const TModel& item) {
+				_datasource.insert(item);
+			}
+
 		protected:
 			typename _impl::expand<typename Base::QuerySet, TDataSource>::DataSourceType _datasource;
 	};

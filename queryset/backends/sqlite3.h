@@ -34,8 +34,17 @@ namespace qs {
         };
         template <>
         inline void joiner::operator()<std::string>(const std::size_t& i, const std::string& it) { _os << (i != 0 ? _sep : "") << "\"" + it + "\""; }
-        template <class T>
-        inline void joiner::operator()(const std::size_t& i, const T& it) { _os << (i != 0 ? _sep : "") << it; }
+		template <class T>
+		inline void joiner::operator()(const std::size_t& i, const T& it) {
+			// TODO: May use SFINAE instead of this if
+			if (std::integral_constant<bool, utils::HasToStringMethod<T>::Has>()) {
+				this->operator()(i, utils::to_string(it)); // Delegate so bundles are placed around strings.
+			}
+			else {
+				_os << (i != 0 ? _sep : "") << it;
+			}
+		}
+
 
         template <typename T> inline std::string equal_clause(const T& value) {
             return " = " + utils::to_string(value);
