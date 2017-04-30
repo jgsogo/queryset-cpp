@@ -7,6 +7,5 @@ file(GLOB utils_SRC
     "*.hpp"
 )
 
-# source_group (utils FILES ${utils_SRC})
 add_library(models ${utils_SRC})
 set_target_properties(models PROPERTIES LINKER_LANGUAGE CXX)
