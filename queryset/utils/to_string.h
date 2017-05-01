@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <iostream>
 #include <string>
+#include "../strong_typedef.h"
 
 
 namespace utils {
@@ -44,7 +45,11 @@ namespace utils {
     inline std::string to_string<std::string>(const std::string& t) {
         return t;
     }
-
+	
+	template <class T, int N>
+	std::string to_string(const strong_typedef<T, N>& t) {
+		return to_string(t.value);
+	}
 
 	template <class T,  typename... Args>
 	void call_to_string(const T& t, Args... args, std::function<void (const std::string&, Args...)> f) {

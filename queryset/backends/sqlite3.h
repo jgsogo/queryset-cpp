@@ -46,7 +46,13 @@ namespace qs {
 		}
 
         template <typename T> inline std::string equal_clause(const T& value) {
-            return " = " + utils::to_string(value);
+			// TODO: May use SFINAE instead of this if
+			if (std::integral_constant<bool, utils::HasToStringMethod<T>::Has>()) {
+				return equal_clause(utils::to_string(value)); // Delegate so bundles are placed around strings.
+			}
+			else {
+				return " = " + utils::to_string(value);
+			}
         }
         template <typename T> inline std::string equal_clause(const std::set<T>& values) {
             std::string sql = " IN (" + utils::join(values, ", ") + ")";
