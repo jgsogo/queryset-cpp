@@ -35,10 +35,16 @@ namespace qs {
                     return _data;
                 }
 
-                template <std::size_t I>
-                auto get() const {
-                    return std::get<I>(_data);
-                }
+				template <std::size_t I>
+				auto get() const {
+					if (I != 0 && !_evaluated) {
+						this->eval();
+					}
+					return std::get<I>(_data);
+				}
+
+			protected:
+				virtual void eval() const = 0;
 
             protected:
                 mutable tuple _data;
@@ -143,18 +149,18 @@ namespace qs {
                 static Manager manager;
                 return manager;
             }
-
-            template <typename... Args2>
-            static Manager& objects(Args2... args) {
-                static Manager manager(args...);
-                return manager;
-            }
+			
+            //template <typename... Args2>
+            //static Manager& objects(Args2... args) {
+            //    static Manager manager(args...);
+            //    return manager;
+            //}
 
         protected:
             void eval() const {
-                if (!BaseImpl::_evaluated) {
-                    BaseImpl::_data = TModel::objects().all().get(BaseImpl::pk());
-                    BaseImpl::_evaluated = true;
+                if (!this->_evaluated) {
+					this->_data = TModel::objects().all().get(this->pk());
+					this->_evaluated = true;
                 }
             }
     };
@@ -162,44 +168,9 @@ namespace qs {
     BaseModel<TModel, TManager, tpk, Args...>::~BaseModel() {};
 
 
-    template <template <typename TModel> class TManager,
-              typename tpk, typename... Args>
-    class BaseModel<void, TManager, tpk, Args...> : public _impl::BaseModel<BaseModel<void, TManager, tpk, Args...>, tpk, Args...> {
-        using BaseImpl = _impl::BaseModel<void, tpk, Args...>;
-        using Manager = TManager<BaseModel<void, TManager, tpk, Args...>>;
-        public:
-            using QuerySet = _impl::QuerySet<void, tpk, Args...>;;
-        public:
-            BaseModel() {};
-            BaseModel(const typename BaseImpl::tuple& data) : BaseImpl(data) {};
-            virtual ~BaseModel() = 0;
-
-            static Manager& objects() {
-                static Manager manager;
-                return manager;
-            }
-
-            template <typename... Args2>
-            static Manager& objects(Args2... args) {
-                static Manager manager(args...);
-                return manager;
-            }
-
-        protected:
-            void eval() const {
-                if (!BaseImpl::_evaluated) {
-                    BaseImpl::_data = _impl::BaseModel<BaseModel, tpk, Args...>::objects().all().get(BaseImpl::pk());
-                    BaseImpl::_evaluated = true;
-                }
-            }
-    };
     template <template <typename TModel> class TManager, typename tpk, typename... Args>
-    BaseModel<void, TManager, tpk, Args...>::~BaseModel() {};
-
-
-    template <template <typename TModel> class TManager, typename tpk, typename... Args>
-    class Model final : public BaseModel<void, TManager, tpk, Args...> {
-        using BaseM = BaseModel<void, TManager, tpk, Args...>;
+    class Model final : public BaseModel<Model<TManager, tpk, Args...>, TManager, tpk, Args...> {
+        using BaseM = BaseModel<Model<TManager, tpk, Args...>, TManager, tpk, Args...>;
         public:
             Model() {};
             Model(const typename BaseM::tuple& data) : BaseM(data) {};
