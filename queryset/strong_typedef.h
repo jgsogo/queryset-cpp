@@ -1,6 +1,9 @@
 
 #pragma once
 
+#include <spdlog/fmt/ostr.h>
+
+
 namespace utils {
     
     // Credit: http://stackoverflow.com/questions/23726038/how-can-i-create-a-new-primitive-type-using-c11-style-strong-typedefs
@@ -24,6 +27,11 @@ namespace utils {
         bool operator<(const strong_type& rhs) const {
             return value < rhs.value;
         }
+
+		// to_string method: used accross queryset-cpp
+		std::string to_string() const {
+			return std::string(value);
+		}
 
         // display it
         friend std::ostream& operator<<(std::ostream & lhs, const strong_typedef& rhs)
