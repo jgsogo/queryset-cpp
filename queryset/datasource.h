@@ -74,9 +74,9 @@ namespace qs {
         
     }
 
-    template <typename... Args>
-    using MemoryDataSource = _impl::MemoryDataSource<void, Args...>;
+    //template <typename... Args>
+    //using MemoryDataSource = _impl::MemoryDataSource<void, Args...>;
 
     template <typename Type, typename... Args>
-    using TypedMemoryDataSource = _impl::MemoryDataSource<Type, Args...>;
+    using MemoryDataSource = _impl::MemoryDataSource<Type, Args...>;
 }

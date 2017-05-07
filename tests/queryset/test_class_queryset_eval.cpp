@@ -5,23 +5,23 @@
 #include "../print_helper.hpp"
 #include "../../queryset/queryset.h"
 
-
-typedef qs::MemoryDataSource<int, std::string, float> myDataSource;
-typedef std::tuple<int, std::string, float> mytuple;
+typedef std::tuple<int, std::string, float> MyModelTuple;
+typedef qs::MemoryDataSource<MyModelTuple, int, std::string, float> myDataSource;
+//typedef std::tuple<int, std::string, float> mytuple;
 
 struct Fixture {
     Fixture() {
-        initial_qs >> mytuple{ 0, "hola", 0.f };
-        initial_qs >> mytuple{ 0, "bye", 0.1f };
-        initial_qs >> mytuple{ 0, "ciao", 0.2f };
+        initial_qs >> MyModelTuple{ 0, "hola", 0.f };
+        initial_qs >> MyModelTuple{ 0, "bye", 0.1f };
+        initial_qs >> MyModelTuple{ 0, "ciao", 0.2f };
 
-        initial_qs >> mytuple{ 1, "hola", 1.f };
-        initial_qs >> mytuple{ 1, "bye", 1.1f };
-        initial_qs >> mytuple{ 1, "ciao", 1.2f };
+        initial_qs >> MyModelTuple{ 1, "hola", 1.f };
+        initial_qs >> MyModelTuple{ 1, "bye", 1.1f };
+        initial_qs >> MyModelTuple{ 1, "ciao", 1.2f };
 
-        initial_qs >> mytuple{ 2, "hola", 2.f };
-        initial_qs >> mytuple{ 2, "bye", 2.1f };
-        initial_qs >> mytuple{ 2, "ciao", 2.2f };
+        initial_qs >> MyModelTuple{ 2, "hola", 2.f };
+        initial_qs >> MyModelTuple{ 2, "bye", 2.1f };
+        initial_qs >> MyModelTuple{ 2, "ciao", 2.2f };
     }
     ~Fixture() {}
 
@@ -32,7 +32,7 @@ BOOST_FIXTURE_TEST_SUITE(queryset_class, Fixture)
 
 BOOST_AUTO_TEST_CASE(eval_once)
 {
-    QuerySet<int, std::string, float> qs(initial_qs);
+    QuerySet<MyModelTuple, int, std::string, float> qs(initial_qs);
     auto f0 = qs.filter(0);
     BOOST_CHECK_EQUAL(f0.count(), 3);
     #ifdef _DEBUG

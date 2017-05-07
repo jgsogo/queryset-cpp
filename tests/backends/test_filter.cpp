@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_SUITE(common_filter)
 
 BOOST_FIXTURE_TEST_CASE_TEMPLATE(basic, T, test_types, T)
 {
-    qs::FilterContainer<int, std::string, float> filters;
+    qs::FilterContainer<MyModelTuple, int, std::string, float> filters;
     auto qs = T::datasource.apply(filters);
 
     BOOST_CHECK(qs.size() == 4);
@@ -22,7 +22,7 @@ BOOST_FIXTURE_TEST_CASE_TEMPLATE(basic, T, test_types, T)
 
 BOOST_FIXTURE_TEST_CASE_TEMPLATE(filter_one_string, T, test_types, T)
 {
-    qs::FilterContainer<int, std::string, float> filters;
+    qs::FilterContainer<MyModelTuple, int, std::string, float> filters;
 	filters.add_filter<std::string>("jgsogo");
 	auto qs = T::datasource.apply(filters);
 
@@ -31,7 +31,7 @@ BOOST_FIXTURE_TEST_CASE_TEMPLATE(filter_one_string, T, test_types, T)
 
 BOOST_FIXTURE_TEST_CASE_TEMPLATE(filter_one_numeric, T, test_types, T)
 {
-	qs::FilterContainer<int, std::string, float> filters;
+	qs::FilterContainer<MyModelTuple, int, std::string, float> filters;
 	filters.add_filter<float>(1.0);
 	auto qs = T::datasource.apply(filters);
 
@@ -52,7 +52,7 @@ BOOST_FIXTURE_TEST_CASE_TEMPLATE(filter_several_string, T, test_types, T, *boost
 
 BOOST_FIXTURE_TEST_CASE_TEMPLATE(filter_several_numeric, T, test_types, T)
 {
-	qs::FilterContainer<int, std::string, float> filters;
+	qs::FilterContainer<MyModelTuple, int, std::string, float> filters;
 	filters.add_filter<float>({ 1.0f, 0.9f });
 	auto qs = T::datasource.apply(filters);
 
@@ -61,7 +61,7 @@ BOOST_FIXTURE_TEST_CASE_TEMPLATE(filter_several_numeric, T, test_types, T)
 
 BOOST_FIXTURE_TEST_CASE_TEMPLATE(filter_combined, T, test_types, T)
 {
-	qs::FilterContainer<int, std::string, float> filters;
+	qs::FilterContainer<MyModelTuple, int, std::string, float> filters;
 	filters.add_filter<std::string>("jgsogo");
 	filters.add_filter<float>(1.0);
 	auto qs = T::datasource.apply(filters);
@@ -71,7 +71,7 @@ BOOST_FIXTURE_TEST_CASE_TEMPLATE(filter_combined, T, test_types, T)
 
 BOOST_FIXTURE_TEST_CASE_TEMPLATE(filter_no_match_string, T, test_types, T)
 {
-	qs::FilterContainer<int, std::string, float> filters;
+	qs::FilterContainer<MyModelTuple, int, std::string, float> filters;
 	filters.add_filter<std::string>("----");
 	auto qs = T::datasource.apply(filters);
 
@@ -80,7 +80,7 @@ BOOST_FIXTURE_TEST_CASE_TEMPLATE(filter_no_match_string, T, test_types, T)
 
 BOOST_FIXTURE_TEST_CASE_TEMPLATE(filter_no_match_numeric, T, test_types, T)
 {
-    qs::FilterContainer<int, std::string, float> filters;
+    qs::FilterContainer<MyModelTuple, int, std::string, float> filters;
     filters.add_filter<int>(23);
     auto qs = T::datasource.apply(filters);
 

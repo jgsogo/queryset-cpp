@@ -5,7 +5,9 @@
 #include "../../queryset/backends/sqlite3.h"
 #include "../config_tests.h"
 
-typedef qs::backends::Sqlite3DataSource<int, std::string, float> myDataSource;
+typedef std::tuple<int, std::string, float> MyModel;
+
+typedef qs::sqlite3::DataSource<MyModel, int, std::string, float> myDataSource;
 typedef myDataSource::qs_type::value_type mytuple;
 
 

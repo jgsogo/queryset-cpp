@@ -7,8 +7,8 @@
 #include "../../queryset/backends/filesystem.h"
 
 
-class MyModel : public qs::BaseModel<MyModel, qs::manager::FileManager, int, std::string, float> {
-    using BaseModel = qs::BaseModel<MyModel, qs::manager::FileManager, int, std::string, float>;
+class MyModel : public qs::BaseModel<MyModel, qs::filesystem::Manager, int, std::string, float> {
+    using BaseModel = qs::BaseModel<MyModel, qs::filesystem::Manager, int, std::string, float>;
     public:
         MyModel() : BaseModel() {}
         MyModel(const BaseModel::tuple& t) : BaseModel(t) {}
@@ -17,23 +17,19 @@ class MyModel : public qs::BaseModel<MyModel, qs::manager::FileManager, int, std
             return 12;
         }
 };
+const std::string qs::filesystem::Manager<MyModel>::_filename = (test_data_dir / boost::filesystem::path("ex_filequeryset.tsv")).string();
+
 
 BOOST_AUTO_TEST_SUITE(model_custom)
 
 BOOST_AUTO_TEST_CASE(count)
 {
-    namespace fs = boost::filesystem;
-    fs::path full_path = test_data_dir / fs::path("ex_filequeryset.tsv");
-
-    BOOST_CHECK_EQUAL(MyModel::objects(full_path.string()).all().count(), 3);
+    BOOST_CHECK_EQUAL(MyModel::objects().all().count(), 3);
 }
 
 BOOST_AUTO_TEST_CASE(custom_method)
 {
-    namespace fs = boost::filesystem;
-    fs::path full_path = test_data_dir / fs::path("ex_filequeryset.tsv");
-
-    auto item1 = MyModel::objects(full_path.string()).all().get(1);
+    auto item1 = MyModel::objects().all().get(1);
     BOOST_CHECK_EQUAL(item1.pk(), 1);
     BOOST_CHECK_EQUAL(item1.product(), 12);
 }

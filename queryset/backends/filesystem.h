@@ -35,18 +35,24 @@ namespace qs {
 		};
 	}
 
-	namespace backends {
+	namespace filesystem {
 
-		template <typename... Args>
-		using FileDataSource = _impl::FileDataSource<void, Args...>;
+		//template <typename... Args>
+		//using DataSource = _impl::FileDataSource<void, Args...>;
 
 		template <typename Type, typename... Args>
-		using TypedFileDataSource = _impl::FileDataSource<Type, Args...>;
+		using DataSource = _impl::FileDataSource<Type, Args...>;
 
-	}
 
-	namespace manager {
 		template <typename TModel>
-		using FileManager = Manager<TModel, _impl::FileDataSource, std::string>;
+		class Manager : public qs::Manager<TModel, _impl::FileDataSource, std::string> {
+			public:
+				Manager() : qs::Manager<TModel, _impl::FileDataSource, std::string>(_filename) {};
+
+				static const std::string& filename() { return _filename; };
+			protected:
+				static const std::string _filename;
+		};
+
 	}
 }

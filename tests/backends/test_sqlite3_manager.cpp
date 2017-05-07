@@ -11,8 +11,8 @@ const std::array<std::string, 2> column_names_2_ = { "int", "string" };
 const std::array<std::string, 3> column_names_3_ = { "int", "string1", "string2" };
 
 /* Test with querysets model */
-typedef qs::Model<qs::manager::Sqlite3Manager, int, std::string> myModel;
-typedef qs::manager::Sqlite3Manager<myModel> myManager;
+typedef qs::Model<qs::sqlite3::Manager, int, std::string> myModel;
+typedef qs::sqlite3::Manager<myModel> myManager;
 const std::string myManager::_table_name = table_name_;
 const std::array<std::string, 2> myManager::_column_names = column_names_2_;
 
@@ -39,13 +39,13 @@ BOOST_AUTO_TEST_SUITE_END()
 
 
 /* Custom model */
-class CustomModel : public qs::BaseModel<CustomModel, qs::manager::Sqlite3Manager, int, std::string, std::string> {
+class CustomModel : public qs::BaseModel<CustomModel, qs::sqlite3::Manager, int, std::string, std::string> {
 public:
 	CustomModel() {};
-	CustomModel(const BaseModel::tuple& data) : qs::BaseModel<CustomModel, qs::manager::Sqlite3Manager, int, std::string, std::string>(data) {};
+	CustomModel(const BaseModel::tuple& data) : qs::BaseModel<CustomModel, qs::sqlite3::Manager, int, std::string, std::string>(data) {};
 	virtual ~CustomModel() {};
 };
-typedef qs::manager::Sqlite3Manager<CustomModel> CustomModelManager;
+typedef qs::sqlite3::Manager<CustomModel> CustomModelManager;
 const std::string CustomModelManager::_table_name = table_name_;
 const std::array<std::string, 3> CustomModelManager::_column_names = column_names_3_;
 

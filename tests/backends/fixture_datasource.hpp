@@ -8,9 +8,11 @@
 #include "../../queryset/datasource.h"
 #include "../config_tests.h"
 
-typedef qs::MemoryDataSource<int, std::string, float> MemoryDataSource;
-typedef qs::backends::FileDataSource<int, std::string, float> FileDataSource;
-typedef qs::backends::Sqlite3DataSource<int, std::string, float> SQLite3DataSource;
+typedef std::tuple<int, std::string, float> MyModelTuple;
+
+typedef qs::MemoryDataSource<MyModelTuple, int, std::string, float> MemoryDataSource;
+typedef qs::filesystem::DataSource<MyModelTuple, int, std::string, float> FileDataSource;
+typedef qs::sqlite3::DataSource<MyModelTuple, int, std::string, float> SQLite3DataSource;
 
 template <typename T>
 struct FixtureDataSource;
@@ -23,10 +25,10 @@ struct FixtureDataSource<MemoryDataSource> {
     };
     void populate() {
         typedef MemoryDataSource::qs_type::value_type mytuple;
-        datasource >> mytuple{1, "jgsogo", 1.f};
-        datasource >> mytuple{2, "conan", 0.9f};
-        datasource >> mytuple{3, "lasote", 1.f};
-        datasource >> mytuple{4, "jgsogo", 0.9f};
+        datasource >> MyModelTuple{1, "jgsogo", 1.f};
+        datasource >> MyModelTuple{2, "conan", 0.9f};
+        datasource >> MyModelTuple{3, "lasote", 1.f};
+        datasource >> MyModelTuple{4, "jgsogo", 0.9f};
     }
 
     MemoryDataSource datasource;
@@ -62,10 +64,10 @@ struct FixtureDataSource<SQLite3DataSource> {
     }
     void populate() {
         // or, for brevity
-		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << 1 << "jgsogo" << 1.0 << sqlite::exec;
-		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << 2 << "conan" << 0.9 << sqlite::exec;
-		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << 3 << "lasote" << 1.0 << sqlite::exec;
-		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << 4 << "jgsogo" << 0.9 << sqlite::exec;
+		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << int(1) << "jgsogo" << 1.0 << sqlite::exec;
+		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << int(2) << "conan" << 0.9 << sqlite::exec;
+		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << int(3) << "lasote" << 1.0 << sqlite::exec;
+		*connection.make_command("INSERT INTO people VALUES( ?, ?, ? )") << int(4) << "jgsogo" << 0.9 << sqlite::exec;
     }
 
 	const fs::path database = fs::temp_directory_path() / fs::unique_path();

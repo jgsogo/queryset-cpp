@@ -129,10 +129,10 @@ namespace qs {
         };
     }
 
-    template <typename... Args>
-    using FilterContainer = _impl::FilterContainer<void, Args...>;
+    //template <typename... Args>
+    //using FilterContainer = _impl::FilterContainer<void, Args...>;
 
     template <typename Type, typename... Args>
-    using TypedFilterContainer = _impl::FilterContainer<Type, Args...>;
+    using FilterContainer = _impl::FilterContainer<Type, Args...>;
 
 }

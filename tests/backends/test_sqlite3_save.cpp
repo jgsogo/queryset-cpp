@@ -11,7 +11,7 @@ BOOST_FIXTURE_TEST_SUITE(backends_sqlite3_save, FixtureDataSource<SQLite3DataSou
 
 BOOST_AUTO_TEST_CASE(add_one)
 {
-    QuerySet<int, std::string, float> qs(datasource);
+    QuerySet<MyModelTuple, int, std::string, float> qs(datasource);
     BOOST_CHECK_EQUAL(qs.count(), 4);
     
     // Add one item to db
@@ -25,17 +25,17 @@ BOOST_AUTO_TEST_CASE(add_one)
 BOOST_AUTO_TEST_CASE(delete_one)
 {
     {
-        QuerySet<int, std::string, float> qs(datasource);
+        QuerySet<MyModelTuple, int, std::string, float> qs(datasource);
         BOOST_CHECK_EQUAL(qs.count(), 4);
     }
     {
-        QuerySet<int, std::string, float> qs(datasource);
+        QuerySet<MyModelTuple, int, std::string, float> qs(datasource);
         qs.filter(1);
         BOOST_CHECK_EQUAL(qs.count(), 1);
         qs.remove();
     }
     {
-        QuerySet<int, std::string, float> qs(datasource);
+        QuerySet<MyModelTuple, int, std::string, float> qs(datasource);
         BOOST_CHECK_EQUAL(qs.count(), 3);
     }
 }

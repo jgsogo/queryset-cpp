@@ -143,15 +143,12 @@ namespace qs {
 
 	}
 
-	namespace backends {
-		template <typename... Args>
-		using Sqlite3DataSource = _impl::Sqlite3DataSource<void, Args...>;
+	namespace sqlite3 {
+		//template <typename... Args>
+		//using Sqlite3DataSource = _impl::Sqlite3DataSource<void, Args...>;
 
 		template <typename Type, typename... Args>
-		using TypedSqlite3DataSource = _impl::Sqlite3DataSource<Type, Args...>;
-	}
-
-	namespace manager {
+		using DataSource = _impl::Sqlite3DataSource<Type, Args...>;
 
 		template <std::size_t N>
 		struct joiner_pk {
@@ -174,12 +171,13 @@ namespace qs {
 		};
 
 		template <typename TModel>
-		class Sqlite3Manager : public Manager<TModel, _impl::Sqlite3DataSource, sqlite::connection&, const std::string&> {
-			using DataSourceType = typename Manager<TModel, _impl::Sqlite3DataSource, sqlite::connection&, const std::string&>::DataSourceType;
+		class Manager : public qs::Manager<TModel, _impl::Sqlite3DataSource, sqlite::connection&, const std::string&> {
+			using BaseManager = typename qs::Manager<TModel, _impl::Sqlite3DataSource, sqlite::connection&, const std::string&>;
+			using DataSourceType = typename BaseManager::DataSourceType;
 			using TupleType = typename DataSourceType::tuple_type;
 			using ArrayType = typename std::array<std::string, std::tuple_size<TupleType>::value>;
 			public:
-				Sqlite3Manager(sqlite::connection& conn) : Manager(conn, _table_name) {}
+				Manager() : BaseManager(get_connection(), _table_name) {}
 
 				static std::string create_table_sql() {
 					std::ostringstream sql; sql << "CREATE TABLE " + _table_name + " (";
@@ -193,6 +191,8 @@ namespace qs {
 					auto sql = create_table_sql();
 					conn.make_command(sql)->exec();
 				}
+
+				static sqlite::connection& get_connection();
 
 				static const std::string& table_name() { return _table_name; };
 				static const ArrayType& column_names() { return _column_names; };

@@ -16,6 +16,16 @@ namespace qs {
             };
         };
 
+		template <typename... Args>
+		struct utils_queryset<std::tuple<Args...>, Args...> {
+			typedef typename utils::queryset<Args...> type;
+			typedef typename std::tuple<Args...> tuple_type;
+			static const std::tuple<Args...>& as_tuple(const std::tuple<Args...>& item) {
+				return item;
+			};
+		};
+
+		/*
         template <typename... Args>
         struct utils_queryset<void, Args...> {
             typedef typename utils::queryset<Args...> type;
@@ -24,6 +34,7 @@ namespace qs {
                 return item;
             };
         };
+		*/
 
     }
 }
