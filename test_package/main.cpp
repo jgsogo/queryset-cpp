@@ -7,6 +7,6 @@
 int main(int argc, char** argv){
     std::cout << "== QuerysetCPP Test Package ==\n";
     
-    typedef qs::Model<int, float> MyModel;
+    typedef qs::Model<qs::memory::Manager, int, float> MyModel;
     std::cout << "Count is: " << MyModel::objects().all().count() << std::endl;
 }
