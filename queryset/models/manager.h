@@ -85,8 +85,8 @@ namespace qs {
 	};
 
 
-    namespace manager {
+    namespace memory {
         template <typename TModel>
-        using MemoryManager = Manager<TModel, _impl::MemoryDataSource, void>;
+        using Manager = qs::Manager<TModel, _impl::MemoryDataSource, void>;
     }
 }

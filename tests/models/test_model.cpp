@@ -6,7 +6,7 @@
 #include "../config_tests.h"
 #include "../../queryset/backends/filesystem.h"
 
-typedef qs::Model<qs::manager::MemoryManager, int, float> MyModelMemory;
+typedef qs::Model<qs::memory::Manager, int, float> MyModelMemory;
 typedef qs::Model <qs::filesystem::Manager, int, std::string, float > MyModelFilesystem;
 const std::string qs::filesystem::Manager<MyModelFilesystem>::_filename = (test_data_dir / boost::filesystem::path("ex_filequeryset.tsv")).string();
 
