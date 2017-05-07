@@ -17,5 +17,10 @@ if __name__ == "__main__":
                                  args = "--scope queryset-cpp:BUILD_TEST=1 --build=missing"
                                 )
     builder.add_common_builds(pure_c=False)
+    filtered_builds = []
+    for settings, options, env_vars, build_requires in builder.builds:
+        if settings["build_type"] == "Release":
+            filtered_builds.append([settings, options, env_vars, build_requires])
+    builder.builds = filtered_builds
     print("{} builds ahead!".format(len(builder.builds)))
     builder.run()
