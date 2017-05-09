@@ -164,10 +164,11 @@ namespace qs {
 			}
 
 			template <class T> inline void operator()(const std::size_t& i, const T&) { _on_type(i, "TEXT"); } // All is text except some fixed types.
-			template <> inline void operator()<int>(const std::size_t& i, const int&) { _on_type(i, "INT"); } // TODO: SFINAE for integral type
-			template <> inline void operator()<std::size_t>(const std::size_t& i, const std::size_t&) { _on_type(i, "INT"); }
-			template <> inline void operator()<float>(const std::size_t& i, const float&) { _on_type(i, "REAL"); } // TODO: SFINAE for real number typ
-			template <> inline void operator()<double>(const std::size_t& i, const double&) { _on_type(i, "REAL"); }
+			// TODO: These functions should be specializations of the one before
+			inline void operator()(const std::size_t& i, const int&) { _on_type(i, "INT"); } // TODO: SFINAE for integral type
+			inline void operator()(const std::size_t& i, const std::size_t&) { _on_type(i, "INT"); }
+			inline void operator()(const std::size_t& i, const float&) { _on_type(i, "REAL"); } // TODO: SFINAE for real number typ
+			inline void operator()(const std::size_t& i, const double&) { _on_type(i, "REAL"); }
 		};
 
 		template <typename TModel>

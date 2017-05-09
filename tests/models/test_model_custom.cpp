@@ -17,7 +17,7 @@ class MyModel : public qs::BaseModel<MyModel, qs::filesystem::Manager, int, std:
             return 12;
         }
 };
-const std::string qs::filesystem::Manager<MyModel>::_filename = (test_data_dir / boost::filesystem::path("ex_filequeryset.tsv")).string();
+template<> const std::string qs::filesystem::Manager<MyModel>::_filename = (test_data_dir / boost::filesystem::path("ex_filequeryset.tsv")).string();
 
 
 BOOST_AUTO_TEST_SUITE(model_custom)

@@ -19,30 +19,29 @@ class MyModelManager : public qs::filesystem::Manager<TModel> {
         }
 };
 
-class MyModel : public qs::BaseModel<MyModel, MyModelManager, int, std::string, float> {
-    using BaseModel = qs::BaseModel<MyModel, MyModelManager, int, std::string, float>;
+class MyModelCustom : public qs::BaseModel<MyModelCustom, MyModelManager, int, std::string, float> {
+    using BaseModel = qs::BaseModel<MyModelCustom, MyModelManager, int, std::string, float>;
     public:
-        MyModel() : BaseModel() {}
-        MyModel(const BaseModel::tuple& t) : BaseModel(t) {}
+        MyModelCustom() : BaseModel() {}
+        MyModelCustom(const BaseModel::tuple& t) : BaseModel(t) {}
 
         std::size_t product() {
             return 12;
         }
 };
-
-const std::string qs::filesystem::Manager<MyModel>::_filename = (test_data_dir / boost::filesystem::path("ex_filequeryset.tsv")).string();
+template<> const std::string qs::filesystem::Manager<MyModelCustom>::_filename = (test_data_dir / boost::filesystem::path("ex_filequeryset.tsv")).string();
 
 
 BOOST_AUTO_TEST_SUITE(model_custom_manager)
 
 BOOST_AUTO_TEST_CASE(count)
 {
-    BOOST_CHECK_EQUAL(MyModel::objects().all().count(), 1);
+    BOOST_CHECK_EQUAL(MyModelCustom::objects().all().count(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(custom_method)
 {
-    auto item1 = MyModel::objects().all().get(1);
+    auto item1 = MyModelCustom::objects().all().get(1);
     BOOST_CHECK_EQUAL(item1.pk(), 1);
     BOOST_CHECK_EQUAL(item1.product(), 12);
 }
