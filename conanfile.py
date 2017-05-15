@@ -13,6 +13,8 @@ class QuerysetCPP(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     exports = "conanfile.py", "CMakeLists.txt", "queryset/*", "tests/*"
     url = "https://github.com/jgsogo/queryset-cpp"
+    options = {"shared": [True, False],}
+    default_options = "shared=True"
 
     def requirements(self):
         self.requires.add("Boost/1.60.0@lasote/stable")

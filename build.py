@@ -16,7 +16,7 @@ if __name__ == "__main__":
                                  apple_clang_versions = ["6.1", "7.0", "7.3", "8.0",],
                                  args = "--scope queryset-cpp:BUILD_TEST=1 --build=missing"
                                 )
-    builder.add_common_builds(pure_c=False)
+    builder.add_common_builds(shared_option_name="queryset-cpp:shared")
     filtered_builds = []
     for settings, options, env_vars, build_requires in builder.builds:
         if settings["build_type"] == "Release":
