@@ -16,9 +16,9 @@ configure_file(config_tests.h.cmake ${CMAKE_CURRENT_LIST_DIR}/config_tests.h)
 file(COPY data/ex_filequeryset.tsv DESTINATION ${TEST_DATA_PATH})
 file(COPY data/fixture_datasource.tsv DESTINATION ${TEST_DATA_PATH})
 
-if(UNIX)
+if(BUILD_SHARED_LIBS)
     add_definitions(-DBOOST_TEST_DYN_LINK)
-endif(UNIX)
+endif(BUILD_SHARED_LIBS)
 
 # Add subdirectories with tests
 add_subdirectory(queryset)
