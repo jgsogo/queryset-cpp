@@ -33,4 +33,19 @@ BOOST_AUTO_TEST_CASE(manager_file)
     BOOST_CHECK_EQUAL(manager.all().count(), 3);
 }
 
+BOOST_AUTO_TEST_CASE(get_method_basic)
+{
+	MyModelFilesystem m(std::make_tuple(1, "str", 2.f));
+	BOOST_CHECK_EQUAL(m.get<0>(), m.get<int>());
+	BOOST_CHECK_EQUAL(m.get<1>(), m.get<std::string>());
+	BOOST_CHECK_EQUAL(m.get<2>(), m.get<float>());
+}
+
+BOOST_AUTO_TEST_CASE(get_method_fail)
+{
+	typedef qs::Model<qs::memory::Manager, int, float, int> MyModelMemory2;
+	MyModelMemory2 a;
+	//a.get<int>(); // TODO: Can I check for static_assert?
+}
+
 BOOST_AUTO_TEST_SUITE_END()

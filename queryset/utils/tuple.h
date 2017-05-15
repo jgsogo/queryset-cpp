@@ -53,7 +53,7 @@ namespace utils {
         }
 
         // Index of a given type
-        namespace {
+        //namespace {
             template <class T, class Tuple>
             struct Index;
 
@@ -66,12 +66,12 @@ namespace utils {
             struct Index<T, std::tuple<U, Types...>> {
                 static const std::size_t value = 1 + Index<T, std::tuple<Types...>>::value;
             };
-        }
+        //}
         
-        template <typename T, typename... Ts>
-        constexpr std::size_t index() {
-            return Index<T, std::tuple<Ts...>>::value;
-        }
+		template <typename T, typename... Ts>
+		constexpr std::size_t index() {
+			return Index<T, std::tuple<Ts...>>::value;
+		}
 
         // Remove ith type of a tuple
         template<size_t I, typename T>
@@ -205,7 +205,7 @@ namespace utils {
 			enumerate<I + 1, FuncT, Tp...>(t, f);
 		}
 
-        /*
+        
         // Reverse a tuple
         template <typename... Ts>
         struct tuple_reverse;
@@ -221,10 +221,9 @@ namespace utils {
         {
             using head = std::tuple<T>;
             using tail = typename tuple_reverse<std::tuple<Ts...>>::type;
-
             using type = decltype(std::tuple_cat(std::declval<tail>(), std::declval<head>()));
         };
-
+		/*
         template<typename T, typename TT = typename std::remove_reference<T>::type, size_t... I>
         auto
             reverse_impl(T&& t, std::index_sequence<I...>)

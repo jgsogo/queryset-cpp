@@ -132,4 +132,13 @@ BOOST_AUTO_TEST_CASE(tuple_get)
     BOOST_CHECK_EQUAL(std::get<std::string>(a), "hola");
 }
 
+BOOST_AUTO_TEST_CASE(tuple_reverse)
+{
+	mytuple a{ 2, "hola", 0.f };
+	typedef utils::tuple::tuple_reverse<mytuple>::type myreversed_tuple;
+	myreversed_tuple b{ 0.f, "hola", 2 };
+
+	BOOST_CHECK_EQUAL(std::get<0>(a), std::get<2>(b));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
