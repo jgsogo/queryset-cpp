@@ -46,7 +46,7 @@ namespace qs {
 				template <typename T>
 				auto get() const {
 					constexpr std::size_t index = ::utils::tuple::index<T, tpk, Args...>();
-					using tuple_reversed = ::utils::tuple::tuple_reverse<std::tuple<tpk, Args...>>::type;
+					using tuple_reversed = typename ::utils::tuple::tuple_reverse<std::tuple<tpk, Args...>>::type;
 					constexpr std::size_t reversed_index =  std::tuple_size<tuple_reversed>() - ::utils::tuple::Index<T, tuple_reversed>::value - 1;
 					static_assert(index == reversed_index, "It seems that the model has two fields of the same type. Cannot desambiguate.");
 
