@@ -13,8 +13,8 @@ const std::array<std::string, 3> column_names_3_ = { "int", "string1", "string2"
 /* Test with querysets model */
 typedef qs::Model<qs::sqlite3::Manager, int, std::string> myModel;
 typedef qs::sqlite3::Manager<myModel> myManager;
-const std::string myManager::_table_name = table_name_;
-const std::array<std::string, 2> myManager::_column_names = column_names_2_;
+template<> const std::string myManager::_table_name = table_name_;
+template<> const std::array<std::string, 2> myManager::_column_names = column_names_2_;
 
 BOOST_AUTO_TEST_SUITE(sqlite3_manager)
 
@@ -46,8 +46,8 @@ public:
 	virtual ~CustomModel() {};
 };
 typedef qs::sqlite3::Manager<CustomModel> CustomModelManager;
-const std::string CustomModelManager::_table_name = table_name_;
-const std::array<std::string, 3> CustomModelManager::_column_names = column_names_3_;
+template<> const std::string CustomModelManager::_table_name = table_name_;
+template<> const std::array<std::string, 3> CustomModelManager::_column_names = column_names_3_;
 
 BOOST_AUTO_TEST_SUITE(sqlite3_manager_custom_model)
 
