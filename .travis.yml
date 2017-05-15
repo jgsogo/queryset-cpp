@@ -9,7 +9,7 @@ env:
     - CONAN_USERNAME="jgsogo"
     - CONAN_CHANNEL="ci"
     - CONAN_TOTAL_PAGES=8
-    - CONAN_PIP_PACKAGE="conan bzr --upgrade"  # When using docker this is how we can install pacakges there (needed for sqlite3cc/dev@jgsogo/ci
+    - CONAN_PIP_PACKAGE="conan --upgrade"  # When using docker this is how we can install pacakges there (needed for sqlite3cc/dev@jgsogo/ci
 
   matrix:
     - CONAN_USE_DOCKER=1 CONAN_CURRENT_PAGE=1
