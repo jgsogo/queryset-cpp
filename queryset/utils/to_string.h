@@ -37,7 +37,7 @@ namespace utils {
     }
 
     template <class T>
-    std::string to_string(const T& t) {
+    inline std::string to_string(const T& t) {
         return to_string_impl(t, std::integral_constant<bool, HasToStringMethod<T>::Has>());
     }
 
@@ -47,7 +47,7 @@ namespace utils {
     }
 	
 	template <class T, int N>
-	std::string to_string(const strong_typedef<T, N>& t) {
+	inline std::string to_string(const strong_typedef<T, N>& t) {
 		return to_string(t.value);
 	}
 
