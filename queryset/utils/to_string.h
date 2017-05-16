@@ -4,6 +4,8 @@
 #include <type_traits>
 #include <iostream>
 #include <string>
+#include <boost/filesystem/path.hpp>
+
 #include "../strong_typedef.h"
 
 
@@ -41,11 +43,16 @@ namespace utils {
         return to_string_impl(t, std::integral_constant<bool, HasToStringMethod<T>::Has>());
     }
 
-    template <>
-    inline std::string to_string<std::string>(const std::string& t) {
-        return t;
-    }
-	
+	template <>
+	inline std::string to_string<std::string>(const std::string& t) {
+		return t;
+	}
+
+	template <>
+	inline std::string to_string<boost::filesystem::path>(const boost::filesystem::path& t) {
+		return t.string();
+	}
+
 	template <class T, int N>
 	inline std::string to_string(const strong_typedef<T, N>& t) {
 		return to_string(t.value);
