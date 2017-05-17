@@ -12,8 +12,6 @@ if __name__ == "__main__":
     builder = ConanMultiPackager(username=username,
                                  reference=reference,
                                  visual_versions=["14",],
-                                 gcc_versions = ["5.4", "6.3",],
-                                 apple_clang_versions = ["7.3", "8.1",],
                                  args = "--scope queryset-cpp:BUILD_TEST=1 --build=missing"
                                 )
     builder.add_common_builds(shared_option_name="queryset-cpp:shared")
