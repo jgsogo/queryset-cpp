@@ -10,4 +10,5 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
     pyenv activate conan
 fi
 
+locate -b bzr | fgrep -w bin
 python build.py
