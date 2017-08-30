@@ -143,7 +143,7 @@ namespace qs {
 
 
     template <typename TModel,
-              template <typename TModel> class TManager,
+              template <typename /*TModel*/> class TManager,
               typename tpk, typename... Args>
     class BaseModel : public _impl::BaseModel<TModel, tpk, Args...> {
         using BaseImpl = _impl::BaseModel<TModel, tpk, Args...>;
@@ -174,11 +174,11 @@ namespace qs {
                 }
             }
     };
-    template <typename TModel, template <typename TModel> class TManager, typename tpk, typename... Args>
+    template <typename TModel, template <typename /*TModel*/> class TManager, typename tpk, typename... Args>
     BaseModel<TModel, TManager, tpk, Args...>::~BaseModel() {};
 
 
-    template <template <typename TModel> class TManager, typename tpk, typename... Args>
+    template <template <typename /*TModel*/> class TManager, typename tpk, typename... Args>
     class Model final : public BaseModel<Model<TManager, tpk, Args...>, TManager, tpk, Args...> {
         using BaseM = BaseModel<Model<TManager, tpk, Args...>, TManager, tpk, Args...>;
         public:
@@ -189,7 +189,7 @@ namespace qs {
     };
 
     // std::get delegate, we not always have a std::tuple here
-    template <std::size_t I, typename TModel, template <typename TModel> class TManager, typename tpk, typename... Args>
+    template <std::size_t I, typename TModel, template <typename /*TModel*/> class TManager, typename tpk, typename... Args>
     auto getter(const qs::BaseModel<TModel, TManager, tpk, Args...>& item) {
         return item.template get<I>();
     }
@@ -197,8 +197,9 @@ namespace qs {
 }
 
 
-template<class Ch, class Tr, typename TModel, template <typename TModel> class TManager, typename tpk, typename... Args>
+template<class Ch, class Tr, typename TModel, template <typename /*TModel*/> class TManager, typename tpk, typename... Args>
 std::basic_ostream<Ch, Tr>& operator<<(std::basic_ostream<Ch, Tr>& os, const qs::BaseModel<TModel, TManager, tpk, Args...>& rhs) {
     rhs.print(os);
     return os;
 }
+
