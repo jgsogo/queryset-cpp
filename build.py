@@ -11,7 +11,8 @@ reference = os.getenv("CONAN_REFERENCE", "{}/{}".format(QuerysetCPP.name, Querys
 if __name__ == "__main__":
     builder = ConanMultiPackager(username=username,
                                  reference=reference,
-                                 args = "--scope queryset-cpp:BUILD_TEST=1 --build=missing"
+                                 args = "--scope queryset-cpp:BUILD_TEST=1 --build=missing",
+                                 stable_branch_pattern="master"
                                 )
     builder.add_common_builds(shared_option_name="queryset-cpp:shared")
     filtered_builds = []
