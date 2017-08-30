@@ -45,6 +45,8 @@ matrix:
         env: CONAN_APPLE_CLANG_VERSIONS=8.1
 
 install:
+  - chmod +x ./.travis/install.sh
   - ./.travis/install.sh
 script:
+  - chmod +x ./.travis/run.sh
   - ./.travis/run.sh
