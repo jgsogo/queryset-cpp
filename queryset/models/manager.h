@@ -7,36 +7,36 @@
 
 namespace qs {
 
-    namespace _impl {
-        // Get templated parameters from typed class
-        // Credit: http://stackoverflow.com/questions/4691657/is-it-possible-to-store-a-template-parameter-pack-without-expanding-it
+	namespace _impl {
+		// Get templated parameters from typed class
+		// Credit: http://stackoverflow.com/questions/4691657/is-it-possible-to-store-a-template-parameter-pack-without-expanding-it
 		template <typename T, 
-				  template <typename T, typename... Args> class TDataSource,
-				  typename... Args>
+		          template <typename, typename...> class TDataSource,
+		          typename... Args>
 		struct expand {
 			typedef TDataSource<T, Args...> DataSourceType;
 		};
 
-        template <typename T, 
-				  template <typename T, typename... Args> class TDataSource,
-				  typename... Args>
-        struct expand<QuerySet<T, Args...>, TDataSource>
-        {
+		template <typename T, 
+		          template <typename, typename...> class TDataSource,
+		          typename... Args>
+		struct expand<QuerySet<T, Args...>, TDataSource>
+		{
 			typedef typename expand<T, TDataSource, Args...>::DataSourceType DataSourceType;
-        };
-    }
+		};
+	}
 
-    template <typename TModel>
-    class BaseManager {
-        public:
-            using QuerySet = typename TModel::QuerySet;
-        public:
-            BaseManager() {};
-            virtual ~BaseManager() {};
+	template <typename TModel>
+	class BaseManager {
+		public:
+			using QuerySet = typename TModel::QuerySet;
+		public:
+			BaseManager() {};
+			virtual ~BaseManager() {};
 
-            virtual QuerySet all() const = 0;
+			virtual QuerySet all() const = 0;
 			virtual void insert(const TModel& item) = 0;
-    };
+	};
 
 	template <typename TModel,
 		template <typename T, typename... ArgsDataSource> class TDataSource,
