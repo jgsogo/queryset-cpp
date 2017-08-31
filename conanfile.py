@@ -39,7 +39,6 @@ class QuerysetCPP(ConanFile):
         # self.copy("*.a", dst="lib", src="lib")
 
     def package_info(self):
-        #self.cpp_info.libs = ["queryset-cpp"]  # Do not generates .lib
-        pass
+        self.cpp_info.libdirs = []
 
 
