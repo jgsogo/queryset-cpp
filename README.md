@@ -118,6 +118,7 @@ This is the dependency graph for the project automatically generated with
 <summary></summary>
 dependencies
 digraph G {
+    rankdir=LR;
     "Boost/1.60.0@lasote/stable" -> {"zlib/1.2.8@lasote/stable" "bzip2/1.0.6@lasote/stable"};
     "queryset-cpp/0.5@PROJECT" -> {"sqlite3cc/master@jgsogo/stable" "libpqxx/5.0.1@jgsogo/stable" "spdlog/0.9.0@memsharded/stable" "Boost/1.60.0@lasote/stable"};
     "sqlite3cc/master@jgsogo/stable" -> {"sqlite3/3.18.0@jgsogo/stable" "Boost/1.60.0@lasote/stable"};
@@ -125,20 +126,6 @@ digraph G {
     } 
 dependencies
 </details> 
- 
- 
-![Alt text](https://g.gravizo.com/svg?
-digraph G {
-    /* Graph automatically generated using Conan:;
-        conan info --graph filename.dot;
-       just add ';' after each line;
-    */;
-    "Boost/1.60.0@lasote/stable" -> {"zlib/1.2.8@lasote/stable" "bzip2/1.0.6@lasote/stable"};
-    "queryset-cpp/0.5@PROJECT" -> {"sqlite3cc/master@jgsogo/stable" "libpqxx/5.0.1@jgsogo/stable" "spdlog/0.9.0@memsharded/stable" "Boost/1.60.0@lasote/stable"};
-    "sqlite3cc/master@jgsogo/stable" -> {"sqlite3/3.18.0@jgsogo/stable" "Boost/1.60.0@lasote/stable"};
-    "libpqxx/5.0.1@jgsogo/stable" -> {"postgresql/v9.6.5@jgsogo/stable"};
-    }
-)
 
 Every library can be found in the official Conan repositories or in my own
 [bintray remote](https://bintray.com/jgsogo/conan-packages). In order to be able to
