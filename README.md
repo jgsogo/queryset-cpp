@@ -12,8 +12,6 @@ Supported backends:
 
 ## Build status
 
-All branches under active development (sources and dependencies).
-
 <table>
     <thead>
         <tr>
@@ -35,7 +33,7 @@ All branches under active development (sources and dependencies).
         <td>master</td>
         <td>
             <a href="https://ci.appveyor.com/project/jgsogo/queryset-cpp">
-                <img src="https://ci.appveyor.com/api/projects/status/vekvvo87f5dngklk?svg=true" alt="Build status"/>
+                <img src="https://ci.appveyor.com/api/projects/status/vekvvo87f5dngklk/branch/master?svg=true" alt="Build status"/>
             </a>
         </td>        
         <td>
@@ -64,7 +62,68 @@ All branches under active development (sources and dependencies).
             </a>
         </td>
     </tr>
+    <tr>
+        <td>dev</td>
+        <td>
+            <a href="https://ci.appveyor.com/project/jgsogo/queryset-cpp">
+                <img src="https://ci.appveyor.com/api/projects/status/vekvvo87f5dngklk/branch/dev?svg=true" alt="Build status"/>
+            </a>
+        </td>        
+        <td>
+            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
+                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/1" alt="Build status"/>
+            </a>
+        </td>
+        <td>
+            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
+                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/2" alt="Build status"/>
+            </a>
+        </td>
+        <td>
+            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
+                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/3" alt="Build status"/>
+            </a>
+        </td>
+        <td>
+            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
+                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/4" alt="Build status"/>
+            </a>
+        </td>
+        <td>
+            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
+                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/5" alt="Build status"/>
+            </a>
+        </td>
+    </tr>
 </table>
+
+All branches under active development (sources and dependencies).
+
+
+## Dependencies
+
+This is the dependency graph for the project automatically generated with
+`conan info`.
+
+![Alt text](https://g.gravizo.com/svg?
+digraph G {
+    /* Graph automatically generated using Conan:;
+        conan info --graph filename.dot;
+       just add ';' after each line;
+    */;
+    "sqlite3cc/master@jgsogo/stable" -> {"sqlite3/3.18.0@jgsogo/stable" "Boost/1.60.0@lasote/stable"};
+    "Boost/1.60.0@lasote/stable" -> {"zlib/1.2.8@lasote/stable" "bzip2/1.0.6@lasote/stable"};
+    "queryset-cpp/0.5@PROJECT" -> {"sqlite3cc/master@jgsogo/stable" "spdlog/0.9.0@memsharded/stable" "libpqxx/5.0.1@jgsogo/stable" "Boost/1.60.0@lasote/stable"};
+    }
+)
+
+Every library can be found in the official Conan repositories or in my own
+[bintray remote](https://bintray.com/jgsogo/conan-packages). In order to be able to
+compile the project you have to add it to your conan remotes:
+
+```bash
+$> conan remote add jgsogo-conan-packages https://api.bintray.com/conan/jgsogo/conan-packages
+```
 
 
 ## Basic usage
