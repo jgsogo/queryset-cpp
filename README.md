@@ -9,6 +9,13 @@ Supported backends:
  * sqlite3
  * postgresql
 
+## Index
+
+ * [Build status](#build-status)
+ * [Dependencies](#dependencies)
+ * [Basic usage](#basic-usage)
+ * [License](#license)
+ 
 
 ## Build status
 
@@ -111,9 +118,10 @@ digraph G {
         conan info --graph filename.dot;
        just add ';' after each line;
     */;
-    "sqlite3cc/master@jgsogo/stable" -> {"sqlite3/3.18.0@jgsogo/stable" "Boost/1.60.0@lasote/stable"};
     "Boost/1.60.0@lasote/stable" -> {"zlib/1.2.8@lasote/stable" "bzip2/1.0.6@lasote/stable"};
-    "queryset-cpp/0.5@PROJECT" -> {"sqlite3cc/master@jgsogo/stable" "spdlog/0.9.0@memsharded/stable" "libpqxx/5.0.1@jgsogo/stable" "Boost/1.60.0@lasote/stable"};
+    "queryset-cpp/0.5@PROJECT" -> {"sqlite3cc/master@jgsogo/stable" "libpqxx/5.0.1@jgsogo/stable" "spdlog/0.9.0@memsharded/stable" "Boost/1.60.0@lasote/stable"};
+    "sqlite3cc/master@jgsogo/stable" -> {"sqlite3/3.18.0@jgsogo/stable" "Boost/1.60.0@lasote/stable"};
+    "libpqxx/5.0.1@jgsogo/stable" -> {"postgresql/v9.6.5@jgsogo/stable"};
     }
 )
 
