@@ -1,9 +1,18 @@
 # queryset-cpp
 
-C++ implementation of an ORM inspired by Python/Django
+C++ implementation of an ORM inspired by [Python/Django](https://www.djangoproject.com/). It allows to query
+a database-like backend using compact and human readable code.
+
+Supported backends:
+
+ * filesystem (read)
+ * sqlite3
+ * postgresql
 
 
 ## Build status
+
+All branches under active development (sources and dependencies).
 
 <table>
     <thead>
@@ -57,6 +66,23 @@ C++ implementation of an ORM inspired by Python/Django
     </tr>
 </table>
 
+
+## Basic usage
+
+Iterate a table 
+
+```cpp
+    std::cout << "== List of informers ==" << std::endl;
+    auto informers = Informer::objects().all();
+    for (auto& region : informers.groupBy<Region>(false)) {
+        std::cout << region.first << ":" << std::endl;
+        for (auto& informer : region.second) {
+            std::cout << "\t- " << informer << std::endl;
+        }
+    }
+```
+
+Check a full usage example at https://github.com/jgsogo/neutron
 
 
 ## License
