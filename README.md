@@ -118,9 +118,6 @@ This is the dependency graph for the project automatically generated with
 <summary></summary>
 dependencies
 digraph G {
-    /* Graph automatically generated using Conan (just add ';' after each line);
-        conan info --graph filename.dot;
-    */;
     "Boost/1.60.0@lasote/stable" -> {"zlib/1.2.8@lasote/stable" "bzip2/1.0.6@lasote/stable"};
     "queryset-cpp/0.5@PROJECT" -> {"sqlite3cc/master@jgsogo/stable" "libpqxx/5.0.1@jgsogo/stable" "spdlog/0.9.0@memsharded/stable" "Boost/1.60.0@lasote/stable"};
     "sqlite3cc/master@jgsogo/stable" -> {"sqlite3/3.18.0@jgsogo/stable" "Boost/1.60.0@lasote/stable"};
