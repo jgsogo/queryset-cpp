@@ -25,16 +25,20 @@ Supported backends:
             <th></th>
             <th>Windows</th>
             <th colspan="5">Unix</th>
+            <th colspan="3">Macos</th>
         </tr>
     </thead>
     <tr>
         <td></td>
         <td>Visual Studio</td>
-        <td>gcc 4.8</td>
         <td>gcc 4.9</td>
-        <td>gcc 5.2</td>
-        <td>gcc 5.3</td>
+        <td>gcc 5.4</td>
         <td>gcc 6.3</td>
+        <td>clang 3.9</td>
+        <td>clang 4.0</td>
+        <td>apple-clang 7.3</td>
+        <td>apple-clang 8.0</td>
+        <td>apple-clang 8.1</td>
     </tr>
     <tr>
         <td>master</td>
@@ -68,6 +72,21 @@ Supported backends:
                 <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/5" alt="Build status"/>
             </a>
         </td>
+        <td>
+            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
+                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/6" alt="Build status"/>
+            </a>
+        </td>
+        <td>
+            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
+                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/7" alt="Build status"/>
+            </a>
+        </td>
+        <td>
+            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
+                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/8" alt="Build status"/>
+            </a>
+        </td>
     </tr>
     <tr>
         <td>dev</td>
@@ -99,6 +118,21 @@ Supported backends:
         <td>
             <a href="https://travis-ci.org/jgsogo/queryset-cpp">
                 <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/5" alt="Build status"/>
+            </a>
+        </td>
+        <td>
+            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
+                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/6" alt="Build status"/>
+            </a>
+        </td>
+        <td>
+            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
+                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/7" alt="Build status"/>
+            </a>
+        </td>
+        <td>
+            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
+                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/8" alt="Build status"/>
             </a>
         </td>
     </tr>
