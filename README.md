@@ -112,6 +112,24 @@ All branches under active development (sources and dependencies).
 This is the dependency graph for the project automatically generated with
 `conan info`.
 
+![Dependency graph](https://g.gravizo.com/source/dependencies?https%3A%2F%2Fraw.githubusercontent.com%2Fjgsogo%2Fqueryset-cpp%2Fmaster%2FREADME.md)
+
+<details> 
+<summary></summary>
+dependencies
+digraph G {
+    /* Graph automatically generated using Conan (just add ';' after each line);
+        conan info --graph filename.dot;
+    */;
+    "Boost/1.60.0@lasote/stable" -> {"zlib/1.2.8@lasote/stable" "bzip2/1.0.6@lasote/stable"};
+    "queryset-cpp/0.5@PROJECT" -> {"sqlite3cc/master@jgsogo/stable" "libpqxx/5.0.1@jgsogo/stable" "spdlog/0.9.0@memsharded/stable" "Boost/1.60.0@lasote/stable"};
+    "sqlite3cc/master@jgsogo/stable" -> {"sqlite3/3.18.0@jgsogo/stable" "Boost/1.60.0@lasote/stable"};
+    "libpqxx/5.0.1@jgsogo/stable" -> {"postgresql/v9.6.5@jgsogo/stable"};
+    } 
+dependencies
+</details> 
+ 
+ 
 ![Alt text](https://g.gravizo.com/svg?
 digraph G {
     /* Graph automatically generated using Conan:;
