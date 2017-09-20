@@ -4,7 +4,7 @@ from conans import ConanFile, CMake
 VERSION = "0.5"
 
 
-class QuerysetCPP(ConanFile):
+class ConanRecipe(ConanFile):
     name = "queryset-cpp"
     version = VERSION
 
@@ -17,7 +17,7 @@ class QuerysetCPP(ConanFile):
     default_options = "shared=True"
 
     def requirements(self):
-        self.requires.add("Boost/1.60.0@lasote/stable")
+        self.requires.add("Boost/1.64.0@conan/stable")
         self.requires.add("spdlog/0.9.0@memsharded/stable")
         self.requires.add("sqlite3cc/master@jgsogo/stable")
         self.requires.add("libpqxx/5.0.1@jgsogo/stable")

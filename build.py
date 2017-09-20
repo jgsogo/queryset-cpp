@@ -1,11 +1,11 @@
 
 import os
 from conan.packager import ConanMultiPackager
-from conanfile import QuerysetCPP
+from conanfile import ConanRecipe
 
 
 username = os.getenv("CONAN_USERNAME", "jgsogo")
-reference = os.getenv("CONAN_REFERENCE", "{}/{}".format(QuerysetCPP.name, QuerysetCPP.version))
+reference = os.getenv("CONAN_REFERENCE", "{}/{}".format(ConanRecipe.name, ConanRecipe.version))
 
 
 if __name__ == "__main__":

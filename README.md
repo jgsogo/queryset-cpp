@@ -23,118 +23,43 @@ Supported backends:
     <thead>
         <tr>
             <th></th>
-            <th>Windows</th>
-            <th colspan="5">Unix</th>
-            <th colspan="3">Macos</th>
+            <th colspan="3">Windows</th>
+            <th colspan="4">Unix</th>
+            <th>Macos</th>
         </tr>
     </thead>
     <tr>
         <td></td>
-        <td>Visual Studio</td>
+        <td>msvc 12</td>
+        <td>msvc 14</td>
+        <td>msvc 15</td>
         <td>gcc 4.9</td>
         <td>gcc 5.4</td>
         <td>gcc 6.3</td>
-        <td>clang 3.9</td>
         <td>clang 4.0</td>
-        <td>apple-clang 7.3</td>
-        <td>apple-clang 8.0</td>
         <td>apple-clang 8.1</td>
     </tr>
     <tr>
         <td>master</td>
-        <td>
-            <a href="https://ci.appveyor.com/project/jgsogo/queryset-cpp">
-                <img src="https://ci.appveyor.com/api/projects/status/vekvvo87f5dngklk/branch/master?svg=true" alt="Build status"/>
-            </a>
-        </td>        
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/1" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/2" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/3" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/4" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/5" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/6" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/7" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/8" alt="Build status"/>
-            </a>
-        </td>
+        <td><a href="https://ci.appveyor.com/project/jgsogo/queryset-cpp"><img src="https://appveyor-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branch/master/1" alt="Build status"/></a></td>        
+        <td><a href="https://ci.appveyor.com/project/jgsogo/queryset-cpp"><img src="https://appveyor-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branch/master/2" alt="Build status"/></a></td>        
+        <td><a href="https://ci.appveyor.com/project/jgsogo/queryset-cpp"><img src="https://appveyor-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branch/master/3" alt="Build status"/></a></td>        
+        <td><a href="https://travis-ci.org/jgsogo/queryset-cpp"><img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/1" alt="Build status"/></a></td>
+        <td><a href="https://travis-ci.org/jgsogo/queryset-cpp"><img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/2" alt="Build status"/></a></td>
+        <td><a href="https://travis-ci.org/jgsogo/queryset-cpp"><img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/3" alt="Build status"/></a></td>
+        <td><a href="https://travis-ci.org/jgsogo/queryset-cpp"><img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/4" alt="Build status"/></a></td>
+        <td><a href="https://travis-ci.org/jgsogo/queryset-cpp"><img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/master/5" alt="Build status"/></a></td>
     </tr>
     <tr>
         <td>dev</td>
-        <td>
-            <a href="https://ci.appveyor.com/project/jgsogo/queryset-cpp">
-                <img src="https://ci.appveyor.com/api/projects/status/vekvvo87f5dngklk/branch/dev?svg=true" alt="Build status"/>
-            </a>
-        </td>        
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/1" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/2" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/3" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/4" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/5" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/6" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/7" alt="Build status"/>
-            </a>
-        </td>
-        <td>
-            <a href="https://travis-ci.org/jgsogo/queryset-cpp">
-                <img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/8" alt="Build status"/>
-            </a>
-        </td>
+        <td><a href="https://ci.appveyor.com/project/jgsogo/queryset-cpp"><img src="https://appveyor-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branch/dev/1" alt="Build status"/></a></td>        
+        <td><a href="https://ci.appveyor.com/project/jgsogo/queryset-cpp"><img src="https://appveyor-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branch/dev/2" alt="Build status"/></a></td>        
+        <td><a href="https://ci.appveyor.com/project/jgsogo/queryset-cpp"><img src="https://appveyor-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branch/dev/3" alt="Build status"/></a></td>        
+        <td><a href="https://travis-ci.org/jgsogo/queryset-cpp"><img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/1" alt="Build status"/></a></td>
+        <td><a href="https://travis-ci.org/jgsogo/queryset-cpp"><img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/2" alt="Build status"/></a></td>
+        <td><a href="https://travis-ci.org/jgsogo/queryset-cpp"><img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/3" alt="Build status"/></a></td>
+        <td><a href="https://travis-ci.org/jgsogo/queryset-cpp"><img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/4" alt="Build status"/></a></td>
+        <td><a href="https://travis-ci.org/jgsogo/queryset-cpp"><img src="https://travis-matrix-badges.herokuapp.com/repos/jgsogo/queryset-cpp/branches/dev/5" alt="Build status"/></a></td>
     </tr>
 </table>
 
@@ -153,9 +78,9 @@ This is the dependency graph for the project automatically generated with
 dependencies
 digraph G {
     rankdir=LR;
-    "Boost/1.60.0@lasote/stable" -> {"zlib/1.2.8@lasote/stable" "bzip2/1.0.6@lasote/stable"};
-    "queryset-cpp/0.5@PROJECT" -> {"sqlite3cc/master@jgsogo/stable" "libpqxx/5.0.1@jgsogo/stable" "spdlog/0.9.0@memsharded/stable" "Boost/1.60.0@lasote/stable"};
-    "sqlite3cc/master@jgsogo/stable" -> {"sqlite3/3.18.0@jgsogo/stable" "Boost/1.60.0@lasote/stable"};
+    "sqlite3cc/master@jgsogo/stable" -> {"Boost/1.64.0@conan/stable" "sqlite3/3.18.0@jgsogo/stable"};
+    "queryset-cpp/0.5@PROJECT" -> {"libpqxx/5.0.1@jgsogo/stable" "Boost/1.64.0@conan/stable" "spdlog/0.9.0@memsharded/stable" "sqlite3cc/master@jgsogo/stable"};
+    "Boost/1.64.0@conan/stable" -> {"zlib/1.2.11@conan/stable" "bzip2/1.0.6@conan/stable"};
     "libpqxx/5.0.1@jgsogo/stable" -> {"postgresql/v9.6.5@jgsogo/stable"};
     } 
 dependencies
