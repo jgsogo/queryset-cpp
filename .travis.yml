@@ -1,7 +1,7 @@
 env:
    global:
      - CONAN_CHANNEL: "stable"
-     - CONAN_REMOTES: "https://api.bintray.com/conan/jgsogo/conan-packages"
+     - CONAN_REMOTES: "https://api.bintray.com/conan/jgsogo/conan-packages, https://api.bintray.com/conan/conan-community/conan"
      - CONAN_UPLOAD: "https://api.bintray.com/conan/jgsogo/conan-packages"
 
 linux: &linux
